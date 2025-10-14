@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NLNG Celebration Portal</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ---------- GENERAL STYLES ---------- */
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: url("assets/background.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ✅ Background overlay */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.65);
+      z-index: 0;
+    }
+
+    /* ---------- MAIN CONTENT ---------- */
+    .content {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 50px 40px;
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+      width: 90%;
+      max-width: 600px;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    .logo {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      width: 120px;
+      height: auto;
+      z-index: 1;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      color: #ddd;
+    }
+
+    /* ---------- BUTTON STYLES ---------- */
+    .button-container {
+      display: flex;
+      gap: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .btn {
+      background-color: #008000;
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 10px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: 0.3s ease;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 10px rgba(0, 128, 0, 0.4);
+    }
+
+    .btn:hover {
+      background-color: #00a000;
+      transform: scale(1.05);
+      box-shadow: 0 6px 14px rgba(0, 160, 0, 0.5);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 15px;
+      color: #cccccc;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      p {
+        font-size: 1rem;
+      }
+      .btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+      }
+    }
+
+    /* ---------- ANIMATIONS ---------- */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <img src="assets/nlng_logo.png" alt="NLNG Logo" class="logo">
+
+  <div class="content">
+    <h1>Welcome to NLNG Celebration Portal</h1>
+    <p>Celebrate excellence through our <strong>Raffle Draw</strong> and <strong>Voting Events</strong>.</p>
+
+    <div class="button-container">
+      <a href="raffle_input.html" class="btn">🎁 Raffle Draw</a>
+      <a href="voting_page.html" class="btn">🗳️ Voting Page</a>
+    </div>
+  </div>
+
+  <footer>
+    © 2025 Nigeria LNG Limited | All Rights Reserved
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NLNG Raffle Admin Upload</title>
+
+  <!-- Excel Parser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: url("../assets/background.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.65);
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.12);
+      padding: 40px;
+      border-radius: 10px;
+      backdrop-filter: blur(8px);
+      width: 90%;
+      max-width: 600px;
+    }
+
+    h1 {
+      color: #fff;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+
+    input[type="password"], input[type="file"] {
+      padding: 10px;
+      margin: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 1rem;
+    }
+
+    button {
+      padding: 12px 25px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: #008000;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #00a000;
+      transform: scale(1.05);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 120px;
+    }
+
+    footer {
+      position: absolute;
+      bottom: 15px;
+      color: #ccc;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <img src="../assets/nlng_logo.png" alt="NLNG Logo" class="logo" />
+
+  <div class="content">
+    <h1>🔐 NLNG Raffle Admin Panel</h1>
+
+    <!-- Login -->
+    <div id="loginSection">
+      <p>Please enter the admin password to continue:</p>
+      <input type="password" id="adminPassword" placeholder="Enter password" />
+      <br />
+      <button onclick="checkPassword()">Login</button>
+      <p id="loginMessage" style="color: #ff8080;"></p>
+    </div>
+
+    <!-- Upload Section -->
+    <div id="uploadSection" class="hidden">
+      <p>Upload participant and gift files (Excel or CSV format)</p>
+      <input type="file" id="participantsFile" accept=".xlsx, .xls, .csv" />
+      <input type="file" id="giftsFile" accept=".xlsx, .xls, .csv" />
+      <br />
+      <button onclick="saveFiles()">💾 Save Files</button>
+      <button onclick="goToDraw()">🎁 Go to Raffle Draw</button>
+      <p id="uploadMessage" style="color: #80ff80; margin-top: 10px;"></p>
+    </div>
+  </div>
+
+  <footer>© 2025 Nigeria LNG Limited | Admin Access</footer>
+
+  <script>
+    const ADMIN_PASSWORD = "NLNG2025";
+
+    function checkPassword() {
+      const entered = document.getElementById("adminPassword").value.trim();
+      const message = document.getElementById("loginMessage");
+
+      if (entered === ADMIN_PASSWORD) {
+        message.style.color = "#00ff80";
+        message.textContent = "Access granted!";
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("uploadSection").classList.remove("hidden");
+      } else {
+        message.style.color = "#ff8080";
+        message.textContent = "Incorrect password. Try again.";
+      }
+    }
+
+    function readExcel(file, isParticipant = false) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: "array" });
+          const sheetName = workbook.SheetNames[0];
+          const sheet = workbook.Sheets[sheetName];
+          const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+
+          if (isParticipant) {
+            const formatted = json.map((row, index) => ({
+              name: row.Name || row.FullName || `Participant ${index + 1}`,
+              id: row.ID || row.UniqueID || row.EmployeeID || index + 1,
+            }));
+            resolve(formatted);
+          } else {
+            const formatted = json.map((row, index) =>
+              row.Gift || row.Item || `Gift ${index + 1}`
+            );
+            resolve(formatted);
+          }
+        };
+        reader.onerror = (err) => reject(err);
+        reader.readAsArrayBuffer(file);
+      });
+    }
+
+    async function saveFiles() {
+      const participantsFile = document.getElementById("participantsFile").files[0];
+      const giftsFile = document.getElementById("giftsFile").files[0];
+      const msg = document.getElementById("uploadMessage");
+
+      if (!participantsFile || !giftsFile) {
+        msg.style.color = "#ff8080";
+        msg.textContent = "⚠️ Please upload both participant and gift files.";
+        return;
+      }
+
+      try {
+        const participants = await readExcel(participantsFile, true);
+        const gifts = await readExcel(giftsFile, false);
+
+        localStorage.setItem("participantsData", JSON.stringify(participants));
+        localStorage.setItem("giftsData", JSON.stringify(gifts));
+
+        msg.style.color = "#80ff80";
+        msg.textContent = `✅ Saved ${participants.length} participants and ${gifts.length} gifts successfully!`;
+      } catch (error) {
+        console.error(error);
+        msg.style.color = "#ff8080";
+        msg.textContent = "❌ Error reading files. Please check file format.";
+      }
+    }
+
+    function goToDraw() {
+      window.location.href = "raffle_output.html";
+    }
+  </script>
+</body>
+</html>

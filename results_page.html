@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NLNG Voting Live Results</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #004d26;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    h1 {
+      margin-bottom: 30px;
+    }
+    table {
+      width: 80%;
+      margin: 20px auto;
+      border-collapse: collapse;
+      background: white;
+      color: black;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background: #00a859;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>NLNG Voting Live Results</h1>
+  <table>
+    <thead>
+      <tr><th>Nominee</th><th>Votes</th></tr>
+    </thead>
+    <tbody id="resultBody"></tbody>
+  </table>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
+      authDomain: "nlng-voting-system.firebaseapp.com",
+      databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
+      projectId: "nlng-voting-system",
+      storageBucket: "nlng-voting-system.firebasestorage.app",
+      messagingSenderId: "851277078103",
+      appId: "1:851277078103:web:54066162daafda99470d12",
+      measurementId: "G-D6MX1JL08C"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const resultBody = document.getElementById("resultBody");
+
+    // 🔄 Live results
+    onValue(ref(db, "votes"), (snapshot) => {
+      const data = snapshot.val() || {};
+      resultBody.innerHTML = "";
+      Object.entries(data)
+        .sort((a, b) => b[1] - a[1])
+        .forEach(([name, count]) => {
+          resultBody.innerHTML += `<tr><td>${name}</td><td>${count}</td></tr>`;
+        });
+    });
+  </script>
+</body>
+</html>

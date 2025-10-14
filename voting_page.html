@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NLNG Voting Page</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #fff;
+      text-align: center;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      background: #003300;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: url("images/nlng-bg.jpg") center/cover no-repeat;
+      filter: brightness(70%) blur(1px);
+      z-index: -2;
+    }
+
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: -1;
+    }
+
+    .container {
+      background: rgba(255,255,255,0.08);
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 1200px;
+      backdrop-filter: blur(8px);
+      margin-top: 40px;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 1.8em;
+    }
+
+    h2 {
+      font-weight: normal;
+      font-size: 1.2em;
+      margin-bottom: 40px;
+    }
+
+    #candidateList {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 25px;
+      justify-items: center;
+    }
+
+    .candidate {
+      background: rgba(0,107,63,0.85);
+      border-radius: 15px;
+      padding: 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      width: 180px;
+      text-align: center;
+    }
+
+    .candidate:hover {
+      background: #00a859;
+      transform: scale(1.05);
+    }
+
+    .candidate.selected {
+      background: gold;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .candidate img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 15px 35px;
+      border: none;
+      border-radius: 8px;
+      background-color: #006b3f;
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 40px;
+    }
+
+    button:hover {
+      background-color: #00a859;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <img src="images/NLNG-Logo.png" class="logo" alt="NLNG Logo" />
+    <h1>NLNG Employee Excellence Awards</h1>
+    <h2>Select your preferred nominee below</h2>
+
+    <div id="candidateList"></div>
+    <button id="voteBtn">Submit Vote</button>
+  </div>
+
+  <!-- ✅ Firebase v10 Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    // ✅ Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
+      authDomain: "nlng-voting-system.firebaseapp.com",
+      databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
+      projectId: "nlng-voting-system",
+      storageBucket: "nlng-voting-system.firebasestorage.app",
+      messagingSenderId: "851277078103",
+      appId: "1:851277078103:web:54066162daafda99470d12",
+      measurementId: "G-D6MX1JL08C"
+    };
+
+    // ✅ Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // ✅ Candidate List
+    const candidates = [
+      { name: "John Okafor", img: "images/john.jpg" },
+      { name: "Amina Bello", img: "images/amina.jpg" },
+      { name: "Chinedu Nwosu", img: "images/chinedu.jpg" },
+      { name: "Grace Eze", img: "images/grace.jpg" },
+      { name: "Emeka Uche", img: "images/emeka.jpg" },
+      { name: "Ifeoma Okeke", img: "images/ifeoma.jpg" },
+      { name: "Umar Danladi", img: "images/umar.jpg" },
+      { name: "Ngozi Udo", img: "images/ngozi.jpg" }
+    ];
+
+    const candidateList = document.getElementById("candidateList");
+    const voteBtn = document.getElementById("voteBtn");
+    let selectedCandidate = null;
+
+    // ✅ Render candidates
+    candidates.forEach(c => {
+      const div = document.createElement("div");
+      div.classList.add("candidate");
+      div.innerHTML = `
+        <h3>${c.name}</h3>
+        <img src="${c.img}" alt="${c.name}">
+      `;
+      div.addEventListener("click", () => selectCandidate(c.name, div));
+      candidateList.appendChild(div);
+    });
+
+    function selectCandidate(name, el) {
+      document.querySelectorAll(".candidate").forEach(c => c.classList.remove("selected"));
+      el.classList.add("selected");
+      selectedCandidate = name;
+    }
+
+    // ✅ Prevent multiple votes
+    if (localStorage.getItem("votedFor")) {
+      voteBtn.disabled = true;
+      voteBtn.textContent = "Vote Already Submitted";
+    }
+
+    // ✅ Handle voting
+    voteBtn.addEventListener("click", async () => {
+      if (localStorage.getItem("votedFor")) {
+        alert("You have already voted!");
+        return;
+      }
+
+      if (!selectedCandidate) {
+        alert("Please select a nominee before voting!");
+        return;
+      }
+
+      const voteRef = ref(db, "votes/" + selectedCandidate);
+      const snapshot = await get(voteRef);
+      const currentVotes = snapshot.exists() ? snapshot.val() : 0;
+      await set(voteRef, currentVotes + 1);
+
+      localStorage.setItem("votedFor", selectedCandidate);
+
+      alert(`✅ Your vote for ${selectedCandidate} has been recorded!`);
+      voteBtn.disabled = true;
+      voteBtn.textContent = "Vote Recorded";
+    });
+  </script>
+</body>
+</html>
