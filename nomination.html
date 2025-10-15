@@ -108,69 +108,79 @@
   <!-- 🔥 Firebase SDK and Script -->
   <script type="module">
     // Import Firebase functions
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+    <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+  import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
 
-    // Your Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
-      authDomain: "nlng-voting-system.firebaseapp.com",
-      databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
-      projectId: "nlng-voting-system",
-      storageBucket: "nlng-voting-system.firebasestorage.app",
-      messagingSenderId: "851277078103",
-      appId: "1:851277078103:web:6b9c5d7cd3a0da80470d12",
-      measurementId: "G-V6T773WLN7"
-    };
+  // ✅ Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
+    authDomain: "nlng-voting-system.firebaseapp.com",
+    databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
+    projectId: "nlng-voting-system",
+    storageBucket: "nlng-voting-system.firebasestorage.app",
+    messagingSenderId: "851277078103",
+    appId: "1:851277078103:web:6b9c5d7cd3a0da80470d12",
+    measurementId: "G-V6T773WLN7"
+  };
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+  // ✅ Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  const analytics = getAnalytics(app);
 
-    // Handle form submission
-    const form = document.getElementById("nominationForm");
-    const message = document.getElementById("message");
+  // ✅ Function to handle form submission
+  document.getElementById("nominationForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    // Get all input fields
+    const nomineeName = document.getElementById("nomineeName").value.trim();
+    const nomineeDept = document.getElementById("nomineeDept").value.trim();
+    const nomineeRole = document.getElementById("nomineeRole").value.trim();
+    const reason = document.getElementById("reason").value.trim();
+    const voterEmail = document.getElementById("voterEmail").value.trim();
 
-      const nomineeName = document.getElementById("nomineeName").value.trim();
-      const nomineeDept = document.getElementById("nomineeDept").value.trim();
-      const nomineeRole = document.getElementById("nomineeRole").value.trim();
-      const reason = document.getElementById("reason").value.trim();
-      const nominatorName = document.getElementById("nominatorName").value.trim();
-      const nominatorEmail = document.getElementById("nominatorEmail").value.trim();
+    // ✅ Validate required fields
+    if (!nomineeName || !nomineeDept || !nomineeRole || !reason || !voterEmail) {
+      alert("⚠️ Please fill out all required fields before submitting.");
+      return;
+    }
 
-      if (!nomineeName || !nomineeDept || !nomineeRole || !reason || !nominatorName || !nominatorEmail) {
-        message.style.color = "orange";
-        message.textContent = "⚠️ Please complete all required fields before submitting.";
-        return;
-      }
+    // ✅ Check local storage first to prevent multiple nominations
+    if (localStorage.getItem("hasVoted")) {
+      alert("⚠️ You have already submitted your nomination. Each person can only nominate once.");
+      return;
+    }
 
-      try {
-        // Save to Firebase
-        const nominationsRef = ref(db, "nominations");
-        const newNominationRef = push(nominationsRef);
+    // ✅ Optional: Check Firebase if this email already submitted
+    const nominationsRef = ref(db, "nominations");
+    const emailCheckQuery = query(nominationsRef, orderByChild("voterEmail"), equalTo(voterEmail));
+    const snapshot = await get(emailCheckQuery);
 
-        await set(newNominationRef, {
-          nomineeName,
-          nomineeDept,
-          nomineeRole,
-          reason,
-          nominatorName,
-          nominatorEmail,
-          timestamp: new Date().toISOString()
-        });
+    if (snapshot.exists()) {
+      alert("⚠️ This email has already been used for nomination.");
+      localStorage.setItem("hasVoted", "true");
+      return;
+    }
 
-        message.style.color = "#00ff80";
-        message.textContent = "✅ Nomination submitted successfully!";
-        form.reset();
-      } catch (error) {
-        console.error("Error submitting nomination:", error);
-        message.style.color = "red";
-        message.textContent = "❌ Failed to submit nomination. Try again.";
-      }
+    // ✅ Save nomination
+    const newNominationRef = push(nominationsRef);
+    await set(newNominationRef, {
+      nomineeName,
+      nomineeDept,
+      nomineeRole,
+      reason,
+      voterEmail,
+      timestamp: new Date().toISOString(),
     });
-  </script>
+
+    // ✅ Mark this user as having nominated
+    localStorage.setItem("hasVoted", "true");
+
+    alert("✅ Your nomination has been submitted successfully! Thank you for participating.");
+    document.getElementById("nominationForm").reset();
+  });
+</script>
 </body>
 </html>
