@@ -118,6 +118,16 @@
     button:hover {
       background-color: #00a859;
     }
+
+    /* ✅ New Admin Button */
+    #adminBtn {
+      margin-top: 25px;
+      background-color: #444;
+    }
+
+    #adminBtn:hover {
+      background-color: #777;
+    }
   </style>
 </head>
 
@@ -129,6 +139,9 @@
 
     <div id="candidateList"></div>
     <button id="voteBtn">Submit Vote</button>
+
+    <!-- ✅ Admin Access Button -->
+    <button id="adminBtn">🔐 View Results (Admin)</button>
   </div>
 
   <!-- ✅ Firebase v10 Modular SDK -->
@@ -148,11 +161,9 @@
       measurementId: "G-D6MX1JL08C"
     };
 
-    // ✅ Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // ✅ Candidate List
     const candidates = [
       { name: "John Okafor", img: "images/john.jpg" },
       { name: "Amina Bello", img: "images/amina.jpg" },
@@ -166,6 +177,7 @@
 
     const candidateList = document.getElementById("candidateList");
     const voteBtn = document.getElementById("voteBtn");
+    const adminBtn = document.getElementById("adminBtn");
     let selectedCandidate = null;
 
     // ✅ Render candidates
@@ -214,6 +226,16 @@
       alert(`✅ Your vote for ${selectedCandidate} has been recorded!`);
       voteBtn.disabled = true;
       voteBtn.textContent = "Vote Recorded";
+    });
+
+    // ✅ Admin Access Logic
+    adminBtn.addEventListener("click", () => {
+      const password = prompt("🔒 Enter admin password:");
+      if (password === "NLNG2025") {
+        window.location.href = "results_page.html";
+      } else if (password) {
+        alert("❌ Incorrect password. Access denied.");
+      }
     });
   </script>
 </body>
