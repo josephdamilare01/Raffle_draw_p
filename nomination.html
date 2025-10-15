@@ -89,7 +89,7 @@
 
   <div class="container">
     <h1>🏆 NLNG Nomination Form</h1>
-    <p>Please complete all fields before submitting your nomination.</p>
+    <p id="dateNotice">Please complete all fields before submitting your nomination.</p>
 
     <form id="nominationForm">
       <input type="text" id="nomineeName" placeholder="Full Name of Nominee *" required />
@@ -98,7 +98,7 @@
       <textarea id="reason" rows="4" placeholder="Why are you nominating this person? *" required></textarea>
       <input type="text" id="nominatorName" placeholder="Your Full Name *" required />
       <input type="email" id="nominatorEmail" placeholder="Your Email *" required />
-      <button type="submit">Submit Nomination</button>
+      <button type="submit" id="submitBtn">Submit Nomination</button>
       <div class="message" id="message"></div>
     </form>
 
@@ -107,11 +107,10 @@
 
   <!-- 🔥 Firebase SDK and Script -->
   <script type="module">
-    // Import Firebase functions
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-    // Your Firebase config
+    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
       authDomain: "nlng-voting-system.firebaseapp.com",
@@ -123,14 +122,27 @@
       measurementId: "G-V6T773WLN7"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Handle form submission
+    // 🔒 Nomination timeframe (set your own X and Y dates)
+    const startDate = new Date("2025-10-10T00:00:00"); // e.g. October 10, 2025
+    const endDate   = new Date("2025-10-25T23:59:59"); // e.g. October 25, 2025
+    const now = new Date();
+
     const form = document.getElementById("nominationForm");
     const message = document.getElementById("message");
+    const submitBtn = document.getElementById("submitBtn");
+    const dateNotice = document.getElementById("dateNotice");
 
+    // 🕒 Check nomination window
+    if (now < startDate || now > endDate) {
+      form.style.display = "none";
+      dateNotice.style.color = "red";
+      dateNotice.textContent = "🚫 NOMINATION CLOSED. Please wait until the next nomination period.";
+    }
+
+    // 📝 Handle submission
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -148,7 +160,7 @@
       }
 
       try {
-        // Check if this email already submitted a nomination
+        // Check if already nominated
         const nominationsRef = ref(db, "nominations");
         const emailQuery = query(nominationsRef, orderByChild("nominatorEmail"), equalTo(nominatorEmail));
         const snapshot = await get(emailQuery);
@@ -159,7 +171,7 @@
           return;
         }
 
-        // Save to Firebase if not found
+        // Save new nomination
         const newNominationRef = push(nominationsRef);
         await set(newNominationRef, {
           nomineeName,
@@ -171,9 +183,9 @@
           timestamp: new Date().toISOString()
         });
 
-        message.style.color = "#00ff80";
-        message.textContent = "✅ Nomination submitted successfully!";
-        form.reset();
+        // Redirect to Thank You page
+        window.location.href = "thankyou.html";
+
       } catch (error) {
         console.error("Error submitting nomination:", error);
         message.style.color = "red";
