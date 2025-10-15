@@ -3,136 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Nomination Page</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>🏆 NLNG Nomination Form</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: url("../assets/background.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
+      position: relative;
     }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 0;
+    }
+
     .container {
-      background: white;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.12);
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 500px;
-    }
-    h2 {
+      width: 90%;
+      max-width: 600px;
       text-align: center;
-      color: #333;
+      backdrop-filter: blur(8px);
     }
-    input, textarea, select, button {
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+      color: #00ff80;
+    }
+
+    input, textarea, select {
       width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 1em;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-sizing: border-box;
     }
+
     button {
-      background-color: #007bff;
+      background-color: #008000;
       color: white;
       border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 1.1rem;
       cursor: pointer;
       transition: 0.3s;
     }
+
     button:hover {
-      background-color: #0056b3;
+      background-color: #00a000;
+      transform: scale(1.05);
     }
-    .alert {
-      color: red;
-      text-align: center;
-      font-size: 0.9em;
+
+    .message {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
+
   <div class="container">
-    <h2>Nomination Form</h2>
-    <p>Please fill in all required details to nominate your candidate.</p>
+    <h1>🏆 NLNG Nomination Form</h1>
+    <p>Please complete all fields before submitting your nomination.</p>
 
     <form id="nominationForm">
-      <label>Nominee Full Name *</label>
-      <input type="text" id="nomineeName" placeholder="Enter nominee's full name" required />
-
-      <label>Department / Team *</label>
-      <input type="text" id="nomineeDept" placeholder="Enter nominee's department" required />
-
-      <label>Reason for Nomination *</label>
-      <textarea id="nomineeReason" rows="3" placeholder="Why are you nominating this person?" required></textarea>
-
-      <label>Your Name *</label>
-      <input type="text" id="voterName" placeholder="Enter your full name" required />
-
-      <label>Your Email *</label>
-      <input type="email" id="voterEmail" placeholder="Enter your email address" required />
-
+      <input type="text" id="nomineeName" placeholder="Full Name of Nominee *" required />
+      <input type="text" id="nomineeDept" placeholder="Department/Unit *" required />
+      <input type="text" id="nomineeRole" placeholder="Position/Role *" required />
+      <textarea id="reason" rows="4" placeholder="Why are you nominating this person? *" required></textarea>
+      <input type="text" id="nominatorName" placeholder="Your Full Name *" required />
+      <input type="email" id="nominatorEmail" placeholder="Your Email *" required />
       <button type="submit">Submit Nomination</button>
-      <p class="alert" id="alertMsg"></p>
+      <div class="message" id="message"></div>
     </form>
+
+    <a href="../index.html">⬅️ Back to Home</a>
   </div>
 
-  <!-- Firebase Setup -->
+  <!-- 🔥 Firebase SDK and Script -->
   <script type="module">
-    // Import Firebase SDKs
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+    // Import Firebase functions
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-    // Your Firebase Config
+    // Your Firebase config
     const firebaseConfig = {
-      apiKey: "YOUR_API_KEY",
-      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-      projectId: "YOUR_PROJECT_ID",
-      storageBucket: "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId: "YOUR_APP_ID"
+      apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
+      authDomain: "nlng-voting-system.firebaseapp.com",
+      databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
+      projectId: "nlng-voting-system",
+      storageBucket: "nlng-voting-system.firebasestorage.app",
+      messagingSenderId: "851277078103",
+      appId: "1:851277078103:web:6b9c5d7cd3a0da80470d12",
+      measurementId: "G-V6T773WLN7"
     };
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
+    // Handle form submission
     const form = document.getElementById("nominationForm");
-    const alertMsg = document.getElementById("alertMsg");
+    const message = document.getElementById("message");
 
-    form.addEventListener("submit", (e) => {
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const nomineeName = document.getElementById("nomineeName").value.trim();
       const nomineeDept = document.getElementById("nomineeDept").value.trim();
-      const nomineeReason = document.getElementById("nomineeReason").value.trim();
-      const voterName = document.getElementById("voterName").value.trim();
-      const voterEmail = document.getElementById("voterEmail").value.trim();
+      const nomineeRole = document.getElementById("nomineeRole").value.trim();
+      const reason = document.getElementById("reason").value.trim();
+      const nominatorName = document.getElementById("nominatorName").value.trim();
+      const nominatorEmail = document.getElementById("nominatorEmail").value.trim();
 
-      if (!nomineeName || !nomineeDept || !nomineeReason || !voterName || !voterEmail) {
-        alertMsg.textContent = "⚠️ Please fill all required fields before submitting.";
+      if (!nomineeName || !nomineeDept || !nomineeRole || !reason || !nominatorName || !nominatorEmail) {
+        message.style.color = "orange";
+        message.textContent = "⚠️ Please complete all required fields before submitting.";
         return;
       }
 
-      const nominationsRef = ref(db, "nominations");
-      push(nominationsRef, {
-        nomineeName,
-        nomineeDept,
-        nomineeReason,
-        voterName,
-        voterEmail,
-        timestamp: new Date().toISOString()
-      })
-      .then(() => {
-        alertMsg.style.color = "green";
-        alertMsg.textContent = "✅ Nomination submitted successfully!";
+      try {
+        // Save to Firebase
+        const nominationsRef = ref(db, "nominations");
+        const newNominationRef = push(nominationsRef);
+
+        await set(newNominationRef, {
+          nomineeName,
+          nomineeDept,
+          nomineeRole,
+          reason,
+          nominatorName,
+          nominatorEmail,
+          timestamp: new Date().toISOString()
+        });
+
+        message.style.color = "#00ff80";
+        message.textContent = "✅ Nomination submitted successfully!";
         form.reset();
-      })
-      .catch((error) => {
-        alertMsg.textContent = "❌ Error submitting nomination: " + error.message;
-      });
+      } catch (error) {
+        console.error("Error submitting nomination:", error);
+        message.style.color = "red";
+        message.textContent = "❌ Failed to submit nomination. Try again.";
+      }
     });
   </script>
 </body>
