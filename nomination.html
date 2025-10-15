@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nomination Page</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 1em;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .alert {
+      color: red;
+      text-align: center;
+      font-size: 0.9em;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Nomination Form</h2>
+    <p>Please fill in all required details to nominate your candidate.</p>
+
+    <form id="nominationForm">
+      <label>Nominee Full Name *</label>
+      <input type="text" id="nomineeName" placeholder="Enter nominee's full name" required />
+
+      <label>Department / Team *</label>
+      <input type="text" id="nomineeDept" placeholder="Enter nominee's department" required />
+
+      <label>Reason for Nomination *</label>
+      <textarea id="nomineeReason" rows="3" placeholder="Why are you nominating this person?" required></textarea>
+
+      <label>Your Name *</label>
+      <input type="text" id="voterName" placeholder="Enter your full name" required />
+
+      <label>Your Email *</label>
+      <input type="email" id="voterEmail" placeholder="Enter your email address" required />
+
+      <button type="submit">Submit Nomination</button>
+      <p class="alert" id="alertMsg"></p>
+    </form>
+  </div>
+
+  <!-- Firebase Setup -->
+  <script type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+
+    // Your Firebase Config
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const form = document.getElementById("nominationForm");
+    const alertMsg = document.getElementById("alertMsg");
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const nomineeName = document.getElementById("nomineeName").value.trim();
+      const nomineeDept = document.getElementById("nomineeDept").value.trim();
+      const nomineeReason = document.getElementById("nomineeReason").value.trim();
+      const voterName = document.getElementById("voterName").value.trim();
+      const voterEmail = document.getElementById("voterEmail").value.trim();
+
+      if (!nomineeName || !nomineeDept || !nomineeReason || !voterName || !voterEmail) {
+        alertMsg.textContent = "⚠️ Please fill all required fields before submitting.";
+        return;
+      }
+
+      const nominationsRef = ref(db, "nominations");
+      push(nominationsRef, {
+        nomineeName,
+        nomineeDept,
+        nomineeReason,
+        voterName,
+        voterEmail,
+        timestamp: new Date().toISOString()
+      })
+      .then(() => {
+        alertMsg.style.color = "green";
+        alertMsg.textContent = "✅ Nomination submitted successfully!";
+        form.reset();
+      })
+      .catch((error) => {
+        alertMsg.textContent = "❌ Error submitting nomination: " + error.message;
+      });
+    });
+  </script>
+</body>
+</html>
