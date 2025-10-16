@@ -26,7 +26,7 @@
     }
 
     h1 {
-      margin: 10px 0 20px;
+      margin: 10px 0 16px;
       font-size: 2.2rem;
       letter-spacing: 1px;
       background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
@@ -42,20 +42,31 @@
       100% { background-position: 0% 50%; }
     }
 
+    /* Container stacks items vertically: winner card on top, table below */
     .content {
-      display: grid;
-      grid-template-columns: 1.3fr 1fr;
-      gap: 30px;
-      max-width: 1200px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+      max-width: 920px;
       margin: 0 auto;
-      padding: 10px 30px 60px;
+      padding: 10px 20px 60px;
+      align-items: stretch;
+    }
+
+    .top {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      flex-direction: column;
     }
 
     .left {
       background: rgba(255, 255, 255, 0.05);
-      padding: 20px;
+      padding: 18px;
       border-radius: 10px;
       backdrop-filter: blur(8px);
+      width: 100%;
     }
 
     table {
@@ -69,9 +80,10 @@
     }
 
     th, td {
-      padding: 14px 12px;
+      padding: 12px 10px;
       text-align: left;
       border-bottom: 1px solid rgba(0,0,0,0.08);
+      word-break: break-word;
     }
 
     thead th {
@@ -84,77 +96,45 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 12px;
       position: relative;
+      width: 100%;
     }
 
     .winner-card {
       width: 100%;
-      max-width: 440px;
+      max-width: 640px;
       background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
       color: #000;
       border-radius: 16px;
-      padding: 25px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
       position: relative;
       overflow: hidden;
       display: none;
+      animation: popIn 700ms ease;
+      margin: 0 auto;
     }
 
     .winner-name {
-      font-size: 2rem;
+      font-size: 1.9rem;
       font-weight: 700;
       background: linear-gradient(90deg,var(--accent2), var(--accent3));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 6px;
-      animation: popIn 1s ease;
     }
 
     .gift-name {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: 600;
       color: #e63946;
     }
 
     @keyframes popIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      60% { transform: scale(1.1); opacity: 1; }
+      0% { transform: scale(0.95); opacity: 0; }
+      60% { transform: scale(1.02); opacity: 1; }
       100% { transform: scale(1); }
-    }
-
-    #loader {
-      display: none;
-      position: absolute;
-      inset: 0;
-      background: rgba(7, 20, 40, 0.85);
-      backdrop-filter: blur(6px);
-      z-index: 10;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-      padding: 20px;
-      border-radius: 16px;
-    }
-
-    .spinner {
-      width: 100px;
-      height: 100px;
-      border: 10px solid rgba(255,255,255,0.2);
-      border-top-color: var(--accent3);
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 15px;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    #countdownText {
-      font-size: 1.2rem;
-      color: #fff;
     }
 
     .btns {
@@ -162,6 +142,7 @@
       gap: 10px;
       flex-wrap: wrap;
       justify-content: center;
+      margin-top: 6px;
     }
 
     .btn {
@@ -172,16 +153,18 @@
       border-radius: 10px;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: transform .14s ease, box-shadow .14s ease;
     }
 
     .btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.26);
     }
 
-    @media (max-width: 950px) {
-      .content { grid-template-columns: 1fr; }
+    /* On small widths keep same stacked layout but narrower card */
+    @media (max-width: 640px) {
+      .winner-card { max-width: 100%; padding: 18px; }
+      th, td { font-size: 0.95rem; padding: 10px 8px; }
     }
   </style>
 </head>
@@ -189,41 +172,36 @@
   <h1>🎊 NLNG End of the Year Raffle Draw</h1>
 
   <div class="content">
-    <!-- Left -->
+    <!-- Top area: winner card and controls -->
+    <div class="top">
+      <div class="right">
+        <div class="winner-card" id="winnerCard">
+          <div class="winner-name" id="winnerName">🏆 Winner Name</div>
+          <div class="gift-name" id="giftName">🎁 Gift</div>
+        </div>
+
+        <div class="btns">
+          <button class="btn" id="startDraw">Start Draw</button>
+          <button class="btn" id="restartBtn">Restart</button>
+          <button class="btn" id="homeBtn">🏠 Home</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Below area: winners table (full width) -->
     <div class="left">
       <h3>🎁 Winners Table</h3>
-      <table id="resultTable">
+      <table id="resultTable" aria-live="polite">
         <thead>
           <tr>
-            <th>#</th>
-            <th>Participant Name</th>
-            <th>Unique ID</th>
-            <th>Gift</th>
+            <th style="width:6%;">#</th>
+            <th style="width:44%;">Participant Name</th>
+            <th style="width:25%;">Unique ID</th>
+            <th style="width:25%;">Gift</th>
           </tr>
         </thead>
         <tbody></tbody>
       </table>
-    </div>
-
-    <!-- Right -->
-    <div class="right">
-      <div class="winner-card" id="winnerCard">
-        <div id="loader">
-          <div class="spinner"></div>
-          <div id="countdownText">Generating next winner in <strong id="countdown">30</strong>s...</div>
-        </div>
-
-        <div class="winner-content">
-          <div class="winner-name" id="winnerName">🏆 Winner Name</div>
-          <div class="gift-name" id="giftName">🎁 Gift</div>
-        </div>
-      </div>
-
-      <div class="btns">
-        <button class="btn" id="startDraw">Start Draw</button>
-        <button class="btn" id="restartBtn">Restart</button>
-        <button class="btn" id="homeBtn">🏠 Home</button>
-      </div>
     </div>
   </div>
 
@@ -232,29 +210,26 @@
     let gifts = [];
     let results = [];
     let index = 0;
-
-    let countdownTimer = null;
-    let countdownValue = 30;
-    let generationDelay = 30;
+    let interval = null;
 
     const resultBody = document.querySelector("#resultTable tbody");
     const winnerCard = document.getElementById("winnerCard");
     const winnerNameEl = document.getElementById("winnerName");
     const giftNameEl = document.getElementById("giftName");
-    const loaderEl = document.getElementById("loader");
-    const countdownEl = document.getElementById("countdown");
 
     const startBtn = document.getElementById("startDraw");
     const restartBtn = document.getElementById("restartBtn");
     const homeBtn = document.getElementById("homeBtn");
 
+    // Load saved data from localStorage (admin page must save participantsData / giftsData)
     window.addEventListener("DOMContentLoaded", () => {
       const savedParticipants = localStorage.getItem("participantsData");
       const savedGifts = localStorage.getItem("giftsData");
       if (savedParticipants && savedGifts) {
         participants = JSON.parse(savedParticipants);
         gifts = JSON.parse(savedGifts);
-        alert(`✅ Loaded ${participants.length} participants and ${gifts.length} gifts.`);
+        // silent load (no blocking alert)
+        console.info(`Loaded ${participants.length} participants and ${gifts.length} gifts.`);
       } else {
         alert("⚠️ Please upload participants and gifts on the admin page first.");
       }
@@ -266,6 +241,7 @@
         return;
       }
 
+      // Create results by shuffling participants and gifts
       const numDraws = Math.min(participants.length, gifts.length);
       const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
       const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
@@ -279,38 +255,17 @@
         });
       }
 
+      // reset UI
       resultBody.innerHTML = "";
       index = 0;
-      winnerCard.style.display = "block";
-      startGenerationCountdown(generationDelay);
+      clearInterval(interval);
+      announceWinner();                 // announce immediately
+      interval = setInterval(announceWinner, 30000); // then every 30s (change as needed)
     });
 
-    function startGenerationCountdown(seconds) {
-      clearCountdown();
-      countdownValue = seconds;
-      countdownEl.textContent = countdownValue;
-      loaderEl.style.display = "flex";
-
-      countdownTimer = setInterval(() => {
-        countdownValue--;
-        countdownEl.textContent = countdownValue;
-        if (countdownValue < 0) {
-          clearCountdown();
-          loaderEl.style.display = "none";
-          generateWinnerAndContinue();
-        }
-      }, 1000);
-    }
-
-    function clearCountdown() {
-      if (countdownTimer) {
-        clearInterval(countdownTimer);
-        countdownTimer = null;
-      }
-    }
-
-    function generateWinnerAndContinue() {
+    function announceWinner() {
       if (index >= results.length) {
+        clearInterval(interval);
         alert("🎉 All winners have been announced!");
         return;
       }
@@ -318,36 +273,43 @@
       const winner = results[index];
       winnerNameEl.textContent = `🏆 ${winner.name}`;
       giftNameEl.textContent = `🎁 ${winner.gift}`;
-      confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
+      winnerCard.style.display = "block";
 
-      resultBody.innerHTML += `
+      // show confetti (if canvas-confetti loaded)
+      if (typeof confetti === "function") {
+        confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
+      }
+
+      // append to results table
+      resultBody.insertAdjacentHTML("beforeend", `
         <tr>
           <td>${index + 1}</td>
           <td>${escapeHtml(winner.name)}</td>
           <td>${escapeHtml(winner.id)}</td>
           <td>${escapeHtml(winner.gift)}</td>
         </tr>
-      `;
-      index++;
+      `);
 
-      if (index < results.length) {
-        setTimeout(() => startGenerationCountdown(generationDelay), 5000); // ⏳ delay next by 5s
-      }
+      // auto-scroll table to bottom so new winners are visible
+      const tableContainer = document.querySelector("#resultTable");
+      tableContainer.scrollIntoView({ behavior: "smooth", block: "end" });
+
+      index++;
     }
 
     restartBtn.addEventListener("click", () => {
-      clearCountdown();
+      clearInterval(interval);
       resultBody.innerHTML = "";
       index = 0;
       results = [];
       winnerCard.style.display = "none";
-      alert("🔄 Draw restarted.");
+      alert("🔄 Draw restarted. Click Start Draw to begin again.");
     });
 
     homeBtn.addEventListener("click", () => (window.location.href = "index.html"));
 
-    function escapeHtml(text) {
-      return text.replace(/[&<>"']/g, (m) => ({
+    function escapeHtml(text = "") {
+      return String(text).replace(/[&<>"']/g, (m) => ({
         "&": "&amp;",
         "<": "&lt;",
         ">": "&gt;",
