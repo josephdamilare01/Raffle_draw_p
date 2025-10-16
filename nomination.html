@@ -3,89 +3,177 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🏆 NLNG Nomination Form</title>
+  <title>🏆 NLNG Nomination Form 2025</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    body {
+    :root {
+      --blue1: #00c6ff;
+      --blue2: #0072ff;
+      --green: #00ff80;
+      --purple: #8a2be2;
+      --dark: #0b132b;
+      --light: rgba(255, 255, 255, 0.15);
+    }
+
+    * {
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: url("../assets/background.jpg") no-repeat center center fixed;
-      background-size: cover;
-      color: white;
-      height: 100vh;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background: radial-gradient(circle at top left, #0b132b, #1c2541, #3a506b);
+      overflow: hidden;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
+      color: #fff;
+      animation: bgShift 12s ease-in-out infinite alternate;
     }
 
-    body::before {
-      content: "";
+    @keyframes bgShift {
+      0% { background: radial-gradient(circle at top left, #0b132b, #1c2541, #3a506b); }
+      50% { background: radial-gradient(circle at bottom right, #2b1055, #7597de, #1c2541); }
+      100% { background: radial-gradient(circle at top left, #0b132b, #1c2541, #3a506b); }
+    }
+
+    .orb {
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.7);
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--blue2), transparent);
+      opacity: 0.15;
+      animation: floaty 10s ease-in-out infinite;
       z-index: 0;
     }
 
+    .orb:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+    .orb:nth-child(2) { top: 70%; right: 15%; animation-delay: 2s; }
+    .orb:nth-child(3) { bottom: 10%; left: 50%; animation-delay: 4s; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
+    }
+
     .container {
-      z-index: 1;
-      background: rgba(255, 255, 255, 0.12);
-      padding: 30px;
-      border-radius: 10px;
+      z-index: 2;
+      background: var(--light);
+      padding: 40px 30px;
+      border-radius: 16px;
       width: 90%;
       max-width: 600px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 0 30px rgba(0, 255, 128, 0.15);
       text-align: center;
-      backdrop-filter: blur(8px);
+      animation: fadeUp 1.5s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h1 {
-      margin-bottom: 20px;
-      font-size: 2rem;
-      color: #00ff80;
+      font-size: 2.3rem;
+      margin-bottom: 10px;
+      background: linear-gradient(90deg, var(--green), var(--blue1), var(--purple));
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 4s infinite alternate;
     }
 
-    input, textarea, select {
+    @keyframes gradientMove {
+      0% { background-position: 0%; }
+      100% { background-position: 100%; }
+    }
+
+    p#dateNotice {
+      margin-bottom: 25px;
+      color: #ddd;
+      font-size: 1rem;
+    }
+
+    input, textarea {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin: 10px 0;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
       font-size: 1rem;
-      box-sizing: border-box;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 10px var(--green);
+    }
+
+    textarea {
+      resize: none;
     }
 
     button {
-      background-color: #008000;
-      color: white;
+      background: linear-gradient(90deg, var(--blue1), var(--green));
+      color: #fff;
       border: none;
-      padding: 12px 25px;
-      border-radius: 8px;
+      padding: 14px 35px;
+      border-radius: 30px;
       font-size: 1.1rem;
+      font-weight: 600;
       cursor: pointer;
       transition: 0.3s;
+      margin-top: 15px;
+      box-shadow: 0 0 15px rgba(0, 255, 128, 0.2);
     }
 
     button:hover {
-      background-color: #00a000;
       transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 255, 128, 0.4);
     }
 
     .message {
       margin-top: 15px;
       font-weight: bold;
+      min-height: 20px;
     }
 
     a {
-      color: white;
+      color: var(--green);
       text-decoration: none;
       display: inline-block;
-      margin-top: 15px;
+      margin-top: 20px;
+      transition: 0.3s;
+    }
+
+    a:hover {
+      color: var(--blue1);
+      transform: scale(1.05);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9rem;
+      color: #aaa;
     }
   </style>
 </head>
+
 <body>
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
 
   <div class="container">
     <h1>🏆 NLNG Nomination Form</h1>
@@ -105,12 +193,13 @@
     <a href="../index.html">⬅️ Back to Home</a>
   </div>
 
-  <!-- 🔥 Firebase SDK and Script -->
+  <footer>© 2025 NLNG | Nomination Portal</footer>
+
+  <!-- 🔥 Firebase SDK and Logic (Unchanged) -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
 
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
       authDomain: "nlng-voting-system.firebaseapp.com",
@@ -125,24 +214,20 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // 🔒 Nomination timeframe (set your own X and Y dates)
-    const startDate = new Date("2025-10-10T00:00:00"); // e.g. October 10, 2025
-    const endDate   = new Date("2025-10-25T23:59:59"); // e.g. October 25, 2025
+    const startDate = new Date("2025-10-10T00:00:00");
+    const endDate = new Date("2025-10-25T23:59:59");
     const now = new Date();
 
     const form = document.getElementById("nominationForm");
     const message = document.getElementById("message");
-    const submitBtn = document.getElementById("submitBtn");
     const dateNotice = document.getElementById("dateNotice");
 
-    // 🕒 Check nomination window
     if (now < startDate || now > endDate) {
       form.style.display = "none";
       dateNotice.style.color = "red";
       dateNotice.textContent = "🚫 NOMINATION CLOSED. Please wait until the next nomination period.";
     }
 
-    // 📝 Handle submission
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
@@ -160,7 +245,6 @@
       }
 
       try {
-        // Check if already nominated
         const nominationsRef = ref(db, "nominations");
         const emailQuery = query(nominationsRef, orderByChild("nominatorEmail"), equalTo(nominatorEmail));
         const snapshot = await get(emailQuery);
@@ -171,7 +255,6 @@
           return;
         }
 
-        // Save new nomination
         const newNominationRef = push(nominationsRef);
         await set(newNominationRef, {
           nomineeName,
@@ -183,7 +266,6 @@
           timestamp: new Date().toISOString()
         });
 
-        // Redirect to Thank You page
         window.location.href = "thankyou.html";
 
       } catch (error) {
