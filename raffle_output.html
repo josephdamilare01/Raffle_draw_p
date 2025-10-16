@@ -227,14 +227,15 @@
   </div>
 
   <!-- Countdown overlay -->
-  <div id="loader">5</div>
+  <div id="loader">10</div>
 
   <script>
     let participants = [];
     let gifts = [];
     let results = [];
     let index = 0;
-    let interval = null;
+    let drawDelay = 3000; // 30 seconds between draws
+    let isDrawing = false;
 
     const resultBody = document.querySelector("#resultTable tbody");
     const winnerCard = document.getElementById("winnerCard");
@@ -257,7 +258,7 @@
       }
     });
 
-    startBtn.addEventListener("click", () => {
+    startBtn.addEventListener("click", async () => {
       if (!participants.length || !gifts.length) {
         alert("Upload both participant and gift data first.");
         return;
@@ -278,38 +279,43 @@
 
       resultBody.innerHTML = "";
       index = 0;
-      clearInterval(interval);
-
-      startCountdown(() => {
-        announceWinner();
-        interval = setInterval(() => {
-          startCountdown(announceWinner);
-        }, 3000); // every 30 seconds
-      });
+      isDrawing = false;
+      runDrawSequence();
     });
 
-    function startCountdown(callback) {
-      let count = 10;
-      loader.textContent = count;
-      loader.style.display = "flex";
-      const countdown = setInterval(() => {
-        count--;
+    async function runDrawSequence() {
+      while (index < results.length) {
+        await startCountdown(5);
+        announceWinner();
+        await sleep(drawDelay); // wait before next countdown
+      }
+      alert("🎉 All winners have been announced!");
+    }
+
+    function startCountdown(seconds) {
+      return new Promise((resolve) => {
+        let count = seconds;
         loader.textContent = count;
-        if (count === 0) {
-          clearInterval(countdown);
-          loader.style.display = "none";
-          callback();
-        }
-      }, 1000);
+        loader.style.display = "flex";
+
+        const timer = setInterval(() => {
+          count--;
+          if (count > 0) {
+            loader.textContent = count;
+          } else {
+            clearInterval(timer);
+            loader.style.display = "none";
+            resolve();
+          }
+        }, 1000);
+      });
+    }
+
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
     function announceWinner() {
-      if (index >= results.length) {
-        clearInterval(interval);
-        alert("🎉 All winners have been announced!");
-        return;
-      }
-
       const winner = results[index];
       winnerNameEl.textContent = `🏆 ${winner.name}`;
       giftNameEl.textContent = `🎁 ${winner.gift}`;
@@ -333,12 +339,7 @@
     }
 
     restartBtn.addEventListener("click", () => {
-      clearInterval(interval);
-      resultBody.innerHTML = "";
-      index = 0;
-      results = [];
-      winnerCard.style.display = "none";
-      alert("🔄 Draw restarted. Click Start Draw to begin again.");
+      location.reload();
     });
 
     homeBtn.addEventListener("click", () => (window.location.href = "index.html"));
