@@ -285,7 +285,7 @@
 
     async function runDrawSequence() {
       while (index < results.length) {
-        await startCountdown(5);
+        await startCountdown(10);
         announceWinner();
         await sleep(drawDelay); // wait before next countdown
       }
@@ -356,3 +356,4 @@
   </script>
 </body>
 </html>
+
