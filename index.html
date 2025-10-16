@@ -3,150 +3,256 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NLNG Celebration Portal</title>
-  <link rel="stylesheet" href="style.css">
+  <title>NLNG 2025 | Raffle Draw, Voting & Nomination</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    /* ---------- GENERAL STYLES ---------- */
-    body {
+    :root {
+      --blue1: #00c6ff;
+      --blue2: #0072ff;
+      --purple: #8a2be2;
+      --pink: #ff007f;
+      --white: #ffffff;
+    }
+
+    * {
       margin: 0;
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: url("assets/background.jpg") no-repeat center center fixed;
-      background-size: cover;
-      color: white;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
       height: 100vh;
+      overflow: hidden;
+      background: radial-gradient(circle at top left, #1a1a2e, #0f3460, #16213e);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      text-align: center;
       position: relative;
-      overflow: hidden;
+      animation: bgShift 10s infinite alternate ease-in-out;
     }
 
-    /* ✅ Background overlay */
-    body::before {
+    @keyframes bgShift {
+      0% { background: radial-gradient(circle at top left, #1a1a2e, #0f3460, #16213e); }
+      50% { background: radial-gradient(circle at bottom right, #2b1055, #7597de, #0f3460); }
+      100% { background: radial-gradient(circle at top left, #1a1a2e, #0f3460, #16213e); }
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 50px;
+      animation: fadeDown 1.5s ease forwards;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      background: linear-gradient(90deg, var(--blue1), var(--pink), var(--purple));
+      background-size: 200%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 4s infinite alternate;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      color: #ddd;
+      margin-top: 10px;
+      font-size: 1.2rem;
+      animation: fadeIn 2s ease forwards 0.5s;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0%; }
+      100% { background-position: 100%; }
+    }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      animation: fadeUp 1.5s ease forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      position: relative;
+      width: 260px;
+      height: 300px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      backdrop-filter: blur(15px);
+      overflow: hidden;
+      text-align: center;
+      transition: all 0.4s ease;
+    }
+
+    .card::before {
       content: "";
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.65);
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, var(--blue1), var(--pink), var(--purple), var(--blue1));
+      animation: spin 5s linear infinite;
       z-index: 0;
+      opacity: 0.3;
     }
 
-    /* ---------- MAIN CONTENT ---------- */
-    .content {
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .card-content {
       position: relative;
-      z-index: 1;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 50px 40px;
-      border-radius: 12px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-      width: 90%;
-      max-width: 600px;
-      animation: fadeIn 1.5s ease-in-out;
-    }
-
-    .logo {
-      position: absolute;
-      top: 25px;
-      left: 25px;
-      width: 120px;
-      height: auto;
-      z-index: 1;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
+      z-index: 2;
+      padding: 30px 20px;
       color: #fff;
     }
 
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 2rem;
-      color: #ddd;
+    .card img {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 20px;
+      animation: bounce 3s infinite ease-in-out;
     }
 
-    /* ---------- BUTTON STYLES ---------- */
-    .button-container {
-      display: flex;
-      gap: 30px;
-      flex-wrap: wrap;
-      justify-content: center;
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+      color: var(--white);
+    }
+
+    .card p {
+      font-size: 0.9rem;
+      color: #ccc;
+      margin-bottom: 20px;
     }
 
     .btn {
-      background-color: #008000;
-      color: white;
+      padding: 10px 25px;
       border: none;
-      padding: 15px 40px;
-      border-radius: 10px;
-      font-size: 1.2rem;
+      border-radius: 30px;
+      background: linear-gradient(90deg, var(--blue1), var(--purple));
+      color: white;
+      font-weight: 600;
       cursor: pointer;
       transition: 0.3s ease;
-      text-decoration: none;
-      font-weight: bold;
-      box-shadow: 0 4px 10px rgba(0, 128, 0, 0.4);
     }
 
     .btn:hover {
-      background-color: #00a000;
-      transform: scale(1.05);
-      box-shadow: 0 6px 14px rgba(0, 160, 0, 0.5);
+      transform: scale(1.1);
+      box-shadow: 0 0 15px var(--blue1);
     }
 
     footer {
       position: absolute;
-      bottom: 15px;
-      color: #cccccc;
+      bottom: 20px;
+      color: #aaa;
       font-size: 0.9rem;
-      text-align: center;
+      animation: fadeIn 2s ease;
     }
 
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.8rem;
-      }
-      p {
-        font-size: 1rem;
-      }
-      .btn {
-        padding: 12px 25px;
-        font-size: 1rem;
-      }
+    /* Floating orbs background */
+    .orb {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, var(--blue2), transparent);
+      border-radius: 50%;
+      opacity: 0.2;
+      animation: floaty 8s ease-in-out infinite;
     }
 
-    /* ---------- ANIMATIONS ---------- */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .orb:nth-child(1) { top: 15%; left: 10%; animation-delay: 0s; }
+    .orb:nth-child(2) { top: 60%; left: 75%; animation-delay: 2s; }
+    .orb:nth-child(3) { bottom: 10%; right: 20%; animation-delay: 4s; }
+
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-25px); }
     }
+
   </style>
 </head>
 <body>
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
 
-  <img src="assets/nlng_logo.png" alt="NLNG Logo" class="logo">
+  <header>
+    <h1>NLNG 2025 Digital Experience</h1>
+    <p>Welcome to the official platform for Raffle Draw, Voting, and Nominations</p>
+  </header>
 
-  <div class="content">
-    <h1>Welcome to NLNG Celebration Portal</h1>
-    <p>Celebrate excellence through our <strong>Raffle Draw</strong> and <strong>Voting Events</strong>.</p>
+  <div class="container">
+    <div class="card" onclick="navigate('nomination.html')">
+      <div class="card-content">
+        <img src="https://cdn-icons-png.flaticon.com/512/4333/4333609.png" alt="Nomination">
+        <h2>Nomination page</h2>
+        <button class="btn">Enter</button>
+      </div>
+    </div>
 
-    <div class="button-container">
-      <a href="raffle_input.html" class="btn">🎁 Raffle Draw</a>
-      <a href="voting_page.html" class="btn">🗳️ Voting Page</a>
-      <a href="nomination.html" class="btn">🏆Nomination</a>
+    <div class="card" onclick="navigate('voting_page.html')">
+      <div class="card-content">
+        <img src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" alt="Voting">
+        <h2>Voting page</h2>
+        <button class="btn">Vote Now</button>
+      </div>
+    </div>
 
+    <div class="card" onclick="navigate('raffle_input.html')">
+      <div class="card-content">
+        <img src="https://cdn-icons-png.flaticon.com/512/2936/2936924.png" alt="Raffle Draw">
+        <h2>Raffle Draw</h2>
+        <button class="btn">Join Draw</button>
+      </div>
     </div>
   </div>
 
   <footer>
-    © 2025 Nigeria LNG Limited | All Rights Reserved
+    © 2025 NLNG | Designed with 💡 Creativity & Innovation
   </footer>
 
+  <script>
+    // Smooth transition effect when navigating
+    function navigate(url) {
+      document.body.style.transition = "opacity 0.5s ease";
+      document.body.style.opacity = "0";
+      setTimeout(() => window.location.href = url, 500);
+    }
+
+    // Parallax background motion
+    document.addEventListener("mousemove", (e) => {
+      document.querySelectorAll(".orb").forEach((orb, i) => {
+        const speed = (i + 1) * 0.02;
+        orb.style.transform = `translate(${e.clientX * speed}px, ${e.clientY * speed}px)`;
+      });
+    });
+  </script>
 </body>
 </html>
-
-
