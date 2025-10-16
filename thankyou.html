@@ -7,8 +7,9 @@
 <style>
   body {
     font-family: "Segoe UI", sans-serif;
-    background: url("../assets/background.jpg") no-repeat center center fixed;
-    background-size: cover;
+    background: linear-gradient(135deg, #001f3f, #007b5f, #001f3f);
+    background-size: 300% 300%;
+    animation: gradientShift 10s ease infinite;
     color: white;
     display: flex;
     flex-direction: column;
@@ -16,18 +17,91 @@
     align-items: center;
     height: 100vh;
     text-align: center;
+    overflow: hidden;
   }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   .box {
     background: rgba(0,0,0,0.7);
     padding: 40px;
     border-radius: 12px;
     backdrop-filter: blur(5px);
+    animation: fadeInUp 1.2s ease-out;
+    box-shadow: 0 0 20px rgba(0,255,128,0.4);
   }
-  h1 { color: #00ff80; }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  h1 {
+    color: #00ff80;
+    font-size: 2.5rem;
+    animation: glowText 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glowText {
+    from { text-shadow: 0 0 10px #00ff80, 0 0 20px #00ff80; }
+    to { text-shadow: 0 0 25px #00ffcc, 0 0 40px #00ff80; }
+  }
+
+  p {
+    font-size: 1.2rem;
+    opacity: 0;
+    animation: fadeText 1.8s ease forwards 1s;
+  }
+
+  @keyframes fadeText {
+    to { opacity: 1; }
+  }
+
   a {
     color: #00ff80;
     margin-top: 20px;
     display: inline-block;
+    font-weight: bold;
+    text-decoration: none;
+    border: 1px solid #00ff80;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+
+  a:hover {
+    background: #00ff80;
+    color: #000;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00ff80;
+  }
+
+  .close-btn {
+    margin-top: 25px;
+    background: #00ff80;
+    border: none;
+    color: black;
+    font-size: 1rem;
+    padding: 10px 25px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .close-btn:hover {
+    background: #00cc66;
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #00ff80;
   }
 </style>
 </head>
@@ -35,7 +109,7 @@
   <div class="box">
     <h1>🎉 Thank You!</h1>
     <p>We have received your nomination.<br>Thank you for your time and participation!</p>
+    <button class="close-btn" onclick="window.close()">Close Page ✖️</button>
   </div>
 </body>
 </html>
-
