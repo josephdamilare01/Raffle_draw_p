@@ -42,7 +42,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Container stacks items vertically: winner card on top, table below */
     .content {
       display: flex;
       flex-direction: column;
@@ -161,10 +160,34 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.26);
     }
 
-    /* On small widths keep same stacked layout but narrower card */
+    /* Countdown overlay */
+    #loader {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(7, 20, 40, 0.95);
+      backdrop-filter: blur(6px);
+      color: white;
+      font-size: 5rem;
+      font-weight: 700;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     @media (max-width: 640px) {
       .winner-card { max-width: 100%; padding: 18px; }
       th, td { font-size: 0.95rem; padding: 10px 8px; }
+      #loader { font-size: 3rem; }
     }
   </style>
 </head>
@@ -172,7 +195,6 @@
   <h1>🎊 NLNG End of the Year Raffle Draw</h1>
 
   <div class="content">
-    <!-- Top area: winner card and controls -->
     <div class="top">
       <div class="right">
         <div class="winner-card" id="winnerCard">
@@ -188,7 +210,6 @@
       </div>
     </div>
 
-    <!-- Below area: winners table (full width) -->
     <div class="left">
       <h3>🎁 Winners Table</h3>
       <table id="resultTable" aria-live="polite">
@@ -205,6 +226,9 @@
     </div>
   </div>
 
+  <!-- Countdown overlay -->
+  <div id="loader">5</div>
+
   <script>
     let participants = [];
     let gifts = [];
@@ -216,20 +240,18 @@
     const winnerCard = document.getElementById("winnerCard");
     const winnerNameEl = document.getElementById("winnerName");
     const giftNameEl = document.getElementById("giftName");
+    const loader = document.getElementById("loader");
 
     const startBtn = document.getElementById("startDraw");
     const restartBtn = document.getElementById("restartBtn");
     const homeBtn = document.getElementById("homeBtn");
 
-    // Load saved data from localStorage (admin page must save participantsData / giftsData)
     window.addEventListener("DOMContentLoaded", () => {
       const savedParticipants = localStorage.getItem("participantsData");
       const savedGifts = localStorage.getItem("giftsData");
       if (savedParticipants && savedGifts) {
         participants = JSON.parse(savedParticipants);
         gifts = JSON.parse(savedGifts);
-        // silent load (no blocking alert)
-        console.info(`Loaded ${participants.length} participants and ${gifts.length} gifts.`);
       } else {
         alert("⚠️ Please upload participants and gifts on the admin page first.");
       }
@@ -241,7 +263,6 @@
         return;
       }
 
-      // Create results by shuffling participants and gifts
       const numDraws = Math.min(participants.length, gifts.length);
       const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
       const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
@@ -255,13 +276,32 @@
         });
       }
 
-      // reset UI
       resultBody.innerHTML = "";
       index = 0;
       clearInterval(interval);
-      announceWinner();                 // announce immediately
-      interval = setInterval(announceWinner, 30000); // then every 30s (change as needed)
+
+      startCountdown(() => {
+        announceWinner();
+        interval = setInterval(() => {
+          startCountdown(announceWinner);
+        }, 3000); // every 30 seconds
+      });
     });
+
+    function startCountdown(callback) {
+      let count = 10;
+      loader.textContent = count;
+      loader.style.display = "flex";
+      const countdown = setInterval(() => {
+        count--;
+        loader.textContent = count;
+        if (count === 0) {
+          clearInterval(countdown);
+          loader.style.display = "none";
+          callback();
+        }
+      }, 1000);
+    }
 
     function announceWinner() {
       if (index >= results.length) {
@@ -275,12 +315,10 @@
       giftNameEl.textContent = `🎁 ${winner.gift}`;
       winnerCard.style.display = "block";
 
-      // show confetti (if canvas-confetti loaded)
       if (typeof confetti === "function") {
         confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
       }
 
-      // append to results table
       resultBody.insertAdjacentHTML("beforeend", `
         <tr>
           <td>${index + 1}</td>
@@ -290,10 +328,7 @@
         </tr>
       `);
 
-      // auto-scroll table to bottom so new winners are visible
-      const tableContainer = document.querySelector("#resultTable");
-      tableContainer.scrollIntoView({ behavior: "smooth", block: "end" });
-
+      document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
       index++;
     }
 
