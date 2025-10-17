@@ -174,7 +174,7 @@
       }
     }
 
-    // ✅ Adjusted section: extract Name and Division
+// ✅ Updated to include Division
     function readExcel(file, isParticipant = false) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -186,10 +186,9 @@
           const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
           if (isParticipant) {
-            // ✅ Now extracts both Name and Division from Excel
             const formatted = json.map((row, index) => ({
               name: row.Name || row.FullName || `Participant ${index + 1}`,
-              division: row.Division || row.Department || "N/A", // added
+              division: row.Division || row.Department || "N/A", // 👈 added line
               id: row.ID || row.UniqueID || row.EmployeeID || index + 1,
             }));
             resolve(formatted);
@@ -220,6 +219,7 @@
         const participants = await readExcel(participantsFile, true);
         const gifts = await readExcel(giftsFile, false);
 
+        // Save both datasets locally
         localStorage.setItem("participantsData", JSON.stringify(participants));
         localStorage.setItem("giftsData", JSON.stringify(gifts));
 
