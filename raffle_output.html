@@ -234,7 +234,7 @@
     let gifts = [];
     let results = [];
     let index = 0;
-    let drawDelay = 3000; // 30 seconds between draws
+    let drawDelay = 300; // 30 seconds between draws
     let isDrawing = false;
 
     const resultBody = document.querySelector("#resultTable tbody");
@@ -285,7 +285,7 @@
 
     async function runDrawSequence() {
       while (index < results.length) {
-        await startCountdown(10);
+        await startCountdown(5);
         announceWinner();
         await sleep(drawDelay); // wait before next countdown
       }
@@ -356,4 +356,5 @@
   </script>
 </body>
 </html>
+
 
