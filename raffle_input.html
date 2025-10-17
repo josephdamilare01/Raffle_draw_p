@@ -46,14 +46,8 @@
     }
 
     @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      from { opacity: 0; transform: translateY(50px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     h1 {
@@ -114,14 +108,8 @@
     }
 
     @keyframes slideIn {
-      from {
-        opacity: 0;
-        transform: translateX(-50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
     }
 
     footer {
@@ -186,6 +174,7 @@
       }
     }
 
+    // ✅ Adjusted section: extract Name and Division
     function readExcel(file, isParticipant = false) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -197,8 +186,10 @@
           const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
           if (isParticipant) {
+            // ✅ Now extracts both Name and Division from Excel
             const formatted = json.map((row, index) => ({
               name: row.Name || row.FullName || `Participant ${index + 1}`,
+              division: row.Division || row.Department || "N/A", // added
               id: row.ID || row.UniqueID || row.EmployeeID || index + 1,
             }));
             resolve(formatted);
