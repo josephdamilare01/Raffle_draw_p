@@ -6,7 +6,6 @@
   <title>🎁 Animated Raffle Draw</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-
   <style>
     :root {
       --accent1: #00c6ff;
@@ -160,7 +159,6 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.26);
     }
 
-    /* Countdown overlay */
     #loader {
       display: none;
       position: fixed;
@@ -216,8 +214,8 @@
         <thead>
           <tr>
             <th style="width:6%;">#</th>
-            <th style="width:44%;">Participant Name</th>
-            <th style="width:25%;">Unique ID</th>
+            <th style="width:38%;">Participant Name</th>
+            <th style="width:31%;">Division</th>  <!-- 🔹 Changed -->
             <th style="width:25%;">Gift</th>
           </tr>
         </thead>
@@ -226,131 +224,116 @@
     </div>
   </div>
 
-  <!-- Countdown overlay -->
   <div id="loader">10</div>
 
   <script>
-  let participants = [];
-  let gifts = [];
-  let results = [];
-  let index = 0;
-  let drawDelay = 300; // 30 seconds between draws
-  let isDrawing = false;
+    let participants = [];
+    let gifts = [];
+    let results = [];
+    let index = 0;
+    let drawDelay = 300;
+    const resultBody = document.querySelector("#resultTable tbody");
+    const winnerCard = document.getElementById("winnerCard");
+    const winnerNameEl = document.getElementById("winnerName");
+    const giftNameEl = document.getElementById("giftName");
+    const loader = document.getElementById("loader");
 
-  const resultBody = document.querySelector("#resultTable tbody");
-  const winnerCard = document.getElementById("winnerCard");
-  const winnerNameEl = document.getElementById("winnerName");
-  const giftNameEl = document.getElementById("giftName");
-  const loader = document.getElementById("loader");
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedParticipants = localStorage.getItem("participantsData");
+      const savedGifts = localStorage.getItem("giftsData");
+      if (savedParticipants && savedGifts) {
+        participants = JSON.parse(savedParticipants);
+        gifts = JSON.parse(savedGifts);
+      } else {
+        alert("⚠️ Please upload participants and gifts on the admin page first.");
+      }
+    });
 
-  const startBtn = document.getElementById("startDraw");
-  const restartBtn = document.getElementById("restartBtn");
-  const homeBtn = document.getElementById("homeBtn");
+    document.getElementById("startDraw").addEventListener("click", async () => {
+      if (!participants.length || !gifts.length) {
+        alert("Upload both participant and gift data first.");
+        return;
+      }
 
-  window.addEventListener("DOMContentLoaded", () => {
-    const savedParticipants = localStorage.getItem("participantsData");
-    const savedGifts = localStorage.getItem("giftsData");
-    if (savedParticipants && savedGifts) {
-      participants = JSON.parse(savedParticipants);
-      gifts = JSON.parse(savedGifts);
-    } else {
-      alert("⚠️ Please upload participants and gifts on the admin page first.");
+      const numDraws = Math.min(participants.length, gifts.length);
+      const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
+      const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
+
+      results = [];
+      for (let i = 0; i < numDraws; i++) {
+        results.push({
+          name: shuffledParticipants[i].name,
+          division: shuffledParticipants[i].division, // 🔹 Updated field
+          gift: shuffledGifts[i],
+        });
+      }
+
+      resultBody.innerHTML = "";
+      index = 0;
+      runDrawSequence();
+    });
+
+    async function runDrawSequence() {
+      while (index < results.length) {
+        await startCountdown(5);
+        announceWinner();
+        await sleep(drawDelay);
+      }
+      alert("🎉 All winners have been announced!");
     }
-  });
 
-  startBtn.addEventListener("click", async () => {
-    if (!participants.length || !gifts.length) {
-      alert("Upload both participant and gift data first.");
-      return;
-    }
+    function startCountdown(seconds) {
+      return new Promise((resolve) => {
+        let count = seconds;
+        loader.textContent = count;
+        loader.style.display = "flex";
 
-    const numDraws = Math.min(participants.length, gifts.length);
-    const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-    const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
-
-    results = [];
-    for (let i = 0; i < numDraws; i++) {
-      results.push({
-        name: shuffledParticipants[i].name,
-        division: shuffledParticipants[i].division, // 👈 changed from id → division
-        gift: shuffledGifts[i],
+        const timer = setInterval(() => {
+          count--;
+          if (count > 0) {
+            loader.textContent = count;
+          } else {
+            clearInterval(timer);
+            loader.style.display = "none";
+            resolve();
+          }
+        }, 1000);
       });
     }
 
-    resultBody.innerHTML = "";
-    index = 0;
-    isDrawing = false;
-    runDrawSequence();
-  });
-
-  async function runDrawSequence() {
-    while (index < results.length) {
-      await startCountdown(5); // countdown seconds (change if you like)
-      announceWinner();
-      await sleep(drawDelay);
-    }
-    alert("🎉 All winners have been announced!");
-  }
-
-  function startCountdown(seconds) {
-    return new Promise((resolve) => {
-      let count = seconds;
-      loader.textContent = count;
-      loader.style.display = "flex";
-
-      const timer = setInterval(() => {
-        count--;
-        if (count > 0) {
-          loader.textContent = count;
-        } else {
-          clearInterval(timer);
-          loader.style.display = "none";
-          resolve();
-        }
-      }, 1000);
-    });
-  }
-
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
-
-  function announceWinner() {
-    const winner = results[index];
-    winnerNameEl.textContent = `🏆 ${winner.name}`;
-    giftNameEl.textContent = `🎁 ${winner.gift}`;
-    winnerCard.style.display = "block";
-
-    if (typeof confetti === "function") {
-      confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
+    function sleep(ms) {
+      return new Promise((resolve) => setTimeout(resolve, ms));
     }
 
-    resultBody.insertAdjacentHTML("beforeend", `
-      <tr>
-        <td>${index + 1}</td>
-        <td>${escapeHtml(winner.name)}</td>
-        <td>${escapeHtml(winner.division)}</td> <!-- 👈 replaced ID with Division -->
-        <td>${escapeHtml(winner.gift)}</td>
-      </tr>
-    `);
+    function announceWinner() {
+      const winner = results[index];
+      winnerNameEl.textContent = `🏆 ${winner.name}`;
+      giftNameEl.textContent = `🎁 ${winner.gift}`;
+      winnerCard.style.display = "block";
 
-    document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
-    index++;
-  }
+      if (typeof confetti === "function") {
+        confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
+      }
 
-  restartBtn.addEventListener("click", () => {
-    location.reload();
-  });
+      // 🔹 Table row now shows Division instead of ID
+      resultBody.insertAdjacentHTML("beforeend", `
+        <tr>
+          <td>${index + 1}</td>
+          <td>${escapeHtml(winner.name)}</td>
+          <td>${escapeHtml(winner.division)}</td>
+          <td>${escapeHtml(winner.gift)}</td>
+        </tr>
+      `);
 
-  homeBtn.addEventListener("click", () => (window.location.href = "index.html"));
+      document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
+      index++;
+    }
 
-  function escapeHtml(text = "") {
-    return String(text).replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;",
-    }[m]));
-  }
-</script>
+    function escapeHtml(text = "") {
+      return String(text).replace(/[&<>"']/g, (m) => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[m]));
+    }
+  </script>
+</body>
+</html>
