@@ -226,114 +226,123 @@
 
   <div id="loader">10</div>
 
-  <script>
-    let participants = [];
-    let gifts = [];
-    let results = [];
-    let index = 0;
-    let drawDelay = 300;
-    const resultBody = document.querySelector("#resultTable tbody");
-    const winnerCard = document.getElementById("winnerCard");
-    const winnerNameEl = document.getElementById("winnerName");
-    const giftNameEl = document.getElementById("giftName");
-    const loader = document.getElementById("loader");
+<script>
+  let participants = [];
+  let gifts = [];
+  let results = [];
+  let index = 0;
+  let drawDelay = 300;
+  const resultBody = document.querySelector("#resultTable tbody");
+  const winnerCard = document.getElementById("winnerCard");
+  const winnerNameEl = document.getElementById("winnerName");
+  const giftNameEl = document.getElementById("giftName");
+  const loader = document.getElementById("loader");
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const savedParticipants = localStorage.getItem("participantsData");
-      const savedGifts = localStorage.getItem("giftsData");
-      if (savedParticipants && savedGifts) {
-        participants = JSON.parse(savedParticipants);
-        gifts = JSON.parse(savedGifts);
-      } else {
-        alert("⚠️ Please upload participants and gifts on the admin page first.");
-      }
-    });
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedParticipants = localStorage.getItem("participantsData");
+    const savedGifts = localStorage.getItem("giftsData");
 
-    document.getElementById("startDraw").addEventListener("click", async () => {
-      if (!participants.length || !gifts.length) {
-        alert("Upload both participant and gift data first.");
-        return;
-      }
+    if (savedParticipants && savedGifts) {
+      participants = JSON.parse(savedParticipants);
+      gifts = JSON.parse(savedGifts);
 
-      const numDraws = Math.min(participants.length, gifts.length);
-      const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-      const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
+      // 🔹 Fix: Make sure each participant has a 'division' field
+      participants = participants.map((p) => {
+        // Try to map id or department to division if division missing
+        return {
+          name: p.name || p.Name || "Unnamed",
+          division: p.division || p.Division || p.department || p.Department || p.id || p.ID || "—",
+        };
+      });
 
-      results = [];
-      for (let i = 0; i < numDraws; i++) {
-        results.push({
-          name: shuffledParticipants[i].name,
-          division: shuffledParticipants[i].division, // 🔹 Updated field
-          gift: shuffledGifts[i],
-        });
-      }
+    } else {
+      alert("⚠️ Please upload participants and gifts on the admin page first.");
+    }
+  });
 
-      resultBody.innerHTML = "";
-      index = 0;
-      runDrawSequence();
-    });
-
-    async function runDrawSequence() {
-      while (index < results.length) {
-        await startCountdown(5);
-        announceWinner();
-        await sleep(drawDelay);
-      }
-      alert("🎉 All winners have been announced!");
+  document.getElementById("startDraw").addEventListener("click", async () => {
+    if (!participants.length || !gifts.length) {
+      alert("Upload both participant and gift data first.");
+      return;
     }
 
-    function startCountdown(seconds) {
-      return new Promise((resolve) => {
-        let count = seconds;
-        loader.textContent = count;
-        loader.style.display = "flex";
+    const numDraws = Math.min(participants.length, gifts.length);
+    const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
+    const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
 
-        const timer = setInterval(() => {
-          count--;
-          if (count > 0) {
-            loader.textContent = count;
-          } else {
-            clearInterval(timer);
-            loader.style.display = "none";
-            resolve();
-          }
-        }, 1000);
+    results = [];
+    for (let i = 0; i < numDraws; i++) {
+      results.push({
+        name: shuffledParticipants[i].name,
+        division: shuffledParticipants[i].division,
+        gift: shuffledGifts[i],
       });
     }
 
-    function sleep(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
+    resultBody.innerHTML = "";
+    index = 0;
+    runDrawSequence();
+  });
+
+  async function runDrawSequence() {
+    while (index < results.length) {
+      await startCountdown(5);
+      announceWinner();
+      await sleep(drawDelay);
+    }
+    alert("🎉 All winners have been announced!");
+  }
+
+  function startCountdown(seconds) {
+    return new Promise((resolve) => {
+      let count = seconds;
+      loader.textContent = count;
+      loader.style.display = "flex";
+
+      const timer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          loader.textContent = count;
+        } else {
+          clearInterval(timer);
+          loader.style.display = "none";
+          resolve();
+        }
+      }, 1000);
+    });
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  function announceWinner() {
+    const winner = results[index];
+    winnerNameEl.textContent = `🏆 ${winner.name}`;
+    giftNameEl.textContent = `🎁 ${winner.gift}`;
+    winnerCard.style.display = "block";
+
+    if (typeof confetti === "function") {
+      confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
     }
 
-    function announceWinner() {
-      const winner = results[index];
-      winnerNameEl.textContent = `🏆 ${winner.name}`;
-      giftNameEl.textContent = `🎁 ${winner.gift}`;
-      winnerCard.style.display = "block";
+    // ✅ Always display Division, even if missing
+    resultBody.insertAdjacentHTML("beforeend", `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${escapeHtml(winner.name)}</td>
+        <td>${escapeHtml(winner.division || "—")}</td>
+        <td>${escapeHtml(winner.gift)}</td>
+      </tr>
+    `);
 
-      if (typeof confetti === "function") {
-        confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
-      }
+    document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
+    index++;
+  }
 
-      // 🔹 Table row now shows Division instead of ID
-      resultBody.insertAdjacentHTML("beforeend", `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${escapeHtml(winner.name)}</td>
-          <td>${escapeHtml(winner.division)}</td>
-          <td>${escapeHtml(winner.gift)}</td>
-        </tr>
-      `);
-
-      document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
-      index++;
-    }
-
-    function escapeHtml(text = "") {
-      return String(text).replace(/[&<>"']/g, (m) => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-      }[m]));
-    }
-  </script>
-</body>
-</html>
+  function escapeHtml(text = "") {
+    return String(text).replace(/[&<>"']/g, (m) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+    }[m]));
+  }
+</script>
