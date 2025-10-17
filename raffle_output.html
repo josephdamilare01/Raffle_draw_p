@@ -230,131 +230,127 @@
   <div id="loader">10</div>
 
   <script>
-    let participants = [];
-    let gifts = [];
-    let results = [];
-    let index = 0;
-    let drawDelay = 300; // 30 seconds between draws
-    let isDrawing = false;
+  let participants = [];
+  let gifts = [];
+  let results = [];
+  let index = 0;
+  let drawDelay = 300; // 30 seconds between draws
+  let isDrawing = false;
 
-    const resultBody = document.querySelector("#resultTable tbody");
-    const winnerCard = document.getElementById("winnerCard");
-    const winnerNameEl = document.getElementById("winnerName");
-    const giftNameEl = document.getElementById("giftName");
-    const loader = document.getElementById("loader");
+  const resultBody = document.querySelector("#resultTable tbody");
+  const winnerCard = document.getElementById("winnerCard");
+  const winnerNameEl = document.getElementById("winnerName");
+  const giftNameEl = document.getElementById("giftName");
+  const loader = document.getElementById("loader");
 
-    const startBtn = document.getElementById("startDraw");
-    const restartBtn = document.getElementById("restartBtn");
-    const homeBtn = document.getElementById("homeBtn");
+  const startBtn = document.getElementById("startDraw");
+  const restartBtn = document.getElementById("restartBtn");
+  const homeBtn = document.getElementById("homeBtn");
 
-    window.addEventListener("DOMContentLoaded", () => {
-      const savedParticipants = localStorage.getItem("participantsData");
-      const savedGifts = localStorage.getItem("giftsData");
-      if (savedParticipants && savedGifts) {
-        participants = JSON.parse(savedParticipants);
-        gifts = JSON.parse(savedGifts);
-      } else {
-        alert("⚠️ Please upload participants and gifts on the admin page first.");
-      }
-    });
+  window.addEventListener("DOMContentLoaded", () => {
+    const savedParticipants = localStorage.getItem("participantsData");
+    const savedGifts = localStorage.getItem("giftsData");
+    if (savedParticipants && savedGifts) {
+      participants = JSON.parse(savedParticipants);
+      gifts = JSON.parse(savedGifts);
+    } else {
+      alert("⚠️ Please upload participants and gifts on the admin page first.");
+    }
+  });
 
-    startBtn.addEventListener("click", async () => {
-      if (!participants.length || !gifts.length) {
-        alert("Upload both participant and gift data first.");
-        return;
-      }
-
-      const numDraws = Math.min(participants.length, gifts.length);
-      const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-      const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
-
-      results = [];
-      for (let i = 0; i < numDraws; i++) {
-        results.push({
-          name: shuffledParticipants[i].name,
-          id: shuffledParticipants[i].id,
-          gift: shuffledGifts[i],
-        });
-      }
-
-      resultBody.innerHTML = "";
-      index = 0;
-      isDrawing = false;
-      runDrawSequence();
-    });
-
-    async function runDrawSequence() {
-      while (index < results.length) {
-        await startCountdown(5);
-        announceWinner();
-        await sleep(drawDelay); // wait before next countdown
-      }
-      alert("🎉 All winners have been announced!");
+  startBtn.addEventListener("click", async () => {
+    if (!participants.length || !gifts.length) {
+      alert("Upload both participant and gift data first.");
+      return;
     }
 
-    function startCountdown(seconds) {
-      return new Promise((resolve) => {
-        let count = seconds;
-        loader.textContent = count;
-        loader.style.display = "flex";
+    const numDraws = Math.min(participants.length, gifts.length);
+    const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
+    const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
 
-        const timer = setInterval(() => {
-          count--;
-          if (count > 0) {
-            loader.textContent = count;
-          } else {
-            clearInterval(timer);
-            loader.style.display = "none";
-            resolve();
-          }
-        }, 1000);
+    results = [];
+    for (let i = 0; i < numDraws; i++) {
+      results.push({
+        name: shuffledParticipants[i].name,
+        division: shuffledParticipants[i].division, // 👈 changed from id → division
+        gift: shuffledGifts[i],
       });
     }
 
-    function sleep(ms) {
-      return new Promise((resolve) => setTimeout(resolve, ms));
+    resultBody.innerHTML = "";
+    index = 0;
+    isDrawing = false;
+    runDrawSequence();
+  });
+
+  async function runDrawSequence() {
+    while (index < results.length) {
+      await startCountdown(5); // countdown seconds (change if you like)
+      announceWinner();
+      await sleep(drawDelay);
     }
+    alert("🎉 All winners have been announced!");
+  }
 
-    function announceWinner() {
-      const winner = results[index];
-      winnerNameEl.textContent = `🏆 ${winner.name}`;
-      giftNameEl.textContent = `🎁 ${winner.gift}`;
-      winnerCard.style.display = "block";
+  function startCountdown(seconds) {
+    return new Promise((resolve) => {
+      let count = seconds;
+      loader.textContent = count;
+      loader.style.display = "flex";
 
-      if (typeof confetti === "function") {
-        confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
-      }
-
-      resultBody.insertAdjacentHTML("beforeend", `
-        <tr>
-          <td>${index + 1}</td>
-          <td>${escapeHtml(winner.name)}</td>
-          <td>${escapeHtml(winner.id)}</td>
-          <td>${escapeHtml(winner.gift)}</td>
-        </tr>
-      `);
-
-      document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
-      index++;
-    }
-
-    restartBtn.addEventListener("click", () => {
-      location.reload();
+      const timer = setInterval(() => {
+        count--;
+        if (count > 0) {
+          loader.textContent = count;
+        } else {
+          clearInterval(timer);
+          loader.style.display = "none";
+          resolve();
+        }
+      }, 1000);
     });
+  }
 
-    homeBtn.addEventListener("click", () => (window.location.href = "index.html"));
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 
-    function escapeHtml(text = "") {
-      return String(text).replace(/[&<>"']/g, (m) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      }[m]));
+  function announceWinner() {
+    const winner = results[index];
+    winnerNameEl.textContent = `🏆 ${winner.name}`;
+    giftNameEl.textContent = `🎁 ${winner.gift}`;
+    winnerCard.style.display = "block";
+
+    if (typeof confetti === "function") {
+      confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
     }
-  </script>
-</body>
-</html>
 
+    resultBody.insertAdjacentHTML("beforeend", `
+      <tr>
+        <td>${index + 1}</td>
+        <td>${escapeHtml(winner.name)}</td>
+        <td>${escapeHtml(winner.division)}</td> <!-- 👈 replaced ID with Division -->
+        <td>${escapeHtml(winner.gift)}</td>
+      </tr>
+    `);
 
+    document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
+    index++;
+  }
+
+  restartBtn.addEventListener("click", () => {
+    location.reload();
+  });
+
+  homeBtn.addEventListener("click", () => (window.location.href = "index.html"));
+
+  function escapeHtml(text = "") {
+    return String(text).replace(/[&<>"']/g, (m) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;",
+    }[m]));
+  }
+</script>
