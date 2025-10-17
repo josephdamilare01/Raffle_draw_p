@@ -123,6 +123,13 @@
       margin-bottom: 6px;
     }
 
+    .division-name {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #004aad;
+      margin-bottom: 8px;
+    }
+
     .gift-name {
       font-size: 1.2rem;
       font-weight: 600;
@@ -197,6 +204,7 @@
       <div class="right">
         <div class="winner-card" id="winnerCard">
           <div class="winner-name" id="winnerName">🏆 Winner Name</div>
+          <div class="division-name" id="divisionName">🏢 Division</div>
           <div class="gift-name" id="giftName">🎁 Gift</div>
         </div>
 
@@ -215,7 +223,7 @@
           <tr>
             <th style="width:6%;">#</th>
             <th style="width:38%;">Participant Name</th>
-            <th style="width:31%;">Division</th>  <!-- 🔹 Changed -->
+            <th style="width:31%;">Division</th>
             <th style="width:25%;">Gift</th>
           </tr>
         </thead>
@@ -235,6 +243,7 @@
   const resultBody = document.querySelector("#resultTable tbody");
   const winnerCard = document.getElementById("winnerCard");
   const winnerNameEl = document.getElementById("winnerName");
+  const divisionNameEl = document.getElementById("divisionName");
   const giftNameEl = document.getElementById("giftName");
   const loader = document.getElementById("loader");
 
@@ -246,15 +255,19 @@
       participants = JSON.parse(savedParticipants);
       gifts = JSON.parse(savedGifts);
 
-      // 🔹 Fix: Make sure each participant has a 'division' field
-      participants = participants.map((p) => {
-        // Try to map id or department to division if division missing
-        return {
-          name: p.name || p.Name || "Unnamed",
-          division: p.division || p.Division || p.department || p.Department || p.id || p.ID || "—",
-        };
-      });
+      // ✅ Fix: ensure Division always exists (handles capitalization / spaces)
+      participants = participants.map((p) => ({
+        name: p.name || p.Name || "Unnamed",
+        division:
+          p.division ||
+          p.Division ||
+          p.department ||
+          p.Department ||
+          p["Division "] ||
+          "—",
+      }));
 
+      console.log("✅ Cleaned participants:", participants);
     } else {
       alert("⚠️ Please upload participants and gifts on the admin page first.");
     }
@@ -286,7 +299,7 @@
 
   async function runDrawSequence() {
     while (index < results.length) {
-      await startCountdown(5);
+      await startCountdown(5); // change here to adjust countdown seconds
       announceWinner();
       await sleep(drawDelay);
     }
@@ -319,6 +332,7 @@
   function announceWinner() {
     const winner = results[index];
     winnerNameEl.textContent = `🏆 ${winner.name}`;
+    divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
     giftNameEl.textContent = `🎁 ${winner.gift}`;
     winnerCard.style.display = "block";
 
@@ -326,15 +340,15 @@
       confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
     }
 
-    // ✅ Always display Division, even if missing
-    resultBody.insertAdjacentHTML("beforeend", `
-      <tr>
+    resultBody.insertAdjacentHTML(
+      "beforeend",
+      `<tr>
         <td>${index + 1}</td>
         <td>${escapeHtml(winner.name)}</td>
         <td>${escapeHtml(winner.division || "—")}</td>
         <td>${escapeHtml(winner.gift)}</td>
-      </tr>
-    `);
+      </tr>`
+    );
 
     document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
     index++;
@@ -342,7 +356,9 @@
 
   function escapeHtml(text = "") {
     return String(text).replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
     }[m]));
   }
 </script>
+</body>
+</html>
