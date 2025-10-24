@@ -90,15 +90,6 @@
       font-weight: 600;
     }
 
-    .right {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      position: relative;
-      width: 100%;
-    }
-
     .winner-card {
       width: 100%;
       max-width: 640px;
@@ -123,7 +114,7 @@
       margin-bottom: 6px;
     }
 
-    .division-name {
+    .division-name, .id-name {
       font-size: 1.2rem;
       font-weight: 600;
       color: #004aad;
@@ -204,6 +195,7 @@
       <div class="right">
         <div class="winner-card" id="winnerCard">
           <div class="winner-name" id="winnerName">🏆 Winner Name</div>
+          <div class="id-name" id="idNumber">🪪 ID Card Number</div>
           <div class="division-name" id="divisionName">🏢 Division</div>
           <div class="gift-name" id="giftName">🎁 Gift</div>
         </div>
@@ -222,9 +214,10 @@
         <thead>
           <tr>
             <th style="width:6%;">#</th>
-            <th style="width:38%;">Participant Name</th>
-            <th style="width:31%;">Division</th>
-            <th style="width:25%;">Gift</th>
+            <th style="width:28%;">Participant Name</th>
+            <th style="width:20%;">ID Card No.</th>
+            <th style="width:26%;">Division</th>
+            <th style="width:20%;">Gift</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -245,6 +238,7 @@
   const winnerNameEl = document.getElementById("winnerName");
   const divisionNameEl = document.getElementById("divisionName");
   const giftNameEl = document.getElementById("giftName");
+  const idNumberEl = document.getElementById("idNumber");
   const loader = document.getElementById("loader");
 
   window.addEventListener("DOMContentLoaded", () => {
@@ -255,16 +249,11 @@
       participants = JSON.parse(savedParticipants);
       gifts = JSON.parse(savedGifts);
 
-      // ✅ Fix: ensure Division always exists (handles capitalization / spaces)
+      // ✅ Ensure all fields are standardized
       participants = participants.map((p) => ({
         name: p.name || p.Name || "Unnamed",
-        division:
-          p.division ||
-          p.Division ||
-          p.department ||
-          p.Department ||
-          p["Division "] ||
-          "—",
+        division: p.division || p.Division || p.department || p.Department || "—",
+        idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
       }));
 
       console.log("✅ Cleaned participants:", participants);
@@ -288,6 +277,7 @@
       results.push({
         name: shuffledParticipants[i].name,
         division: shuffledParticipants[i].division,
+        idCard: shuffledParticipants[i].idCard,
         gift: shuffledGifts[i],
       });
     }
@@ -299,7 +289,7 @@
 
   async function runDrawSequence() {
     while (index < results.length) {
-      await startCountdown(5); // change here to adjust countdown seconds
+      await startCountdown(5);
       announceWinner();
       await sleep(drawDelay);
     }
@@ -332,6 +322,7 @@
   function announceWinner() {
     const winner = results[index];
     winnerNameEl.textContent = `🏆 ${winner.name}`;
+    idNumberEl.textContent = `🪪 ${winner.idCard}`;
     divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
     giftNameEl.textContent = `🎁 ${winner.gift}`;
     winnerCard.style.display = "block";
@@ -345,6 +336,7 @@
       `<tr>
         <td>${index + 1}</td>
         <td>${escapeHtml(winner.name)}</td>
+        <td>${escapeHtml(winner.idCard)}</td>
         <td>${escapeHtml(winner.division || "—")}</td>
         <td>${escapeHtml(winner.gift)}</td>
       </tr>`
