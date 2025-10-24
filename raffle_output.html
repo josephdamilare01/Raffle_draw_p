@@ -232,7 +232,6 @@
   let gifts = [];
   let results = [];
   let index = 0;
-  let drawDelay = 300;
   const resultBody = document.querySelector("#resultTable tbody");
   const winnerCard = document.getElementById("winnerCard");
   const winnerNameEl = document.getElementById("winnerName");
@@ -249,14 +248,11 @@
       participants = JSON.parse(savedParticipants);
       gifts = JSON.parse(savedGifts);
 
-      // ✅ Ensure all fields are standardized
       participants = participants.map((p) => ({
         name: p.name || p.Name || "Unnamed",
         division: p.division || p.Division || p.department || p.Department || "—",
         idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
       }));
-
-      console.log("✅ Cleaned participants:", participants);
     } else {
       alert("⚠️ Please upload participants and gifts on the admin page first.");
     }
@@ -287,11 +283,17 @@
     runDrawSequence();
   });
 
+  // ✅ UPDATED FUNCTION
   async function runDrawSequence() {
-    while (index < results.length) {
-      await startCountdown(5);
+    for (let i = 0; i < results.length; i++) {
+      if (i === 0) {
+        // Countdown only for the first winner
+        await startCountdown(10);
+      } else {
+        // 1-second delay between each subsequent result
+        await sleep(1000);
+      }
       announceWinner();
-      await sleep(drawDelay);
     }
     alert("🎉 All winners have been announced!");
   }
@@ -348,7 +350,7 @@
 
   function escapeHtml(text = "") {
     return String(text).replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[m]));
   }
 </script>
