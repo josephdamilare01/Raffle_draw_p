@@ -397,13 +397,14 @@
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[m]));
   }
-  // 🏠 Home button functionality — reloads the current page
+// 🏠 Home button — redirects directly to index.html
 document.getElementById("homeBtn").addEventListener("click", () => {
-  window.location.reload();
+  window.location.href = "index.html";
 });
 
 </script>
 <div id="doneMessage">✅ Done Drawing!</div>
 </body>
 </html>
+
 
