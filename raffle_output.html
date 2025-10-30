@@ -397,7 +397,13 @@
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
     }[m]));
   }
+  // 🏠 Home button functionality — reloads the current page
+document.getElementById("homeBtn").addEventListener("click", () => {
+  window.location.reload();
+});
+
 </script>
 <div id="doneMessage">✅ Done Drawing!</div>
 </body>
 </html>
+
