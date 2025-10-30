@@ -26,7 +26,7 @@
 
     h1 {
       margin: 10px 0 16px;
-      font-size: 2.2rem;
+      font-size: 5rem;
       letter-spacing: 1px;
       background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
       -webkit-background-clip: text;
@@ -45,9 +45,9 @@
       display: flex;
       flex-direction: column;
       gap: 28px;
-      max-width: 920px;
+      max-width: 100%;
       margin: 0 auto;
-      padding: 10px 20px 60px;
+      padding: 10px 0 60px;
       align-items: stretch;
     }
 
@@ -59,27 +59,32 @@
       flex-direction: column;
     }
 
+    /* ✅ Edited section for wide fitted table */
     .left {
       background: rgba(255, 255, 255, 0.05);
       padding: 18px;
       border-radius: 10px;
       backdrop-filter: blur(8px);
       width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
+      min-width: 90px; /* makes table wide and fitted */
       border-collapse: collapse;
       background: rgba(255,255,255,0.98);
       color: #000;
-      font-size: 1rem;
+      font-size: 2rem;
       border-radius: 10px;
       overflow: hidden;
+      table-layout: fixed; /* ensures uniform column widths */
     }
 
     th, td {
-      padding: 12px 10px;
-      text-align: left;
+      padding: 14px 12px;
+      text-align: center;
       border-bottom: 1px solid rgba(0,0,0,0.08);
       word-break: break-word;
     }
@@ -89,6 +94,7 @@
       color: #fff;
       font-weight: 600;
     }
+    /* ✅ End of edited section */
 
     .winner-card {
       width: 100%;
@@ -148,6 +154,7 @@
       padding: 10px 18px;
       border-radius: 10px;
       font-weight: 600;
+      font-size: 1.5rem;
       cursor: pointer;
       transition: transform .14s ease, box-shadow .14s ease;
     }
@@ -167,7 +174,7 @@
       background: rgba(7, 20, 40, 0.95);
       backdrop-filter: blur(6px);
       color: white;
-      font-size: 5rem;
+      font-size: 10rem;
       font-weight: 700;
       justify-content: center;
       align-items: center;
@@ -283,19 +290,16 @@
     runDrawSequence();
   });
 
-  // ✅ UPDATED FUNCTION
   async function runDrawSequence() {
     for (let i = 0; i < results.length; i++) {
       if (i === 0) {
-        // Countdown only for the first winner
         await startCountdown(10);
       } else {
-        // 1-second delay between each subsequent result
         await sleep(1000);
       }
       announceWinner();
     }
-    alert("🎉 All winners have been announced!");
+    
   }
 
   function startCountdown(seconds) {
