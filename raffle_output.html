@@ -321,6 +321,11 @@
     runDrawSequence();
   });
 
+  // ✅ Home button functionality
+document.getElementById("homeBtn").addEventListener("click", () => {
+  window.location.href = "Raffle_draw_p/index.html";
+});
+
   async function runDrawSequence() {
   for (let i = 0; i < results.length; i++) {
     if (i === 0) {
@@ -401,6 +406,7 @@
 <div id="doneMessage">✅ Done Drawing!</div>
 </body>
 </html>
+
 
 
 
