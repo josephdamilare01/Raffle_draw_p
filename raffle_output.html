@@ -192,6 +192,37 @@
       th, td { font-size: 0.95rem; padding: 10px 8px; }
       #loader { font-size: 3rem; }
     }
+    /* 🎉 Done message styling */
+#doneMessage {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, #00c6ff, #00ff80, #ffd166);
+  color: #00151f;
+  font-size: 3rem;
+  font-weight: 800;
+  padding: 25px 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  text-transform: uppercase;
+  animation: popUp 1s ease forwards, fadeOut 3s 4s forwards;
+  z-index: 2000;
+  letter-spacing: 2px;
+}
+
+@keyframes popUp {
+  0% { transform: translate(-50%, -60%) scale(0.7); opacity: 0; }
+  60% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; display: none; }
+}
+
   </style>
 </head>
 <body>
@@ -291,16 +322,25 @@
   });
 
   async function runDrawSequence() {
-    for (let i = 0; i < results.length; i++) {
-      if (i === 0) {
-        await startCountdown(10);
-      } else {
-        await sleep(1000);
-      }
-      announceWinner();
+  for (let i = 0; i < results.length; i++) {
+    if (i === 0) {
+      await startCountdown(10);
+    } else {
+      await sleep(1000);
     }
-    
+    announceWinner();
   }
+
+  // 🎉 Show animated message after all draws
+  const doneMsg = document.getElementById("doneMessage");
+  doneMsg.style.display = "block";
+
+  // 🎊 Optional confetti burst for finale
+  if (typeof confetti === "function") {
+    confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
+  }
+}
+
 
   function startCountdown(seconds) {
     return new Promise((resolve) => {
@@ -358,5 +398,6 @@
     }[m]));
   }
 </script>
+<div id="doneMessage">✅ Done Drawing!</div>
 </body>
 </html>
