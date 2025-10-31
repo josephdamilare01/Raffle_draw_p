@@ -5,17 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🏆 NLNG Nomination Form 2025</title>
 
+  <!-- Fonts & Select2 -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
   <style>
     :root {
-      --blue1: #00c6ff;
-      --blue2: #0072ff;
-      --green: #00ff80;
-      --purple: #8a2be2;
-      --dark: #0b132b;
-      --light: rgba(255, 255, 255, 0.15);
+      --accent1: #00c6ff;
+      --accent2: #0072ff;
+      --accent3: #00ff80;
+      --dark-green: #004225; /* Deep NLNG green */
     }
+
+    /* 🔠 Global font scaling for larger, clearer text */
+body, input, textarea, select, button, a, p, h1, footer, .message {
+  font-size: 1.25rem !important;
+}
+
+h1 {
+  font-size: 3rem !important;
+}
+
+button {
+  font-size: 1.3rem !important;
+}
+
+.select2-container--default .select2-selection--single {
+  height: 65px !important;
+}
+
+.select2-container--default .select2-selection__rendered {
+  line-height: 65px !important;
+  font-size: 1.25rem !important;
+}
+
 
     * {
       margin: 0;
@@ -24,31 +47,28 @@
       font-family: "Poppins", sans-serif;
     }
 
-    body {
-      background: radial-gradient(circle at top left, #0b132b, #1c2541, #3a506b);
+    html, body {
+      height: 100%;
+      margin: 0;
       overflow: hidden;
-      min-height: 100vh;
+      background-color: var(--dark-green);
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
-      position: relative;
-      color: #fff;
-      animation: bgShift 12s ease-in-out infinite alternate;
+      text-align: center;
+      overflow-x: hidden;
+      padding: 20px;
     }
 
-    @keyframes bgShift {
-      0% { background: radial-gradient(circle at top left, #0b132b, #1c2541, #3a506b); }
-      50% { background: radial-gradient(circle at bottom right, #2b1055, #7597de, #1c2541); }
-      100% { background: radial-gradient(circle at top left, #0b132b, #1c2541, #3a506b); }
-    }
-
+    /* Floating lights */
     .orb {
       position: absolute;
       width: 120px;
       height: 120px;
       border-radius: 50%;
-      background: radial-gradient(circle, var(--blue2), transparent);
-      opacity: 0.15;
+      background: radial-gradient(circle, var(--accent2), transparent);
+      opacity: 0.12;
       animation: floaty 10s ease-in-out infinite;
       z-index: 0;
     }
@@ -62,18 +82,32 @@
       50% { transform: translateY(-30px); }
     }
 
-    .container {
-      z-index: 2;
-      background: var(--light);
-      padding: 40px 30px;
-      border-radius: 16px;
-      width: 90%;
-      max-width: 600px;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 0 30px rgba(0, 255, 128, 0.15);
-      text-align: center;
-      animation: fadeUp 1.5s ease forwards;
+    /* ✅ NLNG logo top-left */
+    .nlng-logo {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      width: 90px;
+      height: auto;
+      z-index: 10;
+      animation: fadeIn 1.5s ease-in-out;
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+  .container {
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  padding: 40px;
+  max-width: 1000px; /* ⬅️ Increased from 400px to 600px */
+  width: 200%;
+  text-align: center;
+  animation: fadeIn 1.2s ease-in-out;
+}
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(40px); }
@@ -81,96 +115,151 @@
     }
 
     h1 {
-      font-size: 2.3rem;
+      font-size: 2.6rem;
       margin-bottom: 10px;
-      background: linear-gradient(90deg, var(--green), var(--blue1), var(--purple));
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
       background-size: 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      animation: gradientMove 4s infinite alternate;
+      animation: gradientMove 6s linear infinite;
     }
 
     @keyframes gradientMove {
-      0% { background-position: 0%; }
-      100% { background-position: 100%; }
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     p#dateNotice {
-      margin-bottom: 25px;
-      color: #ddd;
-      font-size: 1rem;
+      margin-bottom: 30px;
+      color: #eee;
+      font-size: 1.2rem;
+      font-weight: 500;
     }
 
-    input, textarea {
+    input, textarea, select {
       width: 100%;
-      padding: 14px;
-      margin: 10px 0;
+      padding: 16px;
+      margin: 12px 0;
       border: none;
       border-radius: 10px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
       color: #fff;
-      font-size: 1rem;
+      font-size: 1.1rem;
+      font-weight: 600;
       outline: none;
       transition: all 0.3s ease;
     }
 
-    input:focus, textarea:focus {
-      background: rgba(255, 255, 255, 0.2);
-      box-shadow: 0 0 10px var(--green);
+    input::placeholder, textarea::placeholder {
+      color: #ccc;
+      font-weight: 500;
     }
 
-    textarea {
-      resize: none;
+    input:focus, textarea:focus, select:focus {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 12px var(--accent3);
     }
+
+    textarea { resize: none; }
 
     button {
-      background: linear-gradient(90deg, var(--blue1), var(--green));
+      background: linear-gradient(90deg, var(--accent2), var(--accent3));
       color: #fff;
       border: none;
-      padding: 14px 35px;
-      border-radius: 30px;
-      font-size: 1.1rem;
-      font-weight: 600;
+      padding: 16px 45px;
+      border-radius: 35px;
+      font-size: 1.2rem;
+      font-weight: 700;
       cursor: pointer;
       transition: 0.3s;
-      margin-top: 15px;
+      margin-top: 20px;
       box-shadow: 0 0 15px rgba(0, 255, 128, 0.2);
     }
 
     button:hover {
-      transform: scale(1.05);
+      transform: scale(1.07);
       box-shadow: 0 0 25px rgba(0, 255, 128, 0.4);
     }
 
     .message {
-      margin-top: 15px;
+      margin-top: 20px;
       font-weight: bold;
-      min-height: 20px;
+      font-size: 1.1rem;
+      min-height: 22px;
     }
 
     a {
-      color: var(--green);
+      color: var(--accent1);
       text-decoration: none;
       display: inline-block;
-      margin-top: 20px;
+      margin-top: 25px;
+      font-size: 1.1rem;
+      font-weight: 600;
       transition: 0.3s;
     }
 
     a:hover {
-      color: var(--blue1);
+      color: var(--accent3);
       transform: scale(1.05);
     }
 
     footer {
       position: absolute;
-      bottom: 10px;
-      font-size: 0.9rem;
+      bottom: 12px;
+      font-size: 1rem;
       color: #aaa;
+      font-weight: 500;
+    }
+
+    /* ✅ Select2 Styling */
+    .select2-container--default .select2-selection--single {
+      background-color: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 10px;
+      height: 58px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .select2-container--default .select2-selection__rendered {
+      color: #fff !important;
+      line-height: 58px !important;
+      padding-left: 14px !important;
+      font-weight: 600;
+    }
+
+    .select2-container--default .select2-selection__placeholder {
+      color: #ccc !important;
+      font-weight: 500;
+    }
+
+    .select2-container--default .select2-selection__arrow b {
+      border-color: #fff transparent transparent transparent !important;
+    }
+
+    .select2-dropdown {
+      background-color: #1c2541 !important;
+      color: #fff !important;
+      border: none;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .select2-results__option--highlighted {
+      background-color: var(--accent3) !important;
+      color: #000 !important;
+      font-weight: 700;
     }
   </style>
 </head>
 
 <body>
+  <!-- ✅ NLNG Logo at Top Left -->
+  <img src="nlng-logo.png" alt="NLNG Logo" class="nlng-logo">
+
   <div class="orb"></div>
   <div class="orb"></div>
   <div class="orb"></div>
@@ -180,22 +269,49 @@
     <p id="dateNotice">Please complete all fields before submitting your nomination.</p>
 
     <form id="nominationForm">
+      <select id="category" required>
+        <option value="">-- Select Category --</option>
+        <option value="Leadership Excellence">Leadership Excellence</option>
+        <option value="Team Spirit Award">Team Spirit Award</option>
+        <option value="Innovation and Creativity">Innovation and Creativity</option>
+        <option value="Customer Service Excellence">Customer Service Excellence</option>
+        <option value="Safety Champion">Safety Champion</option>
+        <option value="Best Support Staff">Best Support Staff</option>
+        <option value="Sustainability and Environment">Sustainability and Environment</option>
+        <option value="Outstanding Project Delivery">Outstanding Project Delivery</option>
+        <option value="Operational Excellence">Operational Excellence</option>
+        <option value="Rising Star Award">Rising Star Award</option>
+        <option value="Community Impact Award">Community Impact Award</option>
+        <option value="Technical Expertise Award">Technical Expertise Award</option>
+        <option value="Mentorship and Coaching">Mentorship and Coaching</option>
+        <option value="Integrity and Ethics">Integrity and Ethics</option>
+        <option value="Best Collaboration Award">Best Collaboration Award</option>
+        <option value="Problem Solving Excellence">Problem Solving Excellence</option>
+        <option value="SHE Performance Award">SHE Performance Award</option>
+        <option value="Employee of the Year">Employee of the Year</option>
+        <option value="Innovation in Sustainability">Innovation in Sustainability</option>
+        <option value="Exceptional Service Award">Exceptional Service Award</option>
+      </select>
+
       <input type="text" id="nomineeName" placeholder="Full Name of Nominee *" required />
       <input type="text" id="nomineeDept" placeholder="Department/Unit *" required />
       <input type="text" id="nomineeRole" placeholder="Position/Role *" required />
       <textarea id="reason" rows="4" placeholder="Why are you nominating this person? *" required></textarea>
       <input type="text" id="nominatorName" placeholder="Your Full Name *" required />
-      <input type="email" id="nominatorEmail" placeholder="Your Email *" required />
+    
       <button type="submit" id="submitBtn">Submit Nomination</button>
       <div class="message" id="message"></div>
     </form>
 
-    <a href="../index.html">⬅️ Back to Home</a>
+    <a href="/index.html">⬅️ Back to Home</a>
   </div>
 
   <footer>© 2025 NLNG | Nomination Portal</footer>
 
-  <!-- 🔥 Firebase SDK and Logic (Unchanged) -->
+  <!-- JS Scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
     import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
@@ -231,14 +347,14 @@
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
+      const category = document.getElementById("category").value;
       const nomineeName = document.getElementById("nomineeName").value.trim();
       const nomineeDept = document.getElementById("nomineeDept").value.trim();
       const nomineeRole = document.getElementById("nomineeRole").value.trim();
       const reason = document.getElementById("reason").value.trim();
       const nominatorName = document.getElementById("nominatorName").value.trim();
-      const nominatorEmail = document.getElementById("nominatorEmail").value.trim().toLowerCase();
-
-      if (!nomineeName || !nomineeDept || !nomineeRole || !reason || !nominatorName || !nominatorEmail) {
+      
+      if (!category || !nomineeName || !nomineeDept || !nomineeRole || !reason || !nominatorName) {
         message.style.color = "orange";
         message.textContent = "⚠️ Please complete all required fields before submitting.";
         return;
@@ -246,7 +362,7 @@
 
       try {
         const nominationsRef = ref(db, "nominations");
-        const emailQuery = query(nominationsRef, orderByChild("nominatorEmail"), equalTo(nominatorEmail));
+        const emailQuery = query(nominationsRef, orderByChild("nominatorName"), equalTo(nominatorName));
         const snapshot = await get(emailQuery);
 
         if (snapshot.exists()) {
@@ -257,24 +373,30 @@
 
         const newNominationRef = push(nominationsRef);
         await set(newNominationRef, {
+          category,
           nomineeName,
           nomineeDept,
           nomineeRole,
           reason,
           nominatorName,
-          nominatorEmail,
           timestamp: new Date().toISOString()
         });
 
         window.location.href = "thankyou.html";
-
       } catch (error) {
         console.error("Error submitting nomination:", error);
         message.style.color = "red";
         message.textContent = "❌ Failed to submit nomination. Try again.";
       }
     });
+
+    $(document).ready(function() {
+      $('#category').select2({
+        placeholder: "Select or search for a category",
+        allowClear: true,
+        width: '100%'
+      });
+    });
   </script>
 </body>
 </html>
-
