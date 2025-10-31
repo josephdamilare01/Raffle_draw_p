@@ -35,6 +35,16 @@
     box-shadow: 0 0 20px rgba(0,255,128,0.4);
   }
 
+    /* ✅ NLNG logo top-left */
+    .nlng-logo {
+      position: absolute;
+      top: 25px;
+      left: 25px;
+      width: 90px;
+      height: auto;
+      z-index: 10;
+      animation: fadeIn 1.5s ease-in-out;
+    }
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -106,6 +116,8 @@
 </style>
 </head>
 <body>
+  <!-- ✅ NLNG Logo at Top Left -->
+  <img src="nlng-logo.png" alt="NLNG Logo" class="nlng-logo">
   <div class="box">
     <h1>🎉 Thank You!</h1>
     <p>We have received your nomination.<br>Thank you for your time and participation!</p>
@@ -113,3 +125,4 @@
   </div>
 </body>
 </html>
+
