@@ -257,9 +257,7 @@ awards.forEach((award, i) => {
     <label>Nominee Full Name</label>
     <input type="text" name="nomineeName_${i}" required />
     <label>Nominee Department</label>
-    <input type="text" name="nomineeDept_${i}" required />
-    <label>Justification (Why are you nominating this person?)</label>
-    <textarea name="justification_${i}" required></textarea>`;
+    <input type="text" name="nomineeDept_${i}" required />`;
   container.appendChild(div);
 });
 
@@ -300,8 +298,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
       formData[`award_${i+1}`] = {
         award,
         nomineeName: document.querySelector(`[name='nomineeName_${i}']`).value.trim(),
-        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`).value.trim(),
-        justification: document.querySelector(`[name='justification_${i}']`).value.trim()
+        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`).value.trim()
       };
     });
 
@@ -328,3 +325,4 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
