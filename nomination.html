@@ -286,15 +286,21 @@ const awards = [
   "LSS Partner of the Year", "CPM Partner of the Year Award", "NT Partner of the Year Award", "HR Partner of the Year"
 ];
 
-const departments = prompt("Enter departments separated by commas:")
-  .split(",")
-  .map(d => d.trim());
+let departments = ["Operations", "Human Resources"];
+let managers = ["James Okon", "Patricia Balogun"];
 
-const managers = prompt("Enter managers separated by commas:")
-  .split(",")
-  .map(m => m.trim());
+// Ask the user if they want to change them
+if (confirm("Would you like to enter custom department and manager names?")) {
+  const deptInput = prompt("Enter departments separated by commas:", departments.join(", "));
+  const mgrInput = prompt("Enter managers separated by commas:", managers.join(", "));
 
-const container = document.getElementById("awardsContainer");
+  // If the user enters something, update the arrays
+  if (deptInput) departments = deptInput.split(",").map(d => d.trim());
+  if (mgrInput) managers = mgrInput.split(",").map(m => m.trim());
+}
+
+console.log("Departments:", departments);
+console.log("Managers:", managers);
 
 // --- Load staff list (JSON) ---
 let staffList = [];
@@ -449,6 +455,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
