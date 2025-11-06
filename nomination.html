@@ -78,14 +78,14 @@ html, body {
 
 /* Container */
 .container {
-  background: var(--form-bg);
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   width: 80%;
   max-width: 1000px;
   margin: 90px auto 70px auto;
   padding: 40px;
-  box-shadow: 0 0 25px rgba(0,0,0,0.3);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
   overflow-y: auto;
   max-height: calc(100vh - 180px);
   scrollbar-width: none;
@@ -367,3 +367,4 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
