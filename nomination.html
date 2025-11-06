@@ -299,8 +299,8 @@ awards.forEach((award, i) => {
       <input type="text" name="nomineeDept_${i}" readonly />
       <label>Company</label>
       <input type="text" name="nomineeCompany_${i}" readonly />
-      <label>Role</label>
-      <input type="text" name="nomineeRole_${i}" readonly />
+      <label>Status</label>
+      <input type="text" name="nomineeStatus_${i}" readonly />
     `;
   }
 
@@ -320,13 +320,13 @@ container.addEventListener("input", (e) => {
 
   const filtered = staffList
     .filter(person =>
-      (`${person.name} ${person.department} ${person.company} ${person.role}`).toLowerCase().includes(value)
+      (`${person.name} ${person.department} ${person.company} ${person.status}`).toLowerCase().includes(value)
     )
     .slice(0, 20);
 
   filtered.forEach(person => {
     const option = document.createElement("option");
-    option.value = `${person.name} (${person.department}, ${person.company}, ${person.role})`;
+    option.value = `${person.name} (${person.department}, ${person.company}, ${person.status})`;
     datalist.appendChild(option);
   });
 });
@@ -341,7 +341,7 @@ container.addEventListener("change", (e) => {
   if (selected) {
     document.querySelector(`[name='nomineeDept_${index}']`).value = selected.department;
     document.querySelector(`[name='nomineeCompany_${index}']`).value = selected.company;
-    document.querySelector(`[name='nomineeRole_${index}']`).value = selected.role;
+    document.querySelector(`[name='nomineestatus_${index}']`).value = selected.status;
   }
 });
 
@@ -386,7 +386,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
         nomineeName: document.querySelector(`[name='nomineeName_${i}']`)?.value || "",
         nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`)?.value || "",
         nomineeCompany: document.querySelector(`[name='nomineeCompany_${i}']`)?.value || "",
-        nomineeRole: document.querySelector(`[name='nomineeRole_${i}']`)?.value || ""
+        nomineeStatus: document.querySelector(`[name='nomineeStatus_${i}']`)?.value || ""
       };
     });
 
@@ -412,3 +412,4 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
