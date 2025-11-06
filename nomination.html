@@ -112,7 +112,7 @@ label {
   margin-top: 15px;
   font-weight: 600;
 }
-input, textarea {
+input, textarea, select {
   width: 100%;
   padding: 13px;
   border: none;
@@ -122,7 +122,7 @@ input, textarea {
   font-size: 1rem;
   transition: 0.3s;
 }
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   outline: none;
   box-shadow: 0 0 10px var(--input-focus);
 }
@@ -190,6 +190,12 @@ footer {
   padding: 10px 0;
   letter-spacing: 0.5px;
 }
+/* Dropdown option color fix */
+select option {
+  background-color: #1a252f;
+  color: var(--white);
+}
+
 </style>
 </head>
 <body>
@@ -201,10 +207,12 @@ footer {
   <h1>🏆 NLNG Award Nomination Form 2025</h1>
   <p class="note">Each nominator can nominate one unique person per award. Please complete all fields carefully.</p>
 
-  <form id="nominationForm">
+<form id="nominationForm">
     <div class="section-title">Nominator Information</div>
-    <label>Full Name</label>
-    <input type="text" id="nominatorName" required />
+    <label>First Name</label>
+    <input type="text" id="nominatorFirstName" required />
+    <label>Last Name</label>
+    <input type="text" id="nominatorLastName" required />
     <label>Email Address</label>
     <input type="email" id="nominatorEmail" required />
 
@@ -239,55 +247,87 @@ const db = getDatabase(app);
 
 // ✅ Award List
 const awards = [
-  "Most Collaborative Unit of the Year", "The Continuous Improvement (CI) Award", "Manager of the Year",
+  "Most Collaborative Dept of the Year", "The Continuous Improvement (CI) Award", "Manager of the Year",
   "Most Inspirational Mentor", "The 'I Got Ya Back' Award", "Most Innovative Award", "Sustainability Award",
   "Integrity Award", "Enterprise First Award", "PM Partner of the Year", "PI Partner of the Year",
   "PS/PG Partner of the Year", "PT Partner of the Year", "PC Partner of the Year", "Operations Partner of the Year",
   "HSE Partner of the Year", "CMO Partner of the Year", "ESD Partner of the Year", "TP Partner of the Year",
   "TE Partner of the Year", "TI/TF Partner of the Year", "IMT Partner of the Year", "CSS Partner of the Year",
-  "LSS Partner of the Year", "HRE Partner of the Year"
+  "LSS Partner of the Year", "HR Partner of the Year"
 ];
 
+const departments = ["Operations", "Human Resources", "Finance", "Technical Services", "Corporate Affairs"];
+const managers = ["James Okon", "Patricia Balogun", "Emeka Nwosu", "Linda Eze", "Tunde Bamidele"];
+
 const container = document.getElementById("awardsContainer");
+
 awards.forEach((award, i) => {
   const div = document.createElement("div");
   div.classList.add("award-section");
-  div.innerHTML = `
-    <h3>${i + 1}. ${award}</h3>
-    <label>Nominee Full Name</label>
-    <input type="text" name="nomineeName_${i}" required />
-    <label>Nominee Department</label>
-    <input type="text" name="nomineeDept_${i}" required />`;
+
+  let inputField = "";
+
+  if (award === "Manager of the Year") {
+    inputField = `
+      <label>Select Manager</label>
+      <select name="nomineeName_${i}" required>
+        <option value="">-- Choose Manager --</option>
+        ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
+      </select>
+    `;
+  } else if (award === "Most Collaborative Unit of the Year") {
+    inputField = `
+      <label>Select Department</label>
+      <select name="nomineeDept_${i}" required>
+        <option value="">-- Choose Department --</option>
+        ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
+      </select>
+    `;
+  } else {
+    inputField = `
+      <label>Nominee First Name</label>
+      <input type="text" name="nomineeFirstName_${i}" required />
+      <label>Nominee Last Name</label>
+      <input type="text" name="nomineeLastName_${i}" required />
+      <label>Nominee Department</label>
+      <input type="text" name="nomineeDept_${i}" required />
+    `;
+  }
+
+  div.innerHTML = `<h3>${i + 1}. ${award}</h3>${inputField}`;
   container.appendChild(div);
 });
 
-// ✅ Integrated submission script
+// ✅ Form Submission
 document.getElementById("nominationForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const message = document.getElementById("message");
-  const name = document.getElementById("nominatorName").value.trim();
+  const firstName = document.getElementById("nominatorFirstName").value.trim();
+  const lastName = document.getElementById("nominatorLastName").value.trim();
   const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
+
+  if (!firstName || !lastName || !email) {
+    message.textContent = "⚠️ Please complete your name and email.";
+    message.style.color = "yellow";
+    return;
+  }
 
   message.textContent = "⏳ Checking submission status...";
   message.style.color = "white";
 
-  if (!name || !email) {
-    message.style.color = "yellow";
-    message.textContent = "⚠️ Please fill in your name and email.";
-    return;
-  }
-
-  // Disable submit button
   const submitBtn = e.target.querySelector("button[type='submit']");
   submitBtn.disabled = true;
   submitBtn.style.opacity = 0.5;
 
+  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${email}`;
+
   try {
-    const q = query(ref(db, "nominations"), orderByChild("nominatorEmail"), equalTo(email));
+    const q = query(ref(db, "nominations"), orderByChild("uniqueKey"), equalTo(uniqueKey));
     const snap = await get(q);
+
     if (snap.exists()) {
       message.style.color = "#ff8080";
-      message.textContent = "⚠️ You have already submitted your nominations.";
+      message.textContent = "⚠️ You have already submitted nominations.";
       submitBtn.disabled = false;
       submitBtn.style.opacity = 1;
       return;
@@ -297,15 +337,19 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     awards.forEach((award, i) => {
       formData[`award_${i+1}`] = {
         award,
-        nomineeName: document.querySelector(`[name='nomineeName_${i}']`).value.trim(),
-        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`).value.trim()
+        nomineeFirstName: document.querySelector(`[name='nomineeFirstName_${i}']`)?.value?.trim() || "",
+        nomineeLastName: document.querySelector(`[name='nomineeLastName_${i}']`)?.value?.trim() || "",
+        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`)?.value?.trim() || "",
+        nomineeName: document.querySelector(`[name='nomineeName_${i}']`)?.value?.trim() || ""
       };
     });
 
     const newRef = push(ref(db, "nominations"));
     await set(newRef, {
-      nominatorName: name,
+      nominatorFirstName: firstName,
+      nominatorLastName: lastName,
       nominatorEmail: email,
+      uniqueKey,
       submissions: formData,
       timestamp: new Date().toISOString()
     });
@@ -318,11 +362,8 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     console.error(err);
     message.style.color = "red";
     message.textContent = "❌ Error submitting nominations.";
-    submitBtn.disabled = false;
-    submitBtn.style.opacity = 1;
   }
 });
 </script>
 </body>
 </html>
-
