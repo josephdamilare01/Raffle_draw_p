@@ -320,13 +320,13 @@ container.addEventListener("input", (e) => {
 
   const filtered = staffList
     .filter(person =>
-      (`${person["Employee Name"]} ${person["Department"]} ${person["Company"]} ${person["Status"]}`).toLowerCase().includes(value)
+      person["Employee Name"].toLowerCase().includes(value)
     )
     .slice(0, 20);
 
   filtered.forEach(person => {
     const option = document.createElement("option");
-    option.value = `${person["Employee Name"]} (${person["Department"]}, ${person["Company"]}, ${person["Status"]})`;
+    option.value = person["Employee Name"];
     datalist.appendChild(option);
   });
 });
@@ -412,6 +412,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
