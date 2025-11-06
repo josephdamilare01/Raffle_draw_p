@@ -336,15 +336,15 @@ container.addEventListener("change", (e) => {
   if (!e.target.name?.startsWith("nomineeName_")) return;
   const input = e.target;
   const index = input.name.split("_")[1];
-  const selected = staffList.find(p => input.value.includes(p["Employee Name"]));
+
+  const selected = staffList.find(p => p["Employee Name"] === input.value);
 
   if (selected) {
-    document.querySelector(`[name='nomineeDept_${index}']`).value = selected.department;
-    document.querySelector(`[name='nomineeCompany_${index}']`).value = selected.company;
-    document.querySelector(`[name='nomineestatus_${index}']`).value = selected.status;
+    document.querySelector(`[name='nomineeDept_${index}']`).value = selected["Department"];
+    document.querySelector(`[name='nomineeCompany_${index}']`).value = selected["Company"];
+    document.querySelector(`[name='nomineestatus_${index}']`).value = selected["Status"];
   }
 });
-
 // --- Submit to Firebase ---
 document.getElementById("nominationForm").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -412,6 +412,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
