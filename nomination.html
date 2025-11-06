@@ -287,7 +287,7 @@ const awards = [
 ];
 
 // Ask the user if they want to change them
-const departments = ["Operations", "Human Resources", "Finance", "Technical Services", "Corporate Affairs"]; 
+const departments = ["Operations", "Human Resources", "Finance", "Technical Services", "Corporate Affairs"];
 const managers = ["James Okon", "Patricia Balogun", "Emeka Nwosu", "Linda Eze", "Tunde Bamidele"];
 const container = document.getElementById("awardsContainer");
 
@@ -305,25 +305,22 @@ fetch("candidates.json")
 awards.forEach((award, i) => {
   const div = document.createElement("div");
   div.classList.add("award-section");
-
   let inputField = "";
-
-  // Then build your dynamic select field (same as before)
-if (award === "Manager of the Year") {
-    inputField = 
+  if (award === "Manager of the Year") {
+    fieldHTML = `
       <label>Select Manager</label>
       <select name="nomineeName_${i}" required>
         <option value="">-- Choose Manager --</option>
-        ${managers.map(m => <option value="${m}">${m}</option>).join("")}
-      </select>;
+        ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
+      </select>`;
   } else if (award === "Most Collaborative Dept of the Year") {
-    inputField = 
+    fieldHTML = `
       <label>Select Department</label>
       <select name="nomineeDept_${i}" required>
         <option value="">-- Choose Department --</option>
-        ${departments.map(d => <option value="${d}">${d}</option>).join("")}
-      </select>;
-        } else {
+        ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
+      </select>`;
+  } else {
     inputField = `
       <label>Nominee</label>
       <input type="text" list="candidateList_${i}" name="nomineeName_${i}" placeholder="Type candidate name..." autocomplete="off" required>
@@ -445,6 +442,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
