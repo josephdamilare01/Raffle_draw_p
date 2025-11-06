@@ -208,9 +208,9 @@ select option {
   <form id="nominationForm">
     <div class="section-title">Nominator Information</div>
     <label>First Name</label>
-    <input type="text" id="nominatorFirstName" required />
-    <label>Last Name</label>
-    <input type="text" id="nominatorLastName" required />
+    <input type="text" id="nominatorFirst" required />
+    <label>Last </label>
+    <input type="text" id="nominatorLast" required />
     <label>Email Address</label>
     <input type="email" id="nominatorEmail" required />
 
@@ -320,13 +320,13 @@ container.addEventListener("input", (e) => {
 
   const filtered = staffList
     .filter(person =>
-      (`${person.name} ${person.department} ${person.company} ${person.status}`).toLowerCase().includes(value)
+      (`${person.Employee Name} ${person.department} ${person.company} ${person.status}`).toLowerCase().includes(value)
     )
     .slice(0, 20);
 
   filtered.forEach(person => {
     const option = document.createElement("option");
-    option.value = `${person.name} (${person.department}, ${person.company}, ${person.status})`;
+    option.value = `${person.Employee Name} (${person.department}, ${person.company}, ${person.status})`;
     datalist.appendChild(option);
   });
 });
@@ -412,4 +412,5 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
