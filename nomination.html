@@ -243,10 +243,38 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
+// --- Award Descriptions ---
+const awardDescriptions = {
+  "Most Collaborative Dept of the Year": "Recognizes the department that has demonstrated outstanding teamwork, collaboration, and synergy across the organization.",
+  "The Continuous Improvement Team(CIT) Award": "Honors the team that has implemented innovative solutions and continuous improvement initiatives to enhance processes and efficiency.",
+  "Manager of the Year": "Acknowledges the manager who has shown exemplary leadership, mentorship, and achievement of organizational goals.",
+  "Most Inspirational Mentor": "Recognizes an individual who has consistently guided, motivated, and inspired colleagues to achieve excellence.",
+  "The 'I Got Ya Back' Award": "Awarded to someone who consistently supports peers, demonstrating reliability, teamwork, and a positive attitude.",
+  "Most Innovative Award": "Honors an individual or team that has introduced novel ideas, methods, or solutions to drive organizational growth.",
+  "Sustainability Award": "Recognizes initiatives and individuals promoting sustainable practices and environmental stewardship.",
+  "Integrity Award": "Acknowledges employees who consistently uphold ethical standards and honesty in all dealings.",
+  "Enterprise First Award": "Awarded to those who prioritize organizational success and teamwork over personal interests.",
+  "PM Partner of the Year": "Honors the partner who has excelled in project management contributions and collaboration.",
+  "PI Partner of the Year": "Recognizes a partner with outstanding performance in process improvement and innovation.",
+  "PS/PG Partner of the Year": "Acknowledges excellence in professional services or project guidance provided to the organization.",
+  "PT Partner of the Year": "Awarded to partners demonstrating exceptional technical expertise and contribution.",
+  "PC Partner of the Year": "Recognizes partners excelling in corporate initiatives and strategic contributions.",
+  "Operations Partner of the Year": "Honors partners that have significantly contributed to operational excellence and efficiency.",
+  "HSE Partner of the Year": "Recognizes partners who have championed health, safety, and environmental standards.",
+  "CMO Partner of the Year": "Awarded to the partner delivering outstanding results within the Chief Management Office functions.",
+  "ESD Partner of the Year": "Honors partners who have made significant contributions to Enterprise Systems Development.",
+  "TP Partner of the Year": "Recognizes the partner demonstrating excellence in technical planning and execution.",
+  "TE Partner of the Year": "Awarded to partners showing exceptional technical expertise and leadership.",
+  "TI/TF Partner of the Year": "Honors those who excel in technical innovation and transformation initiatives.",
+  "IMT Partner of the Year": "Recognizes contributions to Information Management & Technology solutions that drive impact.",
+  "CSS Partner of the Year": "Acknowledges partners delivering outstanding corporate support services.",
+  "LSS Partner of the Year": "Awarded to partners demonstrating excellence in Lean Six Sigma initiatives.",
+  "HR Partner of the Year": "Honors partners who have made a significant impact in human resources strategy and support."
+};
 
 // --- Awards ---
 const awards = [
-  "Most Collaborative Dept of the Year", "The Continuous Improvement (CI) Award", "Manager of the Year",
+  "Most Collaborative Dept of the Year", "The Continuous Improvement Team(CIT) Award", "Manager of the Year",
   "Most Inspirational Mentor", "The 'I Got Ya Back' Award", "Most Innovative Award", "Sustainability Award",
   "Integrity Award", "Enterprise First Award", "PM Partner of the Year", "PI Partner of the Year",
   "PS/PG Partner of the Year", "PT Partner of the Year", "PC Partner of the Year", "Operations Partner of the Year",
@@ -304,7 +332,7 @@ awards.forEach((award, i) => {
     `;
   }
 
-  div.innerHTML = `<h3>${i + 1}. ${award}</h3>${inputField}`;
+  div.innerHTML = `<h3>${i + 1}. ${award}</h3><p style="color:#ccc; font-size:0.9rem; margin-bottom:10px;">${awardDescriptions[award] || ""}</p>${inputField}`;
   container.appendChild(div);
 });
 
@@ -412,6 +440,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
