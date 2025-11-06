@@ -319,20 +319,21 @@ awards.forEach((award, i) => {
 
   let inputField = "";
 
-  if (award === "Manager of the Year") {
-    inputField = `
-      <label>Select Manager</label>
-      <select name="nomineeName_${i}" required>
-        <option value="">-- Choose Manager --</option>
-        ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
-      </select>`;
-  } else if (award === "Most Collaborative Dept of the Year") {
-    inputField = `
-      <label>Select Department</label>
-      <select name="nomineeDept_${i}" required>
-        <option value="">-- Choose Department --</option>
-        ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
-      </select>`;
+  // Then build your dynamic select field (same as before)
+if (award === "Manager of the Year") {
+  inputField = `
+    <label>Select Manager</label>
+    <select name="nomineeName_${i}" required>
+      <option value="">-- Choose Manager --</option>
+      ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
+    </select>`;
+} else if (award === "Most Collaborative Dept of the Year") {
+  inputField = `
+    <label>Select Department</label>
+    <select name="nomineeDept_${i}" required>
+      <option value="">-- Choose Department --</option>
+      ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
+    </select>`;
   } else {
     inputField = `
       <label>Nominee</label>
@@ -455,6 +456,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
