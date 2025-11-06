@@ -286,8 +286,14 @@ const awards = [
   "LSS Partner of the Year", "CPM Partner of the Year Award", "NT Partner of the Year Award", "HR Partner of the Year"
 ];
 
-//--- const departments = ["Operations", "Human Resources", "Finance", "Technical Services", "Corporate Affairs"];---
-//--- const managers = ["James Okon", "Patricia Balogun", "Emeka Nwosu", "Linda Eze", "Tunde Bamidele"];
+const departments = prompt("Enter departments separated by commas:")
+  .split(",")
+  .map(d => d.trim());
+
+const managers = prompt("Enter managers separated by commas:")
+  .split(",")
+  .map(m => m.trim());
+
 const container = document.getElementById("awardsContainer");
 
 // --- Load staff list (JSON) ---
@@ -443,6 +449,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
