@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>🏆 NLNG Award Nomination Form 2025</title>
 
-<!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 
 <style>
+/* === SAME STYLING AS BEFORE === */
 :root {
   --gradient-bg: linear-gradient(135deg, #003f5c, #2f4b7c, #665191, #a05195, #d45087);
   --form-bg: rgba(255, 255, 255, 0.15);
@@ -19,8 +19,6 @@
   --accent2: #ffcc00;
   --white: #ffffff;
 }
-
-/* Reset & Base */
 * {
   margin: 0;
   padding: 0;
@@ -38,45 +36,19 @@ html, body {
   flex-direction: column;
   justify-content: space-between;
 }
-
 @keyframes bgShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
-/* Floating light effect */
-.orb {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #ffffff33, transparent);
-  animation: floaty 10s ease-in-out infinite;
-  z-index: 0;
-}
+.orb { position: absolute; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, #ffffff33, transparent); animation: floaty 10s ease-in-out infinite; z-index: 0; }
 .orb:nth-child(1){ top: 10%; left: 15%; animation-delay: 0s; }
 .orb:nth-child(2){ top: 60%; right: 10%; animation-delay: 2s; }
 .orb:nth-child(3){ bottom: 15%; left: 45%; animation-delay: 4s; }
+@keyframes floaty { 0%,100%{ transform: translateY(0); } 50%{ transform: translateY(-20px); } }
+.logo { position: fixed; top: 20px; left: 20px; z-index: 10; }
+.logo img { height: 65px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)); }
 
-@keyframes floaty {
-  0%,100%{ transform: translateY(0); }
-  50%{ transform: translateY(-20px); }
-}
-
-/* Logo */
-.logo {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 10;
-}
-.logo img {
-  height: 65px;
-  filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
-}
-
-/* Container */
 .container {
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(12px);
@@ -100,18 +72,9 @@ h1 {
   -webkit-text-fill-color: transparent;
   margin-bottom: 10px;
 }
-p.note {
-  text-align: center;
-  color: #f0f0f0;
-  margin-bottom: 20px;
-}
+p.note { text-align: center; color: #f0f0f0; margin-bottom: 20px; }
 
-/* Form fields */
-label {
-  display: block;
-  margin-top: 15px;
-  font-weight: 600;
-}
+label { display: block; margin-top: 15px; font-weight: 600; }
 input, textarea, select {
   width: 100%;
   padding: 13px;
@@ -126,7 +89,6 @@ input:focus, textarea:focus, select:focus {
   outline: none;
   box-shadow: 0 0 10px var(--input-focus);
 }
-
 textarea { resize: none; height: 80px; }
 
 .section-title {
@@ -137,7 +99,6 @@ textarea { resize: none; height: 80px; }
   border-bottom: 2px solid rgba(255,255,255,0.2);
   padding-bottom: 5px;
 }
-
 .award-section {
   margin-top: 20px;
   padding: 20px;
@@ -145,12 +106,7 @@ textarea { resize: none; height: 80px; }
   background: rgba(255,255,255,0.05);
   box-shadow: 0 0 8px rgba(255,255,255,0.1);
 }
-.award-section h3 {
-  color: var(--accent2);
-  margin-bottom: 10px;
-}
-
-/* Buttons */
+.award-section h3 { color: var(--accent2); margin-bottom: 10px; }
 button {
   display: block;
   background: var(--btn-gradient);
@@ -164,69 +120,45 @@ button {
   cursor: pointer;
   transition: 0.3s ease;
 }
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px rgba(0,255,128,0.4);
-}
-
-/* Message */
-.message {
-  text-align: center;
-  margin-top: 15px;
-  font-weight: 600;
-  min-height: 25px;
-}
-
-/* Footer */
+button:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(0,255,128,0.4); }
+.message { text-align: center; margin-top: 15px; font-weight: 600; min-height: 25px; }
 footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  background: rgba(0,0,0,0.3);
-  color: #fff;
-  font-size: 0.95rem;
-  padding: 10px 0;
-  letter-spacing: 0.5px;
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  text-align: center; background: rgba(0,0,0,0.3);
+  color: #fff; font-size: 0.95rem; padding: 10px 0; letter-spacing: 0.5px;
 }
-/* Dropdown option color fix */
-select option {
-  background-color: #1a252f;
-  color: var(--white);
-}
-
+select option { background-color: #1a252f; color: var(--white); }
 </style>
 </head>
-<body>
 
+<body>
 <div class="logo"><img src="nlng-logo.png" alt="NLNG Logo"></div>
 <div class="orb"></div><div class="orb"></div><div class="orb"></div>
 
 <div class="container">
   <h1>🏆 NLNG Award Nomination Form 2025</h1>
-  <p class="note">Each nominator can nominate one unique person per award. Please complete all fields carefully.</p>
+  <p class="note">Please fill in all required fields carefully.</p>
 
 <form id="nominationForm">
-    <div class="section-title">Nominator Information</div>
-    <label>First Name</label>
-    <input type="text" id="nominatorFirstName" required />
-    <label>Last Name</label>
-    <input type="text" id="nominatorLastName" required />
-    <label>Email Address</label>
-    <input type="email" id="nominatorEmail" required />
+  <div class="section-title">Nominator Information</div>
+  <label>First Name</label>
+  <input type="text" id="nominatorFirstName" required />
+  <label>Last Name</label>
+  <input type="text" id="nominatorLastName" required />
+  <label>Email Address</label>
+  <input type="email" id="nominatorEmail" required />
 
-    <div class="section-title">Award Nominations</div>
-    <div id="awardsContainer"></div>
+  <div class="section-title">Award Nominations</div>
+  <div id="awardsContainer"><p>Loading awards...</p></div>
 
-    <button type="submit">Submit Nominations</button>
-    <div class="message" id="message"></div>
-  </form>
+  <button type="submit">Submit Nominations</button>
+  <div class="message" id="message"></div>
+</form>
 </div>
 
 <footer>© 2025 NLNG | Nomination Portal — All Rights Reserved</footer>
 
-<!-- JS -->
+<!-- FIREBASE + LOGIC -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
 import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
@@ -238,133 +170,160 @@ const firebaseConfig = {
   projectId: "nlng-voting-system",
   storageBucket: "nlng-voting-system.firebasestorage.app",
   messagingSenderId: "851277078103",
-  appId: "1:851277078103:web:6b9c5d7cd3a0da80470d12",
-  measurementId: "G-V6T773WLN7"
+  appId: "1:851277078103:web:6b9c5d7cd3a0da80470d12"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// ✅ Award List
 const awards = [
-  "Most Collaborative Dept of the Year", "The Continuous Improvement (CI) Award", "Manager of the Year",
-  "Most Inspirational Mentor", "The 'I Got Ya Back' Award", "Most Innovative Award", "Sustainability Award",
-  "Integrity Award", "Enterprise First Award", "PM Partner of the Year", "PI Partner of the Year",
-  "PS/PG Partner of the Year", "PT Partner of the Year", "PC Partner of the Year", "Operations Partner of the Year",
-  "HSE Partner of the Year", "CMO Partner of the Year", "ESD Partner of the Year", "TP Partner of the Year",
-  "TE Partner of the Year", "TI/TF Partner of the Year", "IMT Partner of the Year", "CSS Partner of the Year",
-  "LSS Partner of the Year", "HR Partner of the Year"
+  "Most Collaborative Dept of the Year",
+  "The Continuous Improvement (CI) Award",
+  "Manager of the Year",
+  "Most Inspirational Mentor",
+  "The 'I Got Ya Back' Award",
+  "Most Innovative Award",
+  "Sustainability Award",
+  "Integrity Award",
+  "Enterprise First Award"
 ];
 
 const departments = ["Operations", "Human Resources", "Finance", "Technical Services", "Corporate Affairs"];
 const managers = ["James Okon", "Patricia Balogun", "Emeka Nwosu", "Linda Eze", "Tunde Bamidele"];
-
 const container = document.getElementById("awardsContainer");
 
-awards.forEach((award, i) => {
-  const div = document.createElement("div");
-  div.classList.add("award-section");
+let candidates = [];
 
-  let inputField = "";
+function buildAwards() {
+  container.innerHTML = "";
+  awards.forEach((award, i) => {
+    const div = document.createElement("div");
+    div.classList.add("award-section");
 
-  if (award === "Manager of the Year") {
-    inputField = `
-      <label>Select Manager</label>
-      <select name="nomineeName_${i}" required>
-        <option value="">-- Choose Manager --</option>
-        ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
-      </select>
-    `;
-  } else if (award === "Most Collaborative Dept of the Year") {
-    inputField = `
-      <label>Select Department</label>
-      <select name="nomineeDept_${i}" required>
-        <option value="">-- Choose Department --</option>
-        ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
-      </select>
-    `;
-  } else {
-    inputField = `
-      <label>Nominee First Name</label>
-      <input type="text" name="nomineeFirstName_${i}" required />
-      <label>Nominee Last Name</label>
-      <input type="text" name="nomineeLastName_${i}" required />
-      <label>Nominee Department</label>
-      <input type="text" name="nomineeDept_${i}" required />
-    `;
-  }
+    let html = "";
+    if (award === "Most Collaborative Dept of the Year") {
+      html = `
+        <label>Select Department</label>
+        <select name="nomineeDept_${i}" required>
+          <option value="">-- Choose Department --</option>
+          ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
+        </select>
+      `;
+    } else if (award === "Manager of the Year") {
+      html = `
+        <label>Select Manager</label>
+        <select name="nomineeName_${i}" required>
+          <option value="">-- Choose Manager --</option>
+          ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
+        </select>
+      `;
+    } else {
+      html = `
+        <label>Nominee Name</label>
+        <input list="list_${i}" name="nomineeName_${i}" placeholder="Start typing name..." required />
+        <datalist id="list_${i}">
+          ${candidates.map(c => `<option value="${c.identity}"></option>`).join("")}
+        </datalist>
+        <label>Department</label>
+        <input type="text" name="nomineeDept_${i}" placeholder="Department" />
+        <label>Company</label>
+        <input type="text" name="nomineeCompany_${i}" placeholder="Company" />
+        <label>Status</label>
+        <input type="text" name="nomineeStatus_${i}" placeholder="Status (e.g. Staff, Partner)" />
+      `;
+    }
+    div.innerHTML = `<h3>${i + 1}. ${award}</h3>${html}`;
+    container.appendChild(div);
+  });
 
-  div.innerHTML = `<h3>${i + 1}. ${award}</h3>${inputField}`;
-  container.appendChild(div);
-});
+  // Auto-fill on select
+  document.querySelectorAll("input[list]").forEach(input => {
+    input.addEventListener("change", e => {
+      const selected = candidates.find(c => c.identity === e.target.value);
+      if (selected) {
+        const section = e.target.closest(".award-section");
+        section.querySelector(`[name^='nomineeDept_']`).value = selected.department || "";
+        section.querySelector(`[name^='nomineeCompany_']`).value = selected.company || "";
+        section.querySelector(`[name^='nomineeStatus_']`).value = selected.status || "";
+      }
+    });
+  });
+}
 
-// ✅ Form Submission
-document.getElementById("nominationForm").addEventListener("submit", async (e) => {
+// Always display awards (even if fetch fails)
+buildAwards();
+
+// Try loading candidates.json (optional)
+fetch("candidates.json")
+  .then(r => r.ok ? r.json() : [])
+  .then(data => {
+    candidates = data;
+    buildAwards();
+  })
+  .catch(() => {
+    console.warn("⚠️ candidates.json not found — continuing without autocomplete.");
+  });
+
+// Submit logic
+document.getElementById("nominationForm").addEventListener("submit", async e => {
   e.preventDefault();
-  const message = document.getElementById("message");
-  const firstName = document.getElementById("nominatorFirstName").value.trim();
-  const lastName = document.getElementById("nominatorLastName").value.trim();
+  const msg = document.getElementById("message");
+  const first = document.getElementById("nominatorFirstName").value.trim();
+  const last = document.getElementById("nominatorLastName").value.trim();
   const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
 
-  if (!firstName || !lastName || !email) {
-    message.textContent = "⚠️ Please complete your name and email.";
-    message.style.color = "yellow";
+  if (!first || !last || !email) {
+    msg.textContent = "⚠️ Please complete your name and email.";
+    msg.style.color = "yellow";
     return;
   }
 
-  message.textContent = "⏳ Checking submission status...";
-  message.style.color = "white";
-
+  msg.textContent = "⏳ Checking submission status...";
   const submitBtn = e.target.querySelector("button[type='submit']");
-  submitBtn.disabled = true;
-  submitBtn.style.opacity = 0.5;
+  submitBtn.disabled = true; submitBtn.style.opacity = 0.5;
 
-  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${email}`;
+  const uniqueKey = `${first}_${last}_${email}`.toLowerCase();
 
   try {
     const q = query(ref(db, "nominations"), orderByChild("uniqueKey"), equalTo(uniqueKey));
     const snap = await get(q);
-
     if (snap.exists()) {
-      message.style.color = "#ff8080";
-      message.textContent = "⚠️ You have already submitted nominations.";
-      submitBtn.disabled = false;
-      submitBtn.style.opacity = 1;
+      msg.textContent = "⚠️ You have already submitted nominations.";
+      msg.style.color = "#ff8080";
+      submitBtn.disabled = false; submitBtn.style.opacity = 1;
       return;
     }
 
-    const formData = {};
+    const data = {};
     awards.forEach((award, i) => {
-      formData[`award_${i+1}`] = {
+      data[`award_${i+1}`] = {
         award,
-        nomineeFirstName: document.querySelector(`[name='nomineeFirstName_${i}']`)?.value?.trim() || "",
-        nomineeLastName: document.querySelector(`[name='nomineeLastName_${i}']`)?.value?.trim() || "",
-        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`)?.value?.trim() || "",
-        nomineeName: document.querySelector(`[name='nomineeName_${i}']`)?.value?.trim() || ""
+        nomineeName: document.querySelector(`[name='nomineeName_${i}']`)?.value || "",
+        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`)?.value || "",
+        nomineeCompany: document.querySelector(`[name='nomineeCompany_${i}']`)?.value || "",
+        nomineeStatus: document.querySelector(`[name='nomineeStatus_${i}']`)?.value || ""
       };
     });
 
     const newRef = push(ref(db, "nominations"));
     await set(newRef, {
-      nominatorFirstName: firstName,
-      nominatorLastName: lastName,
+      nominatorFirstName: first,
+      nominatorLastName: last,
       nominatorEmail: email,
       uniqueKey,
-      submissions: formData,
+      submissions: data,
       timestamp: new Date().toISOString()
     });
 
-    message.style.color = "lime";
-    message.textContent = "✅ Nomination submitted successfully!";
-    setTimeout(() => location.reload(), 2500);
-
+    msg.textContent = "✅ Nomination submitted successfully!";
+    msg.style.color = "lime";
+    setTimeout(() => location.reload(), 2000);
   } catch (err) {
     console.error(err);
-    message.style.color = "red";
-    message.textContent = "❌ Error submitting nominations.";
+    msg.textContent = "❌ Error submitting nominations.";
+    msg.style.color = "red";
   }
 });
 </script>
 </body>
 </html>
-
