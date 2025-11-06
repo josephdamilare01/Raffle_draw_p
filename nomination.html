@@ -286,21 +286,10 @@ const awards = [
   "LSS Partner of the Year", "CPM Partner of the Year Award", "NT Partner of the Year Award", "HR Partner of the Year"
 ];
 
-let departments = ["Operations", "Human Resources"];
-let managers = ["James Okon", "Patricia Balogun"];
-
 // Ask the user if they want to change them
-if (confirm("Would you like to enter custom department and manager names?")) {
-  const deptInput = prompt("Enter departments separated by commas:", departments.join(", "));
-  const mgrInput = prompt("Enter managers separated by commas:", managers.join(", "));
-
-  // If the user enters something, update the arrays
-  if (deptInput) departments = deptInput.split(",").map(d => d.trim());
-  if (mgrInput) managers = mgrInput.split(",").map(m => m.trim());
-}
-
-console.log("Departments:", departments);
-console.log("Managers:", managers);
+const departments = ["Operations", "Human Resources", "Finance", "Technical Services", "Corporate Affairs"]; 
+const managers = ["James Okon", "Patricia Balogun", "Emeka Nwosu", "Linda Eze", "Tunde Bamidele"];
+const container = document.getElementById("awardsContainer");
 
 // --- Load staff list (JSON) ---
 let staffList = [];
@@ -321,20 +310,20 @@ awards.forEach((award, i) => {
 
   // Then build your dynamic select field (same as before)
 if (award === "Manager of the Year") {
-  inputField = `
-    <label>Select Manager</label>
-    <select name="nomineeName_${i}" required>
-      <option value="">-- Choose Manager --</option>
-      ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
-    </select>`;
-} else if (award === "Most Collaborative Dept of the Year") {
-  inputField = `
-    <label>Select Department</label>
-    <select name="nomineeDept_${i}" required>
-      <option value="">-- Choose Department --</option>
-      ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
-    </select>`;
-  } else {
+    inputField = 
+      <label>Select Manager</label>
+      <select name="nomineeName_${i}" required>
+        <option value="">-- Choose Manager --</option>
+        ${managers.map(m => <option value="${m}">${m}</option>).join("")}
+      </select>;
+  } else if (award === "Most Collaborative Dept of the Year") {
+    inputField = 
+      <label>Select Department</label>
+      <select name="nomineeDept_${i}" required>
+        <option value="">-- Choose Department --</option>
+        ${departments.map(d => <option value="${d}">${d}</option>).join("")}
+      </select>;
+        } else {
     inputField = `
       <label>Nominee</label>
       <input type="text" list="candidateList_${i}" name="nomineeName_${i}" placeholder="Type candidate name..." autocomplete="off" required>
@@ -456,6 +445,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
