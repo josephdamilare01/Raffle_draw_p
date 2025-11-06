@@ -307,20 +307,20 @@ awards.forEach((award, i) => {
   div.classList.add("award-section");
   let inputField = "";
   if (award === "Manager of the Year") {
-    fieldHTML = `
+    inputField = `
       <label>Select Manager</label>
       <select name="nomineeName_${i}" required>
         <option value="">-- Choose Manager --</option>
         ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
       </select>`;
   } else if (award === "Most Collaborative Dept of the Year") {
-    fieldHTML = `
+    inputField = `
       <label>Select Department</label>
       <select name="nomineeDept_${i}" required>
         <option value="">-- Choose Department --</option>
         ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
       </select>`;
-  } else {
+  }  else {
     inputField = `
       <label>Nominee</label>
       <input type="text" list="candidateList_${i}" name="nomineeName_${i}" placeholder="Type candidate name..." autocomplete="off" required>
@@ -442,6 +442,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
