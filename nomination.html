@@ -247,7 +247,7 @@ const db = getDatabase(app);
   
 const awardDescriptions = {
   "Most Collaborative Dept of the Year": "A department that prioritizes the overall company objective and go above and beyond to collaboratively achieve this. They collectively exemplify the NLNG core values, are accommodating, are always ready to support other teams, even going the extra mile.",
-  "The Continuous Improvement Team(CIT) Award": "A team(unit) known for always seeking improvements. They are adaptive, innovative, ready to try new things safely and simplify business processes.",
+  "The Continuous Improvement Team (CIT) Award": "A team(unit) known for always seeking improvements. They are adaptive, innovative, ready to try new things safely and simplify business processes.",
   "Manager of the Year": "A manager who has been excellent in leadership. The winner should be someone known for building high performing teams and people. His/her team should be confident and creative, have a high degree of ownership and accountability.",
   "Most Inspirational Mentor": "A leader who grows people. He or she should have several past and present mentees and have an open-door policy.",
   "The 'I Got Ya Back' Award": "A line head who support personnel within or outside their teams even in seemingly negative situations. He/she is positive and people builder.",
@@ -277,7 +277,7 @@ const awardDescriptions = {
 
 // --- Awards ---
 const awards = [
-  "Most Collaborative Dept of the Year", "The Continuous Improvement Team(CIT) Award", "Manager of the Year",
+  "Most Collaborative Dept of the Year", "The Continuous Improvement Team (CIT) Award", "Manager of the Year",
   "Most Inspirational Mentor", "The 'I Got Ya Back' Award", "Most Innovative Award", "Sustainability Award",
   "Integrity Award", "Enterprise First Award", "PM Partner of the Year", "PI Partner of the Year",
   "PS/PG Partner of the Year", "PT Partner of the Year", "PC Partner of the Year", "Operations Partner of the Year",
@@ -322,10 +322,10 @@ awards.forEach((award, i) => {
       <label>Department Name</label>
       <input type="text" name="nomineeDept_${i}" placeholder="Enter department name" required />
     `;
-  } else if (award === "The Continuous Improvement Team(CIT) Award") {
+  } else if (award === "The Continuous Improvement Team (CIT) Award") {
     // Only department name input
     inputField = `
-      <label>Department Name</label>
+      <label>Unit Name</label>
       <input type="text" name="nomineeDept_${i}" placeholder="Enter department name" required />
     `;
   }
@@ -454,6 +454,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
