@@ -302,25 +302,37 @@ fetch("candidates.json")
   .catch(err => console.error("Error loading staff list:", err));
 
 // --- Render Awards ---
+// --- Render Awards ---
 awards.forEach((award, i) => {
   const div = document.createElement("div");
   div.classList.add("award-section");
   let inputField = "";
+
   if (award === "Manager of the Year") {
+    // Allow nominator to manually type manager name
     inputField = `
-      <label>Select Manager</label>
-      <select name="nomineeName_${i}" required>
-        <option value="">-- Choose Manager --</option>
-        ${managers.map(m => `<option value="${m}">${m}</option>`).join("")}
-      </select>`;
+      <label>Manager's Name</label>
+      <input type="text" name="nomineeName_${i}" placeholder="Enter manager's full name" required />
+      <label>Department</label>
+      <input type="text" name="nomineeDept_${i}" placeholder="Enter department (optional)" />
+      <label>Company</label>
+      <input type="text" name="nomineeCompany_${i}" placeholder="Enter company (optional)" />
+      <label>Status</label>
+      <input type="text" name="nomineestatus_${i}" placeholder="Enter status (optional)" />
+    `;
   } else if (award === "Most Collaborative Dept of the Year") {
+    // Allow nominator to manually type department name
     inputField = `
-      <label>Select Department</label>
-      <select name="nomineeDept_${i}" required>
-        <option value="">-- Choose Department --</option>
-        ${departments.map(d => `<option value="${d}">${d}</option>`).join("")}
-      </select>`;
-  }  else {
+      <label>Department Name</label>
+      <input type="text" name="nomineeDept_${i}" placeholder="Enter department name" required />
+      <label>Nominee Representative (optional)</label>
+      <input type="text" name="nomineeName_${i}" placeholder="Enter representative name (optional)" />
+      <label>Company</label>
+      <input type="text" name="nomineeCompany_${i}" placeholder="Enter company (optional)" />
+      <label>Status</label>
+      <input type="text" name="nomineestatus_${i}" placeholder="Enter status (optional)" />
+    `;
+  } else {
     inputField = `
       <label>Nominee</label>
       <input type="text" list="candidateList_${i}" name="nomineeName_${i}" placeholder="Type candidate name..." autocomplete="off" required>
@@ -334,7 +346,10 @@ awards.forEach((award, i) => {
     `;
   }
 
-  div.innerHTML = `<h3>${i + 1}. ${award}</h3><p style="color:#ccc; font-size:0.9rem; margin-bottom:10px;">${awardDescriptions[award] || ""}</p>${inputField}`;
+  div.innerHTML = `<h3>${i + 1}. ${award}</h3>
+    <p style="color:#ccc; font-size:0.9rem; margin-bottom:10px;">
+      ${awardDescriptions[award] || ""}
+    </p>${inputField}`;
   container.appendChild(div);
 });
 
@@ -442,6 +457,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
