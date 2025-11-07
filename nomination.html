@@ -310,27 +310,17 @@ awards.forEach((award, i) => {
 
   if (award === "Manager of the Year") {
     // Allow nominator to manually type manager name
+    if (award === "Manager of the Year") {
+    // Only manager name input
     inputField = `
       <label>Manager's Name</label>
       <input type="text" name="nomineeName_${i}" placeholder="Enter manager's full name" required />
-      <label>Department</label>
-      <input type="text" name="nomineeDept_${i}" placeholder="Enter department (optional)" />
-      <label>Company</label>
-      <input type="text" name="nomineeCompany_${i}" placeholder="Enter company (optional)" />
-      <label>Status</label>
-      <input type="text" name="nomineestatus_${i}" placeholder="Enter status (optional)" />
     `;
   } else if (award === "Most Collaborative Dept of the Year") {
-    // Allow nominator to manually type department name
+    // Only department name input
     inputField = `
       <label>Department Name</label>
       <input type="text" name="nomineeDept_${i}" placeholder="Enter department name" required />
-      <label>Nominee Representative (optional)</label>
-      <input type="text" name="nomineeName_${i}" placeholder="Enter representative name (optional)" />
-      <label>Company</label>
-      <input type="text" name="nomineeCompany_${i}" placeholder="Enter company (optional)" />
-      <label>Status</label>
-      <input type="text" name="nomineestatus_${i}" placeholder="Enter status (optional)" />
     `;
   } else {
     inputField = `
@@ -457,6 +447,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
