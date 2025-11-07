@@ -444,7 +444,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 
     message.style.color = "lime";
     message.textContent = "✅ Nomination submitted successfully!";
-    setTimeout(() => window.location.href = "thankyou.html, 2500);
+    setTimeout(() => window.location.href = "thankyou.html", 2500);
   } catch (err) {
     console.error(err);
     message.style.color = "red";
@@ -454,6 +454,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
