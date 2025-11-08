@@ -7,7 +7,6 @@
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-
 <style>
 :root {
   --gradient-bg: linear-gradient(135deg, #003f5c, #2f4b7c, #665191, #a05195, #d45087);
@@ -29,23 +28,23 @@
 }
 html, body {
   height: 100%;
+  min-height: 100vh;
   background: var(--gradient-bg);
   background-size: 400% 400%;
   animation: bgShift 20s ease infinite;
   color: var(--white);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  overflow-x: hidden;
 }
 
+/* Background Animation */
 @keyframes bgShift {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
-/* Floating light effect */
+/* Floating orbs */
 .orb {
   position: absolute;
   width: 150px;
@@ -79,21 +78,24 @@ html, body {
 
 /* Container */
 .container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   width: 90%;
   max-width: 1000px;
-  margin: 100px auto 70px auto;
+  margin: 120px auto 50px auto;
   padding: 30px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-  overflow-y: auto;
-  max-height: calc(100vh - 180px);
-  scrollbar-width: none;
   border-radius: 12px;
+  overflow-y: auto;
+  max-height: none;
 }
-.container::-webkit-scrollbar { display: none; }
 
+/* Headings */
 h1 {
   text-align: center;
   font-size: 2rem;
@@ -108,7 +110,7 @@ p.note {
   margin-bottom: 20px;
 }
 
-/* Form fields */
+/* Form */
 label {
   display: block;
   margin-top: 15px;
@@ -181,32 +183,22 @@ button:hover {
 
 /* Footer */
 footer {
-  position: relative;
-  bottom: 0;
+  margin-top: auto;
   width: 100%;
   text-align: center;
   background: rgba(0,0,0,0.3);
   color: #fff;
   font-size: 0.9rem;
-  padding: 10px 0;
+  padding: 15px 0;
   letter-spacing: 0.5px;
+  position: relative;
 }
 
-select option {
-  background-color: #1a252f;
-  color: var(--white);
-}
-
-/* --- Responsive Styles for Mobile Devices --- */
+/* Responsive */
 @media (max-width: 768px) {
-  body {
-    overflow: auto;
-    padding-bottom: 60px;
-  }
-
   .container {
     width: 95%;
-    margin: 90px auto;
+    margin: 90px auto 30px auto;
     padding: 20px;
     max-height: none;
   }
@@ -216,38 +208,22 @@ select option {
     line-height: 1.4;
   }
 
-  label {
-    font-size: 0.9rem;
-  }
-
   input, select, textarea {
     font-size: 0.95rem;
     padding: 10px;
   }
 
-  .award-section {
-    padding: 15px;
-  }
-
   button {
     width: 100%;
     padding: 14px;
-    font-size: 1rem;
     border-radius: 30px;
   }
 
-  .logo {
-    top: 10px;
-    left: 10px;
-  }
-
-  .logo img {
-    height: 50px;
-  }
+  .logo img { height: 50px; }
 
   footer {
     font-size: 0.8rem;
-    padding: 8px 0;
+    padding: 10px 0;
   }
 }
 </style>
@@ -510,6 +486,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
