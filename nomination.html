@@ -462,7 +462,7 @@ if (email && validDomains.includes(emailDomain)) {
     if (snap.exists()) {
       message.style.color = "#ff8080";
       message.textContent = "⚠️ You have already submitted nominations.";
-      / ✅ Re-enable submit button after 1 second
+      // ✅ Re-enable submit button after 1 second
       setTimeout(() => {
         submitBtn.disabled = false;
         submitBtn.style.opacity = 1;
@@ -512,6 +512,7 @@ if (email && validDomains.includes(emailDomain)) {
 </script>
 </body>
 </html>
+
 
 
 
