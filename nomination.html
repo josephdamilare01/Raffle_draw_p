@@ -426,51 +426,48 @@ container.addEventListener("change", (e) => {
 // --- Submit to Firebase ---
 document.getElementById("nominationForm").addEventListener("submit", async (e) => {
   e.preventDefault();
+
   const message = document.getElementById("message");
-  const firstName = document.getElementById("nominatorFirstName").value.trim();
-  const lastName = document.getElementById("nominatorLastName").value.trim();
-  const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
-
-  const employeeNumber = document.getElementById("employeeNumber").value.trim();
-const validDomains = ["nlng.com", "nsml.com", "raisbny.com"];
-const emailDomain = email.includes("@") ? email.split("@")[1] : "";
-
-// ✅ Validation rule: Must have either valid company email OR employee number
-if (email && validDomains.includes(emailDomain)) {
-  // okay - valid company email
-} else if (employeeNumber) {
-  // okay - valid employee number alternative
-} else {
-  message.textContent = "⚠️ Please enter a valid company email or your employee number.";
-  message.style.color = "yellow";
-  return;
-}
-
-
-  message.textContent = "⏳ Checking submission status...";
-  message.style.color = "white";
-
-  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${email}`;
   const submitBtn = e.target.querySelector("button[type='submit']");
   submitBtn.disabled = true;
   submitBtn.style.opacity = 0.5;
 
+  const firstName = document.getElementById("nominatorFirstName").value.trim();
+  const lastName = document.getElementById("nominatorLastName").value.trim();
+  const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
+  const employeeNumber = document.getElementById("employeeNumber").value.trim();
+
+  const validDomains = ["nlng.com", "nsml.com", "raisbny.com"];
+  const emailDomain = email.includes("@") ? email.split("@")[1] : "";
+
+  // ✅ Validation: Must have either valid email OR employee number
+  if (!((email && validDomains.includes(emailDomain)) || employeeNumber)) {
+    message.textContent = "⚠️ Please enter a valid company email or your employee number.";
+    message.style.color = "yellow";
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = 1;
+    return;
+  }
+
+  message.textContent = "⏳ Submitting nomination...";
+  message.style.color = "white";
+
+  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${email || employeeNumber}`;
+
   try {
+    // Check for existing submission
     const q = query(ref(db, "nominations"), orderByChild("uniqueKey"), equalTo(uniqueKey));
     const snap = await get(q);
 
     if (snap.exists()) {
       message.style.color = "#ff8080";
       message.textContent = "⚠️ You have already submitted nominations.";
-      // ✅ Re-enable submit button after 1 second
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = 1;
-      }, 1000);
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = 1;
       return;
-  }
+    }
 
-
+    // Prepare submission
     const formData = {};
     awards.forEach((award, i) => {
       formData[`award_${i + 1}`] = {
@@ -482,6 +479,7 @@ if (email && validDomains.includes(emailDomain)) {
       };
     });
 
+    // Push to Firebase
     const newRef = push(ref(db, "nominations"));
     await set(newRef, {
       nominatorFirstName: firstName,
@@ -495,23 +493,20 @@ if (email && validDomains.includes(emailDomain)) {
 
     message.style.color = "lime";
     message.textContent = "✅ Nomination submitted successfully!";
-    setTimeout(() => window.location.href = "thankyou.html", 2500);
+    setTimeout(() => window.location.href = "thankyou.html", 2000);
+
   } catch (err) {
     console.error(err);
     message.style.color = "red";
     message.textContent = "❌ Error submitting nominations.";
-          // ✅ Re-enable submit button after 1 second
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.style.opacity = 1;
-      }, 1000);
-      return;
-
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = 1;
   }
 });
 </script>
 </body>
 </html>
+
 
 
 
