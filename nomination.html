@@ -243,8 +243,12 @@ footer {
     <input type="text" id="nominatorFirstName" required />
     <label>Last </label>
     <input type="text" id="nominatorLastName" required />
-    <label>Email Address</label>
-    <input type="email" id="nominatorEmail" required />
+    <label>Email Address (Company Email)</label>
+    <input type="email" id="nominatorEmail" placeholder="e.g. jane@nlng.com" />
+
+    <label>Employee Number (if no company email)</label>
+    <input type="text" id="employeeNumber" placeholder="Enter employee number if no email" />
+
 
     <div class="section-title">Award Nominations</div>
     <div id="awardsContainer"></div>
@@ -427,11 +431,21 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
   const lastName = document.getElementById("nominatorLastName").value.trim();
   const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
 
-  if (!firstName || !lastName || !email) {
-    message.textContent = "⚠️ Please complete your name and email.";
-    message.style.color = "yellow";
-    return;
-  }
+  const employeeNumber = document.getElementById("employeeNumber").value.trim();
+const validDomains = ["nlng.com", "nsml.com", "raisbny.com"];
+const emailDomain = email.includes("@") ? email.split("@")[1] : "";
+
+// ✅ Validation rule: Must have either valid company email OR employee number
+if (email && validDomains.includes(emailDomain)) {
+  // okay - valid company email
+} else if (employeeNumber) {
+  // okay - valid employee number alternative
+} else {
+  message.textContent = "⚠️ Please enter a valid company email or your employee number.";
+  message.style.color = "yellow";
+  return;
+}
+
 
   message.textContent = "⏳ Checking submission status...";
   message.style.color = "white";
@@ -486,6 +500,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
