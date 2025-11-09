@@ -243,7 +243,7 @@ footer {
     <input type="text" id="nominatorFirstName" required />
     <label>Last </label>
     <input type="text" id="nominatorLastName" required />
-    <label>Email Address (Company Email)</label>
+    <label>Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
     <input type="email" id="nominatorEmail" placeholder="e.g. jane@nlng.com" />
 
     <label>Employee Number (if no company email)</label>
@@ -486,8 +486,8 @@ if (email && validDomains.includes(emailDomain)) {
     await set(newRef, {
       nominatorFirstName: firstName,
       nominatorLastName: lastName,
-      nominatorEmail: email || null,
-      employeeNumber: employeeNumber || null,
+      nominatorEmail: email || "",
+      employeeNumber: employeeNumber || "",
       uniqueKey,
       submissions: formData,
       timestamp: new Date().toISOString()
@@ -512,6 +512,7 @@ if (email && validDomains.includes(emailDomain)) {
 </script>
 </body>
 </html>
+
 
 
 
