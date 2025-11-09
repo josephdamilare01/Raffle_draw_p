@@ -462,10 +462,14 @@ if (email && validDomains.includes(emailDomain)) {
     if (snap.exists()) {
       message.style.color = "#ff8080";
       message.textContent = "⚠️ You have already submitted nominations.";
-      submitBtn.disabled = false;
-      submitBtn.style.opacity = 1;
+      / ✅ Re-enable submit button after 1 second
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = 1;
+      }, 1000);
       return;
-    }
+  }
+
 
     const formData = {};
     awards.forEach((award, i) => {
@@ -482,7 +486,8 @@ if (email && validDomains.includes(emailDomain)) {
     await set(newRef, {
       nominatorFirstName: firstName,
       nominatorLastName: lastName,
-      nominatorEmail: email,
+      nominatorEmail: email || null,
+      employeeNumber: employeeNumber || null,
       uniqueKey,
       submissions: formData,
       timestamp: new Date().toISOString()
@@ -495,11 +500,19 @@ if (email && validDomains.includes(emailDomain)) {
     console.error(err);
     message.style.color = "red";
     message.textContent = "❌ Error submitting nominations.";
+          // ✅ Re-enable submit button after 1 second
+      setTimeout(() => {
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = 1;
+      }, 1000);
+      return;
+
   }
 });
 </script>
 </body>
 </html>
+
 
 
 
