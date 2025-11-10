@@ -243,12 +243,11 @@ footer {
     <input type="text" id="nominatorFirstName" required />
     <label>Last Name</label>
     <input type="text" id="nominatorLastName" required />
-     <label>Department</label>
+    <label>Department</label>
     <input type="text" id="nominatorDepart" required />
     <label>Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
     <input type="email" id="nominatorEmail" placeholder="e.g. jane@nlng.com" />
-
-    <label>Employee Number (if no company email)</label>
+    <label>Employee Number (for Partner without company email address)</label>
     <input type="text" id="employeeNumber" placeholder="Enter employee number if no email" />
 
 
@@ -273,7 +272,7 @@ const firebaseConfig = {
   authDomain: "nlng-voting-system.firebaseapp.com",
   databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
   projectId: "nlng-voting-system",
-  storageBucket: "nlng-voting-system.appspot.com",
+  storageBucket: "nlng-voting-system.firebasestorage.app",
   messagingSenderId: "851277078103",
   appId: "1:851277078103:web:6b9c5d7cd3a0da80470d12",
   measurementId: "G-V6T773WLN7"
@@ -455,7 +454,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
   message.textContent = "⏳ Submitting nomination...";
   message.style.color = "white";
 
-  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${department.toLowerCase()}_${email || employeeNumber}`;
+  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${email || employeeNumber}`;
 
   try {
     // Check for existing submission
@@ -487,7 +486,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     await set(newRef, {
       nominatorFirstName: firstName,
       nominatorLastName: lastName,
-      nominatorDepart: department,
+      //nominatorDepart: department,
       nominatorEmail: email || "",
       employeeNumber: employeeNumber || "",
       uniqueKey,
@@ -510,6 +509,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
