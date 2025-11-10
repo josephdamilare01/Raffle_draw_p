@@ -455,7 +455,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
   message.textContent = "⏳ Submitting nomination...";
   message.style.color = "white";
 
-  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${email || employeeNumber}`;
+  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${department.toLowerCase()}_${email || employeeNumber}`;
 
   try {
     // Check for existing submission
@@ -510,6 +510,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
