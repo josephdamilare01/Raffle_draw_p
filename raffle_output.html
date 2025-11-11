@@ -196,6 +196,33 @@ let gifts = [];
 let departments = new Set();
 let resultList = [];
 const giftImageMap = {}; // maps gift names to image URLs
+// Request fullscreen when draw starts
+function enterFullscreen() {
+  const elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) { /* Safari */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE11 */
+    elem.msRequestFullscreen();
+  }
+}
+
+// Exit fullscreen (optional)
+function exitFullscreen() {
+  if (document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if (document.webkitExitFullscreen) { /* Safari */
+    document.webkitExitFullscreen();
+  } else if (document.msExitFullscreen) { /* IE11 */
+    document.msExitFullscreen();
+  }
+}
+
+// Trigger fullscreen at the start of the draw
+document.getElementById("startDraw").addEventListener("click", () => {
+  enterFullscreen();
+});
 
 window.addEventListener("DOMContentLoaded", () => {
   // Load uploaded data from localStorage (from upload page)
@@ -293,3 +320,4 @@ function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 </script>
 </body>
 </html>
+
