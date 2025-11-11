@@ -1,440 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎁 Animated Raffle Draw</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-  <style>
-    :root {
-      --accent1: #00c6ff;
-      --accent2: #0072ff;
-      --accent3: #00ff80;
-      --dark: #071428;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🎁 NLNG End of Year Raffle Draw</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<style>
+:root {
+  --accent1: #00c6ff;
+  --accent2: #0072ff;
+  --accent3: #00ff80;
+  --dark: #071428;
+}
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: radial-gradient(circle at 10% 20%, #081028, #071428 30%, #0b2a3a 60%, #071428 100%);
-      color: white;
-      text-align: center;
-      overflow-x: hidden;
-    }
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  background: radial-gradient(circle at 10% 20%, #081028, #071428 30%, #0b2a3a 60%, #071428 100%);
+  color: white;
+  text-align: center;
+  overflow-x: hidden;
+}
 
-    h1 {
-      margin: 10px 0 16px;
-      font-size: 5rem;
-      letter-spacing: 1px;
-      background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 200% 100%;
-      animation: gradientMove 6s linear infinite;
-    }
-
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    .content {
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-      max-width: 100%;
-      margin: 0 auto;
-      padding: 10px 0 60px;
-      align-items: stretch;
-    }
-
-    .top {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      flex-direction: column;
-    }
-
-    /* ✅ Edited section for wide fitted table */
-    .left {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 18px;
-      border-radius: 10px;
-      backdrop-filter: blur(8px);
-      width: 100%;
-      max-width: 100%;
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      min-width: 90px; /* makes table wide and fitted */
-      border-collapse: collapse;
-      background: rgba(255,255,255,0.98);
-      color: #000;
-      font-size: 2rem;
-      border-radius: 10px;
-      overflow: hidden;
-      table-layout: fixed; /* ensures uniform column widths */
-    }
-
-    th, td {
-      padding: 14px 12px;
-      text-align: center;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      word-break: break-word;
-    }
-
-    thead th {
-      background: linear-gradient(90deg, var(--accent2), #005bb5);
-      color: #fff;
-      font-weight: 600;
-    }
-    /* ✅ End of edited section */
-
-    .winner-card {
-      width: 100%;
-      max-width: 640px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
-      color: #000;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-      position: relative;
-      overflow: hidden;
-      display: none;
-      animation: popIn 700ms ease;
-      margin: 0 auto;
-    }
-
-    .winner-name {
-      font-size: 1.9rem;
-      font-weight: 700;
-      background: linear-gradient(90deg,var(--accent2), var(--accent3));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-    }
-
-    .division-name, .id-name {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #004aad;
-      margin-bottom: 8px;
-    }
-
-    .gift-name {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #e63946;
-    }
-
-    @keyframes popIn {
-      0% { transform: scale(0.95); opacity: 0; }
-      60% { transform: scale(1.02); opacity: 1; }
-      100% { transform: scale(1); }
-    }
-
-    .btns {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 6px;
-    }
-
-    .btn {
-      background: linear-gradient(90deg,var(--accent2),var(--accent1));
-      border: none;
-      color: #00151f;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: transform .14s ease, box-shadow .14s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.26);
-    }
-
-    #loader {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(7, 20, 40, 0.95);
-      backdrop-filter: blur(6px);
-      color: white;
-      font-size: 10rem;
-      font-weight: 700;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    @media (max-width: 640px) {
-      .winner-card { max-width: 100%; padding: 18px; }
-      th, td { font-size: 0.95rem; padding: 10px 8px; }
-      #loader { font-size: 3rem; }
-    }
-    /* 🎉 Done message styling */
-#doneMessage {
-  display: none;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: linear-gradient(135deg, #00c6ff, #00ff80, #ffd166);
-  color: #00151f;
+h1 {
+  margin: 10px 0 16px;
   font-size: 3rem;
-  font-weight: 800;
-  padding: 25px 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-  text-transform: uppercase;
-  animation: popUp 1s ease forwards, fadeOut 3s 4s forwards;
-  z-index: 2000;
-  letter-spacing: 2px;
+  background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% 100%;
+  animation: gradientMove 6s linear infinite;
+}
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-      /* --- NLNG Logo Styling --- */
-.logo {
-  position: absolute;
-  top: 20px;
-  left: 30px;
-  z-index: 10;
+.controls {
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-    
-.logo img {
-  height: 80px;
-  width: auto;
-  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
-  transition: transform 0.3s ease, filter 0.3s ease;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 30px;
 }
 
-.logo img:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 8px var(--nlng-yellow));
-}
-@keyframes popUp {
-  0% { transform: translate(-50%, -60%) scale(0.7); opacity: 0; }
-  60% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
-  100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-}
-
-@keyframes fadeOut {
-  0% { opacity: 1; }
-  100% { opacity: 0; display: none; }
+.controls select, .controls input {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 500;
+  outline: none;
 }
 
-  </style>
+.btn {
+  background: linear-gradient(90deg, var(--accent2), var(--accent1));
+  border: none;
+  color: #00151f;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform .14s ease, box-shadow .14s ease;
+}
+.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.26); }
+
+#rollingBox {
+  display: none;
+  font-size: 2rem;
+  margin: 20px auto;
+  font-weight: 600;
+  color: #00ffcc;
+}
+
+.winner-card {
+  display: none;
+  background: linear-gradient(180deg, #ffffff, #f8f9fa);
+  color: #000;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  max-width: 600px;
+  margin: 0 auto 20px;
+  animation: popIn 0.7s ease;
+}
+@keyframes popIn {
+  0% { transform: scale(0.95); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+.winner-card img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin: 10px auto;
+  display: block;
+  border-radius: 12px;
+  background: #f3f3f3;
+}
+.winner-name { font-size: 1.8rem; font-weight: 700; background: linear-gradient(90deg,var(--accent2), var(--accent3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom: 5px; }
+.winner-dept, .winner-id, .winner-gift { font-size: 1.2rem; margin: 6px 0; }
+
+.table-container {
+  width: 90%;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.95);
+  color: #000;
+  border-radius: 10px;
+  overflow: hidden;
+}
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+thead th {
+  background: linear-gradient(90deg, var(--accent2), #005bb5);
+  color: white;
+}
+</style>
 </head>
-  <!-- NLNG Logo -->
-<div class="logo">
-  <img src="nlng-logo.png" alt="NLNG Logo">
-</div>
+
 <body>
-  <h1>🎊 NLNG End of the Year Raffle Draw</h1>
+  <h1>🎊 NLNG End of Year Raffle Draw</h1>
 
-  <div class="content">
-    <div class="top">
-      <div class="right">
-        <div class="winner-card" id="winnerCard">
-          <div class="winner-name" id="winnerName">🏆 Winner Name</div>
-          <div class="id-name" id="idNumber">🪪 ID Card Number</div>
-          <div class="division-name" id="divisionName">🏢 Division</div>
-          <div class="gift-name" id="giftName">🎁 Gift</div>
-        </div>
-
-        <div class="btns">
-          <button class="btn" id="startDraw">Start Draw</button>
-          <button class="btn" id="restartBtn">Restart</button>
-          <button class="btn" id="homeBtn">🏠 Home</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="left">
-      <h3>🎁 Winners Table</h3>
-      <table id="resultTable" aria-live="polite">
-        <thead>
-          <tr>
-            <th style="width:6%;">#</th>
-            <th style="width:28%;">Participant Name</th>
-            <th style="width:20%;">ID Card No.</th>
-            <th style="width:26%;">Division</th>
-            <th style="width:20%;">Gift</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
+  <div class="controls">
+    <select id="departmentFilter"><option value="">All Departments</option></select>
+    <input type="number" id="numDraws" placeholder="Number of Winners" min="1" />
+    <button class="btn" id="startDraw">Start Draw</button>
   </div>
 
-  <div id="loader">10</div>
+  <div id="rollingBox">🎡 Rolling...</div>
+
+  <div class="winner-card" id="winnerCard">
+    <h2 class="winner-name" id="winnerName">🏆 Winner</h2>
+    <div class="winner-dept" id="winnerDept"></div>
+    <div class="winner-id" id="winnerId"></div>
+    <img id="giftImage" src="" alt="Gift Image" />
+    <div class="winner-gift" id="giftName">🎁 Gift</div>
+  </div>
+
+  <div class="table-container">
+    <table id="resultTable">
+      <thead><tr><th>#</th><th>Name</th><th>Department</th><th>ID</th><th>Gift</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
 <script>
-  let participants = [];
-  let gifts = [];
-  let results = [];
-  let index = 0;
-  const resultBody = document.querySelector("#resultTable tbody");
-  const winnerCard = document.getElementById("winnerCard");
-  const winnerNameEl = document.getElementById("winnerName");
-  const divisionNameEl = document.getElementById("divisionName");
-  const giftNameEl = document.getElementById("giftName");
-  const idNumberEl = document.getElementById("idNumber");
-  const loader = document.getElementById("loader");
+let participants = [];
+let gifts = [];
+let departments = new Set();
+let resultList = [];
+const giftImageMap = {}; // backend should map gift name to image URL
 
-  window.addEventListener("DOMContentLoaded", () => {
-    const savedParticipants = localStorage.getItem("participantsData");
-    const savedGifts = localStorage.getItem("giftsData");
+window.addEventListener("DOMContentLoaded", () => {
+  // Load uploaded data from localStorage (already uploaded at backend)
+  const savedParticipants = localStorage.getItem("participantsData");
+  const savedGifts = localStorage.getItem("giftsData");
+  const savedGiftImages = localStorage.getItem("giftImageMap");
 
-    if (savedParticipants && savedGifts) {
-      participants = JSON.parse(savedParticipants);
-      gifts = JSON.parse(savedGifts);
+  if (savedParticipants) participants = JSON.parse(savedParticipants);
+  if (savedGifts) gifts = JSON.parse(savedGifts);
+  if (savedGiftImages) Object.assign(giftImageMap, JSON.parse(savedGiftImages));
 
-      participants = participants.map((p) => ({
-        name: p.name || p.Name || "Unnamed",
-        division: p.division || p.Division || p.department || p.Department || "—",
-        idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
-      }));
-    } else {
-      alert("⚠️ Please upload participants and gifts on the admin page first.");
-    }
-  });
+  participants.forEach(p => departments.add(p.Department || p.Division || "—"));
+  updateDepartmentDropdown();
+});
 
-  document.getElementById("startDraw").addEventListener("click", async () => {
-    if (!participants.length || !gifts.length) {
-      alert("Upload both participant and gift data first.");
-      return;
-    }
-
-    const numDraws = Math.min(participants.length, gifts.length);
-    const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-    const shuffledGifts = [...gifts].sort(() => 0.5 - Math.random());
-
-    results = [];
-    for (let i = 0; i < numDraws; i++) {
-      results.push({
-        name: shuffledParticipants[i].name,
-        division: shuffledParticipants[i].division,
-        idCard: shuffledParticipants[i].idCard,
-        gift: shuffledGifts[i],
-      });
-    }
-
-    resultBody.innerHTML = "";
-    index = 0;
-    runDrawSequence();
-  });
-
-  document.getElementById("homeBtn").addEventListener("click", () => {
-  window.location.href = "/index.html"; // ✅ Works both locally and on Vercel
-})
- 
-  async function runDrawSequence() {
-  for (let i = 0; i < results.length; i++) {
-    if (i === 0) {
-      await startCountdown(10);
-    } else {
-      await sleep(1000);
-    }
-    announceWinner();
-  }
-
-  // 🎉 Show animated message after all draws
-  const doneMsg = document.getElementById("doneMessage");
-  doneMsg.style.display = "block";
-
-  // 🎊 Optional confetti burst for finale
-  if (typeof confetti === "function") {
-    confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
-  }
+function updateDepartmentDropdown() {
+  const select = document.getElementById("departmentFilter");
+  select.innerHTML = '<option value="">All Departments</option>' +
+    [...departments].map(d => `<option value="${d}">${d}</option>`).join("");
 }
 
+document.getElementById("startDraw").addEventListener("click", startDraw);
 
-  function startCountdown(seconds) {
-    return new Promise((resolve) => {
-      let count = seconds;
-      loader.textContent = count;
-      loader.style.display = "flex";
+function startDraw() {
+  const num = parseInt(document.getElementById("numDraws").value) || 1;
+  const selectedDept = document.getElementById("departmentFilter").value;
+  let availableNames = selectedDept ? participants.filter(p => (p.Department || p.Division) === selectedDept) : [...participants];
 
-      const timer = setInterval(() => {
-        count--;
-        if (count > 0) {
-          loader.textContent = count;
-        } else {
-          clearInterval(timer);
-          loader.style.display = "none";
-          resolve();
-        }
-      }, 1000);
-    });
+  if (!availableNames.length || !gifts.length) {
+    alert("⚠️ Please ensure participants and gifts are uploaded and available.");
+    return;
   }
 
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+  const winnersCount = Math.min(num, availableNames.length, gifts.length);
+  resultList = [];
+
+  for (let i = 0; i < winnersCount; i++) {
+    const pIndex = Math.floor(Math.random() * availableNames.length);
+    const gIndex = Math.floor(Math.random() * gifts.length);
+    const person = availableNames.splice(pIndex, 1)[0];
+    const gift = gifts.splice(gIndex, 1)[0];
+    resultList.push({...person, gift});
   }
 
-  function announceWinner() {
-    const winner = results[index];
-    winnerNameEl.textContent = `🏆 ${winner.name}`;
-    idNumberEl.textContent = `🪪 ${winner.idCard}`;
-    divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
-    giftNameEl.textContent = `🎁 ${winner.gift}`;
-    winnerCard.style.display = "block";
+  runAnimatedDraw();
+}
 
-    if (typeof confetti === "function") {
-      confetti({ particleCount: 180, spread: 90, origin: { y: 0.6 } });
-    }
+async function runAnimatedDraw() {
+  for (let winner of resultList) {
+    await animateDraw(winner);
+    await sleep(1500);
+  }
+  confetti({ particleCount: 300, spread: 100, origin:{y:0.6}});
+}
 
-    resultBody.insertAdjacentHTML(
-      "beforeend",
-      `<tr>
-        <td>${index + 1}</td>
-        <td>${escapeHtml(winner.name)}</td>
-        <td>${escapeHtml(winner.idCard)}</td>
-        <td>${escapeHtml(winner.division || "—")}</td>
-        <td>${escapeHtml(winner.gift)}</td>
-      </tr>`
-    );
+async function animateDraw(winner) {
+  const rollBox = document.getElementById("rollingBox");
+  const card = document.getElementById("winnerCard");
+  const img = document.getElementById("giftImage");
+  rollBox.style.display = "block";
+  card.style.display = "none";
 
-    document.querySelector("#resultTable").scrollIntoView({ behavior: "smooth", block: "end" });
-    index++;
+  for (let speed = 100; speed >= 20; speed -= 10) {
+    const rand = participants[Math.floor(Math.random()*participants.length)];
+    rollBox.textContent = `🎡 ${rand?.Name || rand?.name || "Rolling..."}`;
+    await sleep(speed);
   }
 
-  function escapeHtml(text = "") {
-    return String(text).replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    }[m]));
-  }
+  // Show winner
+  rollBox.style.display = "none";
+  document.getElementById("winnerName").textContent = `🏆 ${winner.Name || winner.name}`;
+  document.getElementById("winnerDept").textContent = `🏢 ${winner.Department || winner.Division}`;
+  document.getElementById("winnerId").textContent = `🪪 ${winner["ID Card Number"] || winner.ID}`;
+  document.getElementById("giftName").textContent = `🎁 ${winner.gift}`;
+
+  const giftImg = giftImageMap[winner.gift?.toLowerCase()] || "images/default.png";
+  img.src = giftImg;
+
+  card.style.display = "block";
+  appendToTable(winner);
+  confetti({ particleCount: 150, spread: 70, origin:{y:0.6}});
+}
+
+function appendToTable(winner) {
+  const tbody = document.querySelector("#resultTable tbody");
+  const tr = document.createElement("tr");
+  tr.innerHTML = `<td>${tbody.children.length+1}</td>
+                  <td>${winner.Name || winner.name}</td>
+                  <td>${winner.Department || winner.Division}</td>
+                  <td>${winner["ID Card Number"] || winner.ID}</td>
+                  <td>${winner.gift}</td>`;
+  tbody.appendChild(tr);
+}
+
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 </script>
-<div id="doneMessage">✅ Done Drawing!</div>
 </body>
 </html>
-
-
-
-
 
 
 
