@@ -12,9 +12,9 @@
   --accent1: #00c6ff;
   --accent2: #0072ff;
   --accent3: #00ff80;
-  --dark: #071428;
+  --dark: #0a0f1c;
+  --glass: rgba(255,255,255,0.15);
 }
-
 html, body {
   height: 100%;
   margin: 0;
@@ -25,8 +25,9 @@ html, body {
   overflow-x: hidden;
 }
 
+/* Header */
 h1 {
-  margin: 10px 0 16px;
+  margin: 20px 0 25px;
   font-size: 3rem;
   background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
   -webkit-background-clip: text;
@@ -40,53 +41,70 @@ h1 {
   100% { background-position: 0% 50%; }
 }
 
+/* Controls */
 .controls {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 30px;
+  gap: 15px;
+  margin-bottom: 25px;
 }
-
 .controls select, .controls input {
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
   border: none;
   font-size: 1rem;
   font-weight: 500;
   outline: none;
+  background: var(--glass);
+  color: white;
+  backdrop-filter: blur(10px);
 }
+.controls select option { color: #000; }
 
 .btn {
   background: linear-gradient(90deg, var(--accent2), var(--accent1));
   border: none;
-  color: #00151f;
-  padding: 10px 20px;
-  border-radius: 10px;
+  color: #fff;
+  padding: 12px 25px;
+  border-radius: 12px;
   font-weight: 600;
   font-size: 1.2rem;
   cursor: pointer;
-  transition: transform .14s ease, box-shadow .14s ease;
+  transition: all .3s ease;
 }
-.btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.26); }
+.btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+}
 
+/* Rolling Text */
 #rollingBox {
   display: none;
-  font-size: 2rem;
-  margin: 20px auto;
-  font-weight: 600;
-  color: #00ffcc;
+  font-size: 2.5rem;
+  margin: 25px auto;
+  font-weight: 700;
+  color: var(--accent3);
+  text-shadow: 0 0 10px var(--accent3);
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
 }
 
+/* Winner Card */
 .winner-card {
   display: none;
-  background: linear-gradient(180deg, #ffffff, #f8f9fa);
-  color: #000;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255,255,255,0.2);
+  color: #fff;
   padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-  max-width: 600px;
-  margin: 0 auto 20px;
+  border-radius: 25px;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+  max-width: 700px;
+  margin: 0 auto 30px;
   animation: popIn 0.7s ease;
 }
 @keyframes popIn {
@@ -94,17 +112,29 @@ h1 {
   100% { transform: scale(1); opacity: 1; }
 }
 .winner-card img {
-  width: 150px;
-  height: 150px;
+  width: 350px;
+  height: 350px;
   object-fit: contain;
-  margin: 10px auto;
+  margin: 20px auto;
   display: block;
-  border-radius: 12px;
-  background: #f3f3f3;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.2);
+  box-shadow: 0 0 25px rgba(255,255,255,0.3);
 }
-.winner-name { font-size: 1.8rem; font-weight: 700; background: linear-gradient(90deg,var(--accent2), var(--accent3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom: 5px; }
-.winner-dept, .winner-id, .winner-gift { font-size: 1.2rem; margin: 6px 0; }
+.winner-name {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 5px;
+  background: linear-gradient(90deg,var(--accent2), var(--accent3));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.winner-dept, .winner-id, .winner-gift {
+  font-size: 1.3rem;
+  margin: 6px 0;
+}
 
+/* Result Table */
 .table-container {
   width: 90%;
   margin: 0 auto;
@@ -113,18 +143,23 @@ h1 {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: rgba(255,255,255,0.95);
-  color: #000;
-  border-radius: 10px;
+  color: #fff;
+  border-radius: 12px;
   overflow: hidden;
+  background: rgba(255,255,255,0.07);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
 }
 th, td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+  padding: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
 }
 thead th {
-  background: linear-gradient(90deg, var(--accent2), #005bb5);
+  background: linear-gradient(90deg, var(--accent2), var(--accent1));
   color: white;
+}
+tr:hover td {
+  background: rgba(255,255,255,0.1);
 }
 </style>
 </head>
@@ -160,10 +195,10 @@ let participants = [];
 let gifts = [];
 let departments = new Set();
 let resultList = [];
-const giftImageMap = {}; // backend should map gift name to image URL
+const giftImageMap = {}; // maps gift names to image URLs
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Load uploaded data from localStorage (already uploaded at backend)
+  // Load uploaded data from localStorage (from upload page)
   const savedParticipants = localStorage.getItem("participantsData");
   const savedGifts = localStorage.getItem("giftsData");
   const savedGiftImages = localStorage.getItem("giftImageMap");
@@ -211,7 +246,7 @@ function startDraw() {
 async function runAnimatedDraw() {
   for (let winner of resultList) {
     await animateDraw(winner);
-    await sleep(1500);
+    await sleep(2000);
   }
   confetti({ particleCount: 300, spread: 100, origin:{y:0.6}});
 }
@@ -223,13 +258,12 @@ async function animateDraw(winner) {
   rollBox.style.display = "block";
   card.style.display = "none";
 
-  for (let speed = 100; speed >= 20; speed -= 10) {
-    const rand = participants[Math.floor(Math.random()*participants.length)];
+  for (let speed = 100; speed >= 25; speed -= 10) {
+    const rand = participants[Math.floor(Math.random() * participants.length)];
     rollBox.textContent = `🎡 ${rand?.Name || rand?.name || "Rolling..."}`;
     await sleep(speed);
   }
 
-  // Show winner
   rollBox.style.display = "none";
   document.getElementById("winnerName").textContent = `🏆 ${winner.Name || winner.name}`;
   document.getElementById("winnerDept").textContent = `🏢 ${winner.Department || winner.Division}`;
@@ -241,7 +275,7 @@ async function animateDraw(winner) {
 
   card.style.display = "block";
   appendToTable(winner);
-  confetti({ particleCount: 150, spread: 70, origin:{y:0.6}});
+  confetti({ particleCount: 180, spread: 90, origin:{y:0.6}});
 }
 
 function appendToTable(winner) {
@@ -259,8 +293,3 @@ function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 </script>
 </body>
 </html>
-
-
-
-
-
