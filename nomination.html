@@ -241,8 +241,10 @@ footer {
     <div class="section-title">Nominator Information</div>
     <label>First Name</label>
     <input type="text" id="nominatorFirstName" required />
-    <label>Last </label>
+    <label>Last Name</label>
     <input type="text" id="nominatorLastName" required />
+     <label>Department</label>
+    <input type="text" id="nominatorDepart" required />
     <label>Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
     <input type="email" id="nominatorEmail" placeholder="e.g. jane@nlng.com" />
 
@@ -434,6 +436,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 
   const firstName = document.getElementById("nominatorFirstName").value.trim();
   const lastName = document.getElementById("nominatorLastName").value.trim();
+  const department = document.getElementById("nominatorDepart").value.trim();
   const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
   const employeeNumber = document.getElementById("employeeNumber").value.trim();
 
@@ -452,7 +455,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
   message.textContent = "⏳ Submitting nomination...";
   message.style.color = "white";
 
-  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${email || employeeNumber}`;
+  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${department.toLowerCase()}_${email || employeeNumber}`;
 
   try {
     // Check for existing submission
@@ -484,6 +487,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     await set(newRef, {
       nominatorFirstName: firstName,
       nominatorLastName: lastName,
+      nominatorDepart: department,
       nominatorEmail: email || "",
       employeeNumber: employeeNumber || "",
       uniqueKey,
@@ -506,6 +510,8 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
+
 
 
 
