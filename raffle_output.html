@@ -1,684 +1,727 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🎁 Animated Raffle Draw</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-  <style>
-    :root {
-      --accent1: #00c6ff;
-      --accent2: #0072ff;
-      --accent3: #00ff80;
-      --dark: #071428;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎁 Animated Raffle Draw</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --accent1: #00c6ff;
+            --accent2: #0072ff;
+            --accent3: #00ff80;
+            --dark: #071428;
+        }
 
-    html, body {
-      height: 100%;
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: radial-gradient(circle at 10% 20%, #081028, #071428 30%, #0b2a3a 60%, #071428 100%);
-      color: white;
-      text-align: center;
-      overflow-x: hidden;
-    }
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: radial-gradient(circle at 10% 20%, #081028, #071428 30%, #0b2a3a 60%, #071428 100%);
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+        }
 
-    h1 {
-      margin: 10px 0 16px;
-      font-size: 5rem;
-      letter-spacing: 1px;
-      background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 200% 100%;
-      animation: gradientMove 6s linear infinite;
-    }
+        h1 {
+            margin: 10px 0 16px;
+            font-size: 5rem;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 100%;
+            animation: gradientMove 6s linear infinite;
+        }
 
-    @keyframes gradientMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-    .content {
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-      max-width: 100%;
-      margin: 0 auto;
-      padding: 10px 0 60px;
-      align-items: stretch;
-    }
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px 0 60px;
+            align-items: stretch;
+        }
 
-    .top {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      flex-direction: column;
-    }
+        .top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-direction: column;
+        }
 
-    /* Table container (kept for structure, but table itself is hidden) */
-    .left {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 18px;
-      border-radius: 10px;
-      backdrop-filter: blur(8px);
-      width: 100%;
-      max-width: 100%;
-      overflow-x: auto;
-    }
+        /* Table container (kept for structure, but table itself is hidden) */
+        .left {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            border-radius: 10px;
+            backdrop-filter: blur(8px);
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+        }
 
-    table {
-      width: 100%;
-      min-width: 90px;
-      border-collapse: collapse;
-      background: rgba(255,255,255,0.98);
-      color: #000;
-      font-size: 2rem;
-      border-radius: 10px;
-      overflow: hidden;
-      table-layout: fixed;
-    }
+        table {
+            width: 100%;
+            min-width: 90px;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.98);
+            color: #000;
+            font-size: 2rem;
+            border-radius: 10px;
+            overflow: hidden;
+            table-layout: fixed;
+        }
 
-    th, td {
-      padding: 14px 12px;
-      text-align: center;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      word-break: break-word;
-    }
+        th, td {
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            word-break: break-word;
+        }
 
-    thead th {
-      background: linear-gradient(90deg, var(--accent2), #005bb5);
-      color: #fff;
-      font-weight: 600;
-    }
+        thead th {
+            background: linear-gradient(90deg, var(--accent2), #005bb5);
+            color: #fff;
+            font-weight: 600;
+        }
 
-    /* ➡️ IMPROVEMENT 1: Increased max-width for prominence */
-    .winner-card {
-      width: 100%;
-      max-width: 800px; 
-      background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
-      color: #000;
-      border-radius: 16px;
-      padding: 24px;
-      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-      position: relative;
-      overflow: visible;
-      display: none;
-      animation: popIn 700ms ease;
-      margin: 0 auto;
-    }
+        /* ➡️ IMPROVEMENT 1: Increased max-width for prominence */
+        .winner-card {
+            width: 100%;
+            max-width: 800px; 
+            background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+            color: #000;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+            position: relative;
+            overflow: visible;
+            display: none;
+            animation: popIn 700ms ease;
+            margin: 0 auto;
+        }
 
-    .winner-name {
-      font-size: 1.9rem;
-      font-weight: 700;
-      background: linear-gradient(90deg,var(--accent2), var(--accent3));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 6px;
-    }
+        .winner-name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(90deg,var(--accent2), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
 
-    .division-name, .id-name {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #004aad;
-      margin-bottom: 8px;
-    }
+        .division-name, .id-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #004aad;
+            margin-bottom: 8px;
+        }
 
-    .gift-name {
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #e63946;
-    }
+        .gift-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e63946;
+        }
 
-    /* ➡️ IMPROVEMENT 2: Increased size for gift image */
-    .gift-image-wrap {
-      margin-top: 20px;
-      height: 250px; 
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      position: relative;
-      overflow: visible;
-    }
+        /* ➡️ IMPROVEMENT 2: Increased size for gift image */
+        .gift-image-wrap {
+            margin-top: 20px;
+            height: 250px; 
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            position: relative;
+            overflow: visible;
+        }
 
-    .gift-image {
-      max-height: 240px; /* Increased max height */
-      max-width: 400px; /* Increased max width */
-      border-radius: 12px;
-      box-shadow: 0 16px 40px rgba(0,0,0,0.35);
-      transform-origin: center;
-      opacity: 0;
-    }
+        .gift-image {
+            max-height: 240px; /* Increased max height */
+            max-width: 400px; /* Increased max width */
+            border-radius: 12px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+            transform-origin: center;
+            opacity: 0;
+        }
 
-    /* animation for image entering */
-    @keyframes moveIn {
-      0% { transform: translateY(40px) scale(0.9) rotate(-6deg); opacity: 0; }
-      60% { transform: translateY(-6px) scale(1.04) rotate(2deg); opacity: 1; }
-      100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
-    }
+        /* animation for image entering */
+        @keyframes moveIn {
+            0% { transform: translateY(40px) scale(0.9) rotate(-6deg); opacity: 0; }
+            60% { transform: translateY(-6px) scale(1.04) rotate(2deg); opacity: 1; }
+            100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+        }
 
-    /* animation for image leaving */
-    @keyframes moveOut {
-      0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(-40px) scale(0.9) rotate(6deg); opacity: 0; }
-    }
+        /* animation for image leaving */
+        @keyframes moveOut {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-40px) scale(0.9) rotate(6deg); opacity: 0; }
+        }
 
-    .entering {
-      animation: moveIn 700ms ease forwards;
-    }
-    .leaving {
-      animation: moveOut 500ms ease forwards;
-    }
+        .entering {
+            animation: moveIn 700ms ease forwards;
+        }
+        .leaving {
+            animation: moveOut 500ms ease forwards;
+        }
 
-    @keyframes popIn {
-      0% { transform: scale(0.95); opacity: 0; }
-      60% { transform: scale(1.02); opacity: 1; }
-      100% { transform: scale(1); }
-    }
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            60% { transform: scale(1.02); opacity: 1; }
+            100% { transform: scale(1); }
+        }
 
-    .btns {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-top: 6px;
-      align-items:center;
-    }
+        .btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 6px;
+            align-items:center;
+        }
 
-    .btn {
-      background: linear-gradient(90deg,var(--accent2),var(--accent1));
-      border: none;
-      color: #00151f;
-      padding: 10px 18px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition: transform .14s ease, box-shadow .14s ease;
-    }
+        .btn {
+            background: linear-gradient(90deg,var(--accent2),var(--accent1));
+            border: none;
+            color: #00151f;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform .14s ease, box-shadow .14s ease;
+        }
 
-    .btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.26);
-    }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.26);
+        }
 
-    #loader {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(7, 20, 40, 0.95);
-      backdrop-filter: blur(6px);
-      color: white;
-      font-size: 10rem;
-      font-weight: 700;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
-    }
+        #loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 20, 40, 0.95);
+            backdrop-filter: blur(6px);
+            color: white;
+            font-size: 10rem;
+            font-weight: 700;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
-    @media (max-width: 640px) {
-      .winner-card { max-width: 100%; padding: 18px; }
-      th, td { font-size: 0.95rem; padding: 10px 8px; }
-      #loader { font-size: 3rem; }
-    }
+        @media (max-width: 640px) {
+            .winner-card { max-width: 100%; padding: 18px; }
+            th, td { font-size: 0.95rem; padding: 10px 8px; }
+            #loader { font-size: 3rem; }
+        }
 
-    #doneMessage {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: linear-gradient(135deg, #00c6ff, #00ff80, #ffd166);
-      color: #00151f;
-      font-size: 3rem;
-      font-weight: 800;
-      padding: 25px 40px;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-      text-transform: uppercase;
-      animation: popUp 1s ease forwards, fadeOut 3s 4s forwards;
-      z-index: 2000;
-      letter-spacing: 2px;
-    }
+        #doneMessage {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00c6ff, #00ff80, #ffd166);
+            color: #00151f;
+            font-size: 3rem;
+            font-weight: 800;
+            padding: 25px 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            animation: popUp 1s ease forwards, fadeOut 3s 4s forwards;
+            z-index: 2000;
+            letter-spacing: 2px;
+        }
 
-    /* department gallery */
-    .department-gallery {
-      margin: 12px 0 8px;
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-      min-height: 90px;
-    }
+        /* department gallery */
+        .department-gallery {
+            margin: 12px 0 8px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            min-height: 90px;
+        }
 
-    .gallery-thumb {
-      width: 110px;
-      height: 80px;
-      border-radius: 8px;
-      object-fit: cover;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.25);
-      transform-origin:center;
-      cursor: pointer; /* Added cursor for better UX */
-      animation: float 4s ease-in-out infinite;
-    }
+        .gallery-thumb {
+            width: 110px;
+            height: 80px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+            transform-origin:center;
+            cursor: pointer; /* Added cursor for better UX */
+            animation: float 4s ease-in-out infinite;
+        }
 
-    @keyframes float {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(1deg); }
-      100% { transform: translateY(0) rotate(0deg); }
-    }
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
 
-    /* --- NLNG Logo Styling --- */
-    .logo {
-      position: absolute;
-      top: 20px;
-      left: 30px;
-      z-index: 10;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+        /* --- NLNG Logo Styling --- */
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-    .logo img {
-      height: 80px;
-      width: auto;
-      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
-      transition: transform 0.3s ease, filter 0.3s ease;
-    }
+        .logo img {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
 
-    .logo img:hover {
-      transform: scale(1.05);
-      filter: drop-shadow(0 0 8px var(--nlng-yellow));
-    }
-    @keyframes popUp {
-      0% { transform: translate(-50%, -60%) scale(0.7); opacity: 0; }
-      60% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
-      100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    }
+        .logo img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 8px var(--nlng-yellow));
+        }
+        @keyframes popUp {
+            0% { transform: translate(-50%, -60%) scale(0.7); opacity: 0; }
+            60% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
 
-    @keyframes fadeOut {
-      0% { opacity: 1; }
-      100% { opacity: 0; display: none; }
-    }
-  </style>
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+    </style>
 </head>
 
 <div class="logo">
-  <img src="nlng-logo.png" alt="NLNG Logo">
+    <img src="nlng-logo.png" alt="NLNG Logo">
 </div>
 <body>
-  <h1>🎊 NLNG End of the Year Raffle Draw</h1>
+    <h1>🎊 NLNG End of the Year Raffle Draw</h1>
 
-  <div class="content">
-    <div class="top">
-      <div class="right">
-        <div class="winner-card" id="winnerCard">
-          <div class="winner-name" id="winnerName">🎁 Gift Preview / 🏆 Winner Name</div>
-          <div class="id-name" id="idNumber">🪪 ID Card Number</div>
-          <div class="division-name" id="divisionName">🏢 Division</div>
-          <div class="gift-name" id="giftName">🎁 Gift Name</div>
+    <div class="content">
+        <div class="top">
+            <div class="right">
+                <div class="winner-card" id="winnerCard">
+                    <div class="winner-name" id="winnerName">🎁 Gift Preview / 🏆 Winner Name</div>
+                    <div class="id-name" id="idNumber">🪪 ID Card Number</div>
+                    <div class="division-name" id="divisionName">🏢 Division</div>
+                    <div class="gift-name" id="giftName">🎁 Gift Name</div>
 
-          <div class="gift-image-wrap">
-            <img id="giftImage" class="gift-image" src="" alt="Gift image">
-          </div>
+                    <div class="gift-image-wrap">
+                        <img id="giftImage" class="gift-image" src="" alt="Gift image">
+                    </div>
+                </div>
+
+                <div class="btns">
+                    <select id="departmentSelect" class="btn" style="background:transparent;color:white;border:1px solid rgba(255,255,255,0.12);padding:10px;border-radius:10px;font-size:1.2rem;">
+                        <option value="">Select Department (All)</option>
+                    </select>
+
+                    <input type="number" id="maxDrawsInput" class="btn" value="1" min="1" placeholder="Max Draws" style="background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px; border-radius: 10px; font-size: 1.2rem; width: 150px; text-align: center;">
+
+                    <button class="btn" id="startDraw">Start Draw</button>
+                    <button class="btn" id="restartBtn">Restart</button>
+                    <button class="btn" id="homeBtn">🏠 Home</button>
+                </div>
+            </div>
         </div>
 
-        <div class="btns">
-          <select id="departmentSelect" class="btn" style="background:transparent;color:white;border:1px solid rgba(255,255,255,0.12);padding:10px;border-radius:10px;font-size:1.2rem;">
-            <option value="">Select Department (All)</option>
-          </select>
+        <div class="left">
+            <h3>🎁 Department Gifts (Total Gifts Available: <span id="totalGiftsDisplay">0</span>)</h3>
+            <div id="gallery" class="department-gallery" aria-live="polite"></div>
 
-          <button class="btn" id="startDraw">Start Draw</button>
-          <button class="btn" id="restartBtn">Restart</button>
-          <button class="btn" id="homeBtn">🏠 Home</button>
+            <h3 style="margin-top:18px;">🎁 Winners Table (Hidden for Focus)</h3>
+            <table id="resultTable" aria-live="polite" style="display:none;">
+                <thead>
+                    <tr>
+                        <th style="width:6%;">#</th>
+                        <th style="width:28%;">Participant Name</th>
+                        <th style="width:20%;">ID Card No.</th>
+                        <th style="width:26%;">Division</th>
+                        <th style="width:20%;">Gift</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
-      </div>
     </div>
 
-    <div class="left">
-      <h3>🎁 Department Gifts</h3>
-      <div id="gallery" class="department-gallery" aria-live="polite"></div>
-
-      <h3 style="margin-top:18px;">🎁 Winners Table (Hidden for Focus)</h3>
-      <table id="resultTable" aria-live="polite" style="display:none;">
-        <thead>
-          <tr>
-            <th style="width:6%;">#</th>
-            <th style="width:28%;">Participant Name</th>
-            <th style="width:20%;">ID Card No.</th>
-            <th style="width:26%;">Division</th>
-            <th style="width:20%;">Gift</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div id="loader">10</div>
+    <div id="loader">10</div>
 <script>
-  // --- Start of Hardcoded Gift Data (USED ONLY FOR DISPLAY/PREVIEW SELECTOR) ---
-  const giftsHardcoded = [
-    // PD Department Gifts
-    { name: "Electric Iron", department: "PD", image: "iron.jpg" },
-    { name: "Gas Cooker", department: "PD", image: "cooker.jpg" },
-    { name: "55-inch TV", department: "PD", image: "tv.jpg" },
-    { name: "Water Dispenser", department: "PD", image: "dispenser.jpg" },
-    
-    // PI Department Gifts
-    { name: "Laptop", department: "PI", image: "laptop.jpg" },
-    { name: "Smartphone", department: "PI", image: "phone.jpg" },
-    { name: "Tablet", department: "PI", image: "tablet.jpg" },
+    // --- Start of Hardcoded Gift Data (USED ONLY FOR DISPLAY/PREVIEW SELECTOR) ---
+    const giftsHardcoded = [
+        // PD Department Gifts
+        { name: "Electric Iron", department: "PD", image: "iron.jpg" },
+        { name: "Gas Cooker", department: "PD", image: "cooker.jpg" },
+        { name: "55-inch TV", department: "PD", image: "tv.jpg" },
+        { name: "Water Dispenser", department: "PD", image: "dispenser.jpg" },
+        
+        // PI Department Gifts
+        { name: "Laptop", department: "PI", image: "laptop.jpg" },
+        { name: "Smartphone", department: "PI", image: "phone.jpg" },
+        { name: "Tablet", department: "PI", image: "tablet.jpg" },
 
-    // PS Department Gifts
-    { name: "Shoes Voucher", department: "PS", image: "shoes.jpg" },
-    { name: "Monitor", department: "PS", image: "monitor.jpg" },
-    { name: "Small Car", department: "PS", image: "car.jpg" },
+        // PS Department Gifts
+        { name: "Shoes Voucher", department: "PS", image: "shoes.jpg" },
+        { name: "Monitor", department: "PS", image: "monitor.jpg" },
+        { name: "Small Car", department: "PS", image: "car.jpg" },
 
-    // PK Department Gifts
-    { name: "Generator", department: "PK", image: "generator.jpg" },
-    { name: "Oven", department: "PK", image: "images/oven.jpg" },
-    
-    // PM Department Gifts
-    { name: "Microwave", department: "PM", image: "microwave.jpg" },
-    { name: "Toaster", department: "PM", image: "toaster.jpg" },
-  ];
-  // --- End of Hardcoded Gift Data ---
+        // PK Department Gifts
+        { name: "Generator", department: "PK", image: "generator.jpg" },
+        { name: "Oven", department: "PK", image: "images/oven.jpg" },
+        
+        // PM Department Gifts
+        { name: "Microwave", department: "PM", image: "microwave.jpg" },
+        { name: "Toaster", department: "PM", image: "toaster.jpg" },
+    ];
+    // --- End of Hardcoded Gift Data ---
 
-  let participants = [];
-  let gifts = giftsHardcoded; // ➡️ Gift list for DISPLAY/PREVIEW (uses hardcoded data)
-  let giftsForDraw = [];      // ➡️ Gift list for DRAWING (loaded from localStorage)
-  let results = [];
-  let index = 0;
-  const resultBody = document.querySelector("#resultTable tbody");
-  const winnerCard = document.getElementById("winnerCard");
-  const winnerNameEl = document.getElementById("winnerName");
-  const divisionNameEl = document.getElementById("divisionName");
-  const giftNameEl = document.getElementById("giftName");
-  const idNumberEl = document.getElementById("idNumber");
-  const loader = document.getElementById("loader");
-  const giftImageEl = document.getElementById("giftImage");
-  const resultTable = document.getElementById("resultTable");
-  const gallery = document.getElementById("gallery");
-  const departmentSelect = document.getElementById("departmentSelect");
+    let participants = [];
+    let gifts = giftsHardcoded; // ➡️ Gift list for DISPLAY/PREVIEW (uses hardcoded data)
+    let giftsForDraw = [];       // ➡️ Gift list for DRAWING (loaded from localStorage)
+    let results = [];
+    let index = 0;
+    const resultBody = document.querySelector("#resultTable tbody");
+    const winnerCard = document.getElementById("winnerCard");
+    const winnerNameEl = document.getElementById("winnerName");
+    const divisionNameEl = document.getElementById("divisionName");
+    const giftNameEl = document.getElementById("giftName");
+    const idNumberEl = document.getElementById("idNumber");
+    const loader = document.getElementById("loader");
+    const giftImageEl = document.getElementById("giftImage");
+    const resultTable = document.getElementById("resultTable");
+    const gallery = document.getElementById("gallery");
+    const departmentSelect = document.getElementById("departmentSelect");
+    const maxDrawsInput = document.getElementById("maxDrawsInput"); // NEW: Input for max draws
+    const totalGiftsDisplay = document.getElementById("totalGiftsDisplay"); // NEW: Display for total gifts
 
-  window.addEventListener("DOMContentLoaded", () => {
-    const savedParticipants = localStorage.getItem("participantsData");
-    const savedGifts = localStorage.getItem("giftsData"); // Load gifts for draw from admin page
+    window.addEventListener("DOMContentLoaded", () => {
+        const savedParticipants = localStorage.getItem("participantsData");
+        const savedGifts = localStorage.getItem("giftsData"); // Load gifts for draw from admin page
 
-    // 1. Load Participants
-    if (savedParticipants) {
-      participants = JSON.parse(savedParticipants);
-      participants = participants.map((p) => ({
-        name: p.name || p.Name || "Unnamed",
-        division: p.division || p.Division || p.department || p.Department || "—",
-        idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
-      }));
-    } else {
-      alert("⚠️ Please upload participants on the admin page first.");
-    }
-
-    // 2. Load Gifts for Draw
-    if (savedGifts) {
-        giftsForDraw = JSON.parse(savedGifts);
-        // Normalize gifts for drawing (this list needs to match the structure expected by the draw logic)
-        giftsForDraw = giftsForDraw.map((g) => ({
-            name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
-            department: g.department || g.Department || g.Division || "General",
-            image: g.image || g.ImageURL || g.Image || g.img || "", // Image will be overwritten by hardcoded list in winner announce
-        }));
-        console.log(`Loaded ${giftsForDraw.length} gifts for the draw.`);
-    } else {
-        alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
-    }
-    
-    if (gifts.length === 0) {
-       alert("⚠️ Error: Hardcoded gift data (for display) is empty. Cannot show gallery.");
-       return;
-    }
-    
-    populateDepartmentSelect();
-    updateGallery(); // initial gallery (All)
-  });
-
-  function populateDepartmentSelect() {
-    // Uses hardcoded gifts (gifts) to populate selector
-    const depts = Array.from(new Set(gifts.map(g => (g.department || "General")))).sort();
-    departmentSelect.innerHTML = '<option value="">Select Department (All)</option>';
-    depts.forEach(d => {
-      const opt = document.createElement("option");
-      opt.value = d;
-      opt.textContent = d;
-      departmentSelect.appendChild(opt);
-    });
-
-    departmentSelect.addEventListener("change", () => {
-      updateGallery();
-    });
-  }
-
-  function updateGallery() {
-    const selected = departmentSelect.value;
-    // Uses hardcoded gifts (gifts) to filter gallery
-    const filtered = selected ? gifts.filter(g => (g.department || "General") === selected) : gifts;
-    gallery.innerHTML = "";
-
-    if (!filtered.length) {
-      gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts for this department in the hardcoded list.</div>';
-      return;
-    }
-
-    filtered.forEach(g => {
-      const img = document.createElement("img");
-      img.className = "gallery-thumb";
-      img.alt = g.name || "gift";
-      // Uses hardcoded image path
-      if (g.image && g.image.trim()) {
-        img.src = g.image;
-      } else {
-        img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
-      }
-      img.title = g.name;
-      img.addEventListener('click', () => {
-        previewGift(g);
-      });
-
-      gallery.appendChild(img);
-    });
-  }
-
-  // Function to Preview a Gift
-  function previewGift(giftObj) {
-    winnerCard.style.display = "block";
-    winnerNameEl.textContent = "🎁 Gift Preview";
-    idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
-    divisionNameEl.textContent = "Click 'Start Draw' to begin!";
-    giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
-
-    const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
-      ? giftObj.image 
-      : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
-    
-    giftImageEl.src = giftImageSrc;
-    
-    giftImageEl.classList.remove("entering", "leaving");
-    void giftImageEl.offsetWidth; 
-    giftImageEl.classList.add("entering");
-    setTimeout(() => giftImageEl.classList.remove("entering"), 700);
-  }
-
-
-  document.getElementById("startDraw").addEventListener("click", async () => {
-    if (!participants.length) {
-      alert("Participant data is not loaded. Please upload participants first.");
-      return;
-    }
-    // ➡️ Check the list used for the actual draw
-    if (!giftsForDraw.length) {
-      alert("Gift data for drawing is empty. Please upload the gift list first.");
-      return;
-    }
-
-    // DRAW MODIFICATION: Use giftsForDraw (from localStorage)
-    const usableGifts = giftsForDraw.slice();
-
-    const numDraws = Math.min(participants.length, usableGifts.length);
-    const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-    const shuffledGifts = [...usableGifts].sort(() => 0.5 - Math.random());
-
-    results = [];
-    for (let i = 0; i < numDraws; i++) {
-      // The `gift` object here contains the gift details from the UPLOADED file
-      results.push({
-        name: shuffledParticipants[i].name,
-        division: shuffledParticipants[i].division,
-        idCard: shuffledParticipants[i].idCard,
-        gift: shuffledGifts[i], 
-      });
-    }
-
-    resultBody.innerHTML = "";
-    index = 0;
-    runDrawSequence();
-  });
-
-  document.getElementById("homeBtn").addEventListener("click", () => {
-    window.location.href = "/index.html";
-  });
-
-  document.getElementById("restartBtn").addEventListener("click", () => {
-    // Reset state
-    results = [];
-    index = 0;
-    resultBody.innerHTML = "";
-    resultTable.style.display = "none";
-    winnerCard.style.display = "none";
-    giftImageEl.src = "";
-
-    // Reset preview content text
-    winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
-    idNumberEl.textContent = "🪪 ID Card Number";
-    divisionNameEl.textContent = "🏢 Division";
-    giftNameEl.textContent = "🎁 Gift Name";
-  });
-
-  async function runDrawSequence() {
-    for (let i = 0; i < results.length; i++) {
-      if (i === 0) {
-        await startCountdown(10);
-      } else {
-        await sleep(1000);
-      }
-      await announceWinnerSequence();
-    }
-
-    const doneMsg = document.getElementById("doneMessage");
-    doneMsg.style.display = "block";
-
-    if (typeof confetti === "function") {
-      confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
-    }
-  }
-
-  function startCountdown(seconds) {
-    return new Promise((resolve) => {
-      let count = seconds;
-      loader.textContent = count;
-      loader.style.display = "flex";
-
-      const timer = setInterval(() => {
-        count--;
-        if (count > 0) {
-          loader.textContent = count;
+        // 1. Load Participants
+        if (savedParticipants) {
+            participants = JSON.parse(savedParticipants);
+            participants = participants.map((p) => ({
+                name: p.name || p.Name || "Unnamed",
+                division: p.division || p.Division || p.department || p.Department || "—",
+                idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
+            }));
         } else {
-          clearInterval(timer);
-          loader.style.display = "none";
-          resolve();
+            alert("⚠️ Please upload participants on the admin page first.");
         }
-      }, 1000);
+
+        // 2. Load Gifts for Draw
+        if (savedGifts) {
+            giftsForDraw = JSON.parse(savedGifts);
+            // Normalize gifts for drawing (this list needs to match the structure expected by the draw logic)
+            giftsForDraw = giftsForDraw.map((g) => ({
+                name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
+                department: g.department || g.Department || g.Division || "General",
+                image: g.image || g.ImageURL || g.Image || g.img || "", // Image will be overwritten by hardcoded list in winner announce
+            }));
+            console.log(`Loaded ${giftsForDraw.length} gifts for the draw.`);
+        } else {
+            alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
+        }
+        
+        if (gifts.length === 0) {
+            alert("⚠️ Error: Hardcoded gift data (for display) is empty. Cannot show gallery.");
+            return;
+        }
+
+        // NEW: Update total gifts display and max draws input
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        maxDrawsInput.max = giftsForDraw.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+
+        populateDepartmentSelect();
+        updateGallery(); // initial gallery (All)
     });
-  }
 
-  function sleep(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+    function populateDepartmentSelect() {
+        // Uses hardcoded gifts (gifts) to populate selector
+        const depts = Array.from(new Set(gifts.map(g => (g.department || "General")))).sort();
+        departmentSelect.innerHTML = '<option value="">Select Department (All)</option>';
+        depts.forEach(d => {
+            const opt = document.createElement("option");
+            opt.value = d;
+            opt.textContent = d;
+            departmentSelect.appendChild(opt);
+        });
 
-  async function announceWinnerSequence() {
-    const winner = results[index];
-    if (!winner) return;
-
-    // The gift data for the winner comes from the UPLOADED list (winner.gift)
-    const giftObj = winner.gift;
-    const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
-    
-    // Find the corresponding hardcoded gift data for the image
-    const displayGift = gifts.find(g => g.name === giftText);
-
-    // populate text
-    winnerNameEl.textContent = `🏆 ${winner.name}`;
-    idNumberEl.textContent = `🪪 ${winner.idCard}`;
-    divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
-    giftNameEl.textContent = `🎁 ${giftText}`;
-
-    // ➡️ Use the hardcoded image if a match is found, otherwise use fallback
-    const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
-        ? displayGift.image 
-        : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
-    
-    giftImageEl.src = imageSource;
-
-
-    winnerCard.style.display = "block";
-    giftImageEl.classList.remove("entering", "leaving");
-    void giftImageEl.offsetWidth;
-    giftImageEl.classList.add("entering");
-
-    if (typeof confetti === "function") {
-      confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
+        departmentSelect.addEventListener("change", () => {
+            updateGallery();
+        });
     }
 
-    // Add to hidden table (for record)
-    const rowHtml = `<tr>
-        <td>${index + 1}</td>
-        <td>${escapeHtml(winner.name)}</td>
-        <td>${escapeHtml(winner.idCard)}</td>
-        <td>${escapeHtml(winner.division || "—")}</td>
-        <td>${escapeHtml(giftText)}</td>
-      </tr>`;
-    resultBody.insertAdjacentHTML("beforeend", rowHtml);
-    
-    await sleep(2200);
+    function updateGallery() {
+        const selected = departmentSelect.value;
+        // Uses hardcoded gifts (gifts) to filter gallery
+        const filtered = selected ? gifts.filter(g => (g.department || "General") === selected) : gifts;
+        gallery.innerHTML = "";
 
-    giftImageEl.classList.remove("entering");
-    giftImageEl.classList.add("leaving");
+        if (!filtered.length) {
+            gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts for this department in the hardcoded list.</div>';
+            return;
+        }
 
-    await sleep(520);
+        filtered.forEach(g => {
+            const img = document.createElement("img");
+            img.className = "gallery-thumb";
+            img.alt = g.name || "gift";
+            // Uses hardcoded image path
+            if (g.image && g.image.trim()) {
+                img.src = g.image;
+            } else {
+                img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
+            }
+            img.title = g.name;
+            img.addEventListener('click', () => {
+                previewGift(g);
+            });
 
-    winnerCard.style.display = "none";
-    giftImageEl.classList.remove("leaving");
-    index++;
-    await sleep(400);
-  }
+            gallery.appendChild(img);
+        });
+    }
 
-  function escapeHtml(text = "") {
-    return String(text).replace(/[&<>"']/g, (m) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-    }[m]));
-  }
+    // Function to Preview a Gift
+    function previewGift(giftObj) {
+        winnerCard.style.display = "block";
+        winnerNameEl.textContent = "🎁 Gift Preview";
+        idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
+        divisionNameEl.textContent = "Click 'Start Draw' to begin!";
+        giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+
+        const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
+            ? giftObj.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
+        
+        giftImageEl.src = giftImageSrc;
+        
+        giftImageEl.classList.remove("entering", "leaving");
+        void giftImageEl.offsetWidth; 
+        giftImageEl.classList.add("entering");
+        setTimeout(() => giftImageEl.classList.remove("entering"), 700);
+    }
+
+
+    document.getElementById("startDraw").addEventListener("click", async () => {
+        if (!participants.length) {
+            alert("Participant data is not loaded. Please upload participants first.");
+            return;
+        }
+        // ➡️ Check the list used for the actual draw
+        if (!giftsForDraw.length) {
+            alert("Gift data for drawing is empty. Please upload the gift list first.");
+            return;
+        }
+
+        // NEW: Get the desired number of draws
+        const desiredDraws = parseInt(maxDrawsInput.value, 10);
+
+        if (isNaN(desiredDraws) || desiredDraws < 1) {
+            alert("Please enter a valid number of draws (1 or more).");
+            return;
+        }
+
+        // DRAW MODIFICATION: Use giftsForDraw (from localStorage)
+        const usableGifts = giftsForDraw.slice();
+
+        // Calculate the actual number of draws, constrained by participants, gifts, and the user's input
+        const numDraws = Math.min(participants.length, usableGifts.length, desiredDraws);
+
+        if (numDraws === 0) {
+             alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
+             return;
+        }
+
+        const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
+        const shuffledGifts = [...usableGifts].sort(() => 0.5 - Math.random());
+
+        results = [];
+        for (let i = 0; i < numDraws; i++) {
+            // The `gift` object here contains the gift details from the UPLOADED file
+            results.push({
+                name: shuffledParticipants[i].name,
+                division: shuffledParticipants[i].division,
+                idCard: shuffledParticipants[i].idCard,
+                gift: shuffledGifts[i], 
+            });
+        }
+
+        resultBody.innerHTML = "";
+        index = 0;
+        runDrawSequence();
+
+        // NEW: Update the total gifts available to reflect the draw (simulated replacement)
+        totalGiftsDisplay.textContent = giftsForDraw.length - results.length;
+        maxDrawsInput.max = giftsForDraw.length - results.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length - results.length);
+    });
+
+    document.getElementById("homeBtn").addEventListener("click", () => {
+        window.location.href = "/index.html";
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+        // Reset state
+        results = [];
+        index = 0;
+        resultBody.innerHTML = "";
+        resultTable.style.display = "none";
+        winnerCard.style.display = "none";
+        giftImageEl.src = "";
+
+        // Reset preview content text
+        winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
+        idNumberEl.textContent = "🪪 ID Card Number";
+        divisionNameEl.textContent = "🏢 Division";
+        giftNameEl.textContent = "🎁 Gift Name";
+
+        // NEW: Reset gift count display and max draws input to initial state
+        const savedGifts = localStorage.getItem("giftsData"); 
+        if (savedGifts) {
+             giftsForDraw = JSON.parse(savedGifts).map((g) => ({
+                name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
+                department: g.department || g.Department || g.Division || "General",
+                image: g.image || g.ImageURL || g.Image || g.img || "",
+            }));
+        } else {
+             giftsForDraw = [];
+        }
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        maxDrawsInput.max = giftsForDraw.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+    });
+
+    async function runDrawSequence() {
+        for (let i = 0; i < results.length; i++) {
+            if (i === 0) {
+                await startCountdown(10);
+            } else {
+                await sleep(1000);
+            }
+            await announceWinnerSequence();
+        }
+
+        const doneMsg = document.getElementById("doneMessage");
+        doneMsg.style.display = "block";
+
+        if (typeof confetti === "function") {
+            confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
+        }
+    }
+
+    function startCountdown(seconds) {
+        return new Promise((resolve) => {
+            let count = seconds;
+            loader.textContent = count;
+            loader.style.display = "flex";
+
+            const timer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    loader.textContent = count;
+                } else {
+                    clearInterval(timer);
+                    loader.style.display = "none";
+                    resolve();
+                }
+            }, 1000);
+        });
+    }
+
+    function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    async function announceWinnerSequence() {
+        const winner = results[index];
+        if (!winner) return;
+
+        // The gift data for the winner comes from the UPLOADED list (winner.gift)
+        const giftObj = winner.gift;
+        const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
+        
+        // Find the corresponding hardcoded gift data for the image
+        const displayGift = gifts.find(g => g.name === giftText);
+
+        // populate text
+        winnerNameEl.textContent = `🏆 ${winner.name}`;
+        idNumberEl.textContent = `🪪 ${winner.idCard}`;
+        divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
+        giftNameEl.textContent = `🎁 ${giftText}`;
+
+        // ➡️ Use the hardcoded image if a match is found, otherwise use fallback
+        const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
+            ? displayGift.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
+        
+        giftImageEl.src = imageSource;
+
+
+        winnerCard.style.display = "block";
+        giftImageEl.classList.remove("entering", "leaving");
+        void giftImageEl.offsetWidth;
+        giftImageEl.classList.add("entering");
+
+        if (typeof confetti === "function") {
+            confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
+        }
+
+        // Add to hidden table (for record)
+        const rowHtml = `<tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(winner.name)}</td>
+            <td>${escapeHtml(winner.idCard)}</td>
+            <td>${escapeHtml(winner.division || "—")}</td>
+            <td>${escapeHtml(giftText)}</td>
+        </tr>`;
+        resultBody.insertAdjacentHTML("beforeend", rowHtml);
+        
+        await sleep(2200);
+
+        giftImageEl.classList.remove("entering");
+        giftImageEl.classList.add("leaving");
+
+        await sleep(520);
+
+        winnerCard.style.display = "none";
+        giftImageEl.classList.remove("leaving");
+        index++;
+        await sleep(400);
+    }
+
+    function escapeHtml(text = "") {
+        return String(text).replace(/[&<>"']/g, (m) => ({
+            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+        }[m]));
+    }
 </script>
 <div id="doneMessage">✅ Done Drawing!</div>
 </body>
 </html>
-
