@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
 <style>
 :root {
   --accent1: #00c6ff;
@@ -24,8 +25,6 @@ html, body {
   text-align: center;
   overflow-x: hidden;
 }
-
-/* Header */
 h1 {
   margin: 20px 0 25px;
   font-size: 3rem;
@@ -40,8 +39,6 @@ h1 {
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
-
-/* Controls */
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -61,7 +58,6 @@ h1 {
   backdrop-filter: blur(10px);
 }
 .controls select option { color: #000; }
-
 .btn {
   background: linear-gradient(90deg, var(--accent2), var(--accent1));
   border: none;
@@ -78,7 +74,58 @@ h1 {
   box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
-/* Rolling Text */
+/* Gift motion display */
+#deptGifts {
+  display: none;
+  margin: 25px auto;
+  max-width: 900px;
+  text-align: center;
+}
+#deptGifts h3 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+  color: var(--accent3);
+}
+.gift-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.gift-item {
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  padding: 10px;
+  width: 150px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: giftIn 0.8s forwards;
+}
+.gift-item.exit {
+  animation: giftOut 0.6s forwards;
+}
+@keyframes giftIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes giftOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-30px); }
+}
+.gift-item img {
+  width: 100%;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.gift-item span {
+  font-weight: 600;
+  color: #fff;
+}
+
+/* Rolling & Winner */
 #rollingBox {
   display: none;
   font-size: 2.5rem;
@@ -92,8 +139,6 @@ h1 {
   0%,100% { opacity: 1; transform: scale(1); }
   50% { opacity: 0.6; transform: scale(1.05); }
 }
-
-/* Winner Card */
 .winner-card {
   display: none;
   background: rgba(255,255,255,0.15);
@@ -108,8 +153,8 @@ h1 {
   animation: popIn 0.7s ease;
 }
 @keyframes popIn {
-  0% { transform: scale(0.95); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 .winner-card img {
   width: 350px;
@@ -134,11 +179,12 @@ h1 {
   margin: 6px 0;
 }
 
-/* Result Table */
+/* Table */
 .table-container {
   width: 90%;
   margin: 0 auto;
   overflow-x: auto;
+  display: none; /* initially hidden */
 }
 table {
   width: 100%;
@@ -168,9 +214,19 @@ tr:hover td {
   <h1>🎊 NLNG End of Year Raffle Draw</h1>
 
   <div class="controls">
-    <select id="departmentFilter"><option value="">All Departments</option></select>
+    <select id="departmentFilter">
+      <option value="">Select Department</option>
+      <option value="Department A">Department A</option>
+      <option value="Department B">Department B</option>
+      <option value="Department C">Department C</option>
+    </select>
     <input type="number" id="numDraws" placeholder="Number of Winners" min="1" />
     <button class="btn" id="startDraw">Start Draw</button>
+  </div>
+
+  <div id="deptGifts">
+    <h3>🎁 Gifts for Selected Department</h3>
+    <div class="gift-list" id="giftList"></div>
   </div>
 
   <div id="rollingBox">🎡 Rolling...</div>
@@ -183,7 +239,7 @@ tr:hover td {
     <div class="winner-gift" id="giftName">🎁 Gift</div>
   </div>
 
-  <div class="table-container">
+  <div class="table-container" id="tableContainer">
     <table id="resultTable">
       <thead><tr><th>#</th><th>Name</th><th>Department</th><th>ID</th><th>Gift</th></tr></thead>
       <tbody></tbody>
@@ -193,80 +249,79 @@ tr:hover td {
 <script>
 let participants = [];
 let gifts = [];
-let departments = new Set();
 let resultList = [];
-const giftImageMap = {"Smartphone": "Smartphone.jpg",
-"Laptop": "Laptop.jpg",
-"Bluetooth Speaker": "Bluetooth Speaker.jpg"
-}; // maps gift names to image URLs
-// Request fullscreen when draw starts
-function enterFullscreen() {
-  const elem = document.documentElement;
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.webkitRequestFullscreen) { /* Safari */
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) { /* IE11 */
-    elem.msRequestFullscreen();
-  }
-}
 
-// Exit fullscreen (optional)
-function exitFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.webkitExitFullscreen) { /* Safari */
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) { /* IE11 */
-    document.msExitFullscreen();
-  }
-}
+let departmentGiftMap = {
+  "Department A": ["Smartphone", "Laptop", "Bluetooth Speaker"],
+  "Department B": ["Smart Watch", "Tablet", "Power Bank"],
+  "Department C": ["Television", "Microwave", "Air Fryer"]
+};
 
-// Trigger fullscreen at the start of the draw
-document.getElementById("startDraw").addEventListener("click", () => {
-  enterFullscreen();
-});
+const giftImageMap = {
+  "smartphone": "images/Smartphone.jpg",
+  "laptop": "images/Laptop.jpg",
+  "bluetooth speaker": "images/Bluetooth Speaker.jpg",
+  "smart watch": "images/Smart Watch.jpg",
+  "tablet": "images/Tablet.jpg",
+  "power bank": "images/Power Bank.jpg",
+  "television": "images/Television.jpg",
+  "microwave": "images/Microwave.jpg",
+  "air fryer": "images/Air Fryer.jpg"
+};
 
+// Load Excel data if saved
 window.addEventListener("DOMContentLoaded", () => {
-  // Load uploaded data from localStorage (from upload page)
   const savedParticipants = localStorage.getItem("participantsData");
   const savedGifts = localStorage.getItem("giftsData");
-  const savedGiftImages = localStorage.getItem("giftImageMap");
-
   if (savedParticipants) participants = JSON.parse(savedParticipants);
   if (savedGifts) gifts = JSON.parse(savedGifts);
-  if (savedGiftImages) Object.assign(giftImageMap, JSON.parse(savedGiftImages));
-
-  participants.forEach(p => departments.add(p.Department || p.Division || "—"));
-  updateDepartmentDropdown();
 });
 
-function updateDepartmentDropdown() {
-  const select = document.getElementById("departmentFilter");
-  select.innerHTML = '<option value="">All Departments</option>' +
-    [...departments].map(d => `<option value="${d}">${d}</option>`).join("");
-}
+// Animate department gifts
+document.getElementById("departmentFilter").addEventListener("change", () => {
+  const dept = document.getElementById("departmentFilter").value;
+  const list = document.getElementById("giftList");
+  const container = document.getElementById("deptGifts");
+
+  // exit animation
+  [...list.children].forEach(item => item.classList.add("exit"));
+  setTimeout(() => {
+    list.innerHTML = "";
+    if (dept && departmentGiftMap[dept]) {
+      container.style.display = "block";
+      departmentGiftMap[dept].forEach((g, i) => {
+        const giftImg = giftImageMap[g.toLowerCase()] || "images/default.png";
+        const div = document.createElement("div");
+        div.className = "gift-item";
+        div.style.animationDelay = `${i * 0.1}s`;
+        div.innerHTML = `<img src="${giftImg}" alt="${g}"><span>${g}</span>`;
+        list.appendChild(div);
+      });
+    } else container.style.display = "none";
+  }, 500);
+});
 
 document.getElementById("startDraw").addEventListener("click", startDraw);
 
 function startDraw() {
+  const dept = document.getElementById("departmentFilter").value;
   const num = parseInt(document.getElementById("numDraws").value) || 1;
-  const selectedDept = document.getElementById("departmentFilter").value;
-  let availableNames = selectedDept ? participants.filter(p => (p.Department || p.Division) === selectedDept) : [...participants];
+  let availableNames = dept ? participants.filter(p => (p.Department || p.Division) === dept) : [...participants];
+  let availableGifts = [...gifts];
 
-  if (!availableNames.length || !gifts.length) {
-    alert("⚠️ Please ensure participants and gifts are uploaded and available.");
+  if (!availableNames.length || !availableGifts.length) {
+    alert("⚠️ Please select a department and ensure participants & gifts are uploaded.");
     return;
   }
 
-  const winnersCount = Math.min(num, availableNames.length, gifts.length);
+  const winnersCount = Math.min(num, availableNames.length, availableGifts.length);
   resultList = [];
 
   for (let i = 0; i < winnersCount; i++) {
     const pIndex = Math.floor(Math.random() * availableNames.length);
-    const gIndex = Math.floor(Math.random() * gifts.length);
+    const gIndex = Math.floor(Math.random() * availableGifts.length);
     const person = availableNames.splice(pIndex, 1)[0];
-    const gift = gifts.splice(gIndex, 1)[0];
+    const gift = availableGifts.splice(gIndex, 1)[0];
     resultList.push({...person, gift});
   }
 
@@ -290,14 +345,14 @@ async function animateDraw(winner) {
 
   for (let speed = 100; speed >= 25; speed -= 10) {
     const rand = participants[Math.floor(Math.random() * participants.length)];
-    rollBox.textContent = `🎡 ${rand?.Name || rand?.name || "Rolling..."}`;
+    rollBox.textContent = `🎡 ${rand?.Name || "Rolling..."}`;
     await sleep(speed);
   }
 
   rollBox.style.display = "none";
-  document.getElementById("winnerName").textContent = `🏆 ${winner.Name || winner.name}`;
-  document.getElementById("winnerDept").textContent = `🏢 ${winner.Department || winner.Division}`;
-  document.getElementById("winnerId").textContent = `🪪 ${winner["ID Card Number"] || winner.ID}`;
+  document.getElementById("winnerName").textContent = `🏆 ${winner.Name}`;
+  document.getElementById("winnerDept").textContent = `🏢 ${winner.Department}`;
+  document.getElementById("winnerId").textContent = `🪪 ${winner.ID}`;
   document.getElementById("giftName").textContent = `🎁 ${winner.gift}`;
 
   const giftImg = giftImageMap[winner.gift?.toLowerCase()] || "images/default.png";
@@ -309,12 +364,14 @@ async function animateDraw(winner) {
 }
 
 function appendToTable(winner) {
+  const tableContainer = document.getElementById("tableContainer");
+  tableContainer.style.display = "block"; // show table only after first draw
   const tbody = document.querySelector("#resultTable tbody");
   const tr = document.createElement("tr");
   tr.innerHTML = `<td>${tbody.children.length+1}</td>
-                  <td>${winner.Name || winner.name}</td>
-                  <td>${winner.Department || winner.Division}</td>
-                  <td>${winner["ID Card Number"] || winner.ID}</td>
+                  <td>${winner.Name}</td>
+                  <td>${winner.Department}</td>
+                  <td>${winner.ID}</td>
                   <td>${winner.gift}</td>`;
   tbody.appendChild(tr);
 }
@@ -323,6 +380,3 @@ function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 </script>
 </body>
 </html>
-
-
-
