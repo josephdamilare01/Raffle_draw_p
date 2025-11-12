@@ -166,11 +166,21 @@
             100% { transform: translateY(-40px) scale(0.9) rotate(6deg); opacity: 0; }
         }
 
+        /* NEW: Animation for continuous subtle floating */
+        @keyframes floatHorizontal {
+            0% { transform: translateX(0px); }
+            50% { transform: translateX(8px); }
+            100% { transform: translateX(0px); }
+        }
+
         .entering {
             animation: moveIn 700ms ease forwards;
         }
         .leaving {
             animation: moveOut 500ms ease forwards;
+        }
+        .floating { /* NEW class for continuous floating */
+            animation: floatHorizontal 4s ease-in-out infinite;
         }
 
         @keyframes popIn {
@@ -509,7 +519,7 @@
     }
 
     // Function to Preview a Gift
-    function previewGift(giftObj) {
+    async function previewGift(giftObj) {
         winnerCard.style.display = "block";
         winnerNameEl.textContent = "🎁 Gift Preview";
         idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
@@ -520,12 +530,26 @@
             ? giftObj.image 
             : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
         
+        // Ensure the old image animates out before the new one animates in
+        if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
+            giftImageEl.classList.remove("entering", "floating");
+            giftImageEl.classList.add("leaving");
+            await sleep(500); // Wait for leaving animation to complete
+        } else if (giftImageEl.classList.contains("leaving")) {
+             // If already leaving, just wait
+            await sleep(500);
+        }
+
         giftImageEl.src = giftImageSrc;
-        
-        giftImageEl.classList.remove("entering", "leaving");
-        void giftImageEl.offsetWidth; 
+        giftImageEl.classList.remove("leaving"); // Remove leaving if it was there
+        void giftImageEl.offsetWidth; // Trigger reflow to restart animation
         giftImageEl.classList.add("entering");
-        setTimeout(() => giftImageEl.classList.remove("entering"), 700);
+
+        // After the entering animation, start the continuous floating
+        setTimeout(() => {
+            giftImageEl.classList.remove("entering");
+            giftImageEl.classList.add("floating"); // Add the new floating animation
+        }, 700); // Duration of the 'entering' animation
     }
 
 
@@ -575,6 +599,9 @@
 
         resultBody.innerHTML = "";
         index = 0;
+
+        // Remove floating animation when draw starts
+        giftImageEl.classList.remove("floating"); 
         runDrawSequence();
 
         // NEW: Update the total gifts available to reflect the draw (simulated replacement)
@@ -594,7 +621,11 @@
         resultBody.innerHTML = "";
         resultTable.style.display = "none";
         winnerCard.style.display = "none";
+        
+        // Ensure image is reset for next preview/draw, including removing floating
         giftImageEl.src = "";
+        giftImageEl.classList.remove("entering", "leaving", "floating");
+
 
         // Reset preview content text
         winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
@@ -623,7 +654,11 @@
             if (i === 0) {
                 await startCountdown(10);
             } else {
-                await sleep(1000);
+                // If it's not the first draw, make the current image leave
+                giftImageEl.classList.remove("entering", "floating"); // Ensure floating is removed
+                giftImageEl.classList.add("leaving");
+                await sleep(500); // Wait for the leaving animation to finish
+                winnerCard.style.display = "none"; // Hide the card temporarily
             }
             await announceWinnerSequence();
         }
@@ -676,17 +711,19 @@
         divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
         giftNameEl.textContent = `🎁 ${giftText}`;
 
-        // ➡️ Use the hardcoded image if a match is found, otherwise use fallback
+
+// ➡️ Use the hardcoded image if a match is found, otherwise use fallback
         const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
             ? displayGift.image 
             : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
         
         giftImageEl.src = imageSource;
 
-
         winnerCard.style.display = "block";
-        giftImageEl.classList.remove("entering", "leaving");
-        void giftImageEl.offsetWidth;
+        
+        // This is where the image enters
+        giftImageEl.classList.remove("leaving", "floating"); // Ensure leaving and floating are removed
+        void giftImageEl.offsetWidth; // Trigger reflow to restart animation
         giftImageEl.classList.add("entering");
 
         if (typeof confetti === "function") {
@@ -703,25 +740,21 @@
         </tr>`;
         resultBody.insertAdjacentHTML("beforeend", rowHtml);
         
-        await sleep(2200);
-
-        giftImageEl.classList.remove("entering");
-        giftImageEl.classList.add("leaving");
-
-        await sleep(520);
-
-        winnerCard.style.display = "none";
-        giftImageEl.classList.remove("leaving");
-        index++;
-        await sleep(400);
+        // Show table if it's the first draw
+        if (index === 0) {
+            resultTable.style.display = "table";
+        }
+        
+        index++; // Increment for the next winner
+        
+        await sleep(4000); // Display the winner for 4 seconds before moving to the next
     }
 
-    function escapeHtml(text = "") {
-        return String(text).replace(/[&<>"']/g, (m) => ({
-            "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
-        }[m]));
+    function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return unsafe;
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
+
 </script>
-<div id="doneMessage">✅ Done Drawing!</div>
 </body>
 </html>
