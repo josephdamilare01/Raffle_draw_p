@@ -8,7 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-        <style>
+    <style>
         :root {
             --accent1: #00c6ff;
             --accent2: #0072ff;
@@ -266,30 +266,82 @@
         }
 
         /* department gallery */
-        .department-gallery {
-            margin: 12px 0 8px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            min-height: 90px;
+        /* --- SLIDER STYLING --- */
+        #giftSliderContainer {
+            width: 100%;
+            max-width: 800px;
+            margin: 12px auto 8px;
+            position: relative;
+            padding: 0 40px; /* Space for controls */
         }
-
-        .gallery-thumb {
-            width: 200px;
-            height: 100px;
+        .slider-wrapper {
+            overflow: hidden;
             border-radius: 10px;
-            object-fit: cover;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
-            transform-origin:center;
-            cursor: pointer; /* Added cursor for better UX */
-            animation: float 4s ease-in-out infinite;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+        .slider-track {
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+        .slider-item {
+            flex: 0 0 33.333%; /* Show 3 items */
+            padding: 10px 5px;
+            box-sizing: border-box;
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+        .slider-item.active {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        .slider-item img {
+            width: 100%;
+            height: 100px;
+            object-fit: contain;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .slider-item.active img {
+             /* Add a glow to the active item */
+            box-shadow: 0 0 15px var(--accent3), 0 4px 10px rgba(0,0,0,0.3); 
+            transform: scale(1.05);
         }
 
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(1deg); }
-            100% { transform: translateY(0) rotate(0deg); }
+        .slider-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5rem;
+            z-index: 50;
+            opacity: 0.8;
+            transition: opacity 0.3s, background 0.3s;
+        }
+        .slider-control:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        #prevBtn { left: 0; }
+        #nextBtn { right: 0; }
+        
+        .gallery-label {
+            font-size: 0.9rem;
+            margin-top: 4px;
+            color: #ddd;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 100%;
+            display: block;
         }
 
         /* --- NLNG Logo Styling --- */
@@ -361,10 +413,18 @@
                 </div>
             </div>
         </div>
-
+        
         <div class="left">
-            <h3>🎁 Department Gifts (Total Available: <span id="totalGiftsDisplay">0</span>)</h3>
-            <div id="gallery" class="department-gallery" role="list" aria-label="Department Gift Gallery"></div>
+            <h3>🎁 Gift Preview Slider (Filter: <span id="currentDeptDisplay">All</span>)</h3>
+            <div id="giftSliderContainer">
+                <button class="slider-control" id="prevBtn" aria-label="Previous Gift">&lt;</button>
+                <div class="slider-wrapper">
+                    <div class="slider-track" id="sliderTrack">
+                        </div>
+                </div>
+                <button class="slider-control" id="nextBtn" aria-label="Next Gift">&gt;</button>
+            </div>
+
 
             <h3 style="margin-top:18px;">🎁 Winners Table</h3>
             <table id="resultTable" aria-live="polite" style="display:none;">
@@ -383,8 +443,6 @@
     </main>
     <div id="loader">10</div>
     <div id="doneMessage" style="display: none;">Draw Complete!</div>
-</body>
-</html>
 <script>
     // --- Start of Hardcoded Gift Data (USED ONLY FOR DISPLAY/PREVIEW SELECTOR) ---
     // NOTE: This array is now the single source of truth for display images.
@@ -421,15 +479,15 @@
         { name: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts", department: "NST Partners", image: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts.jpg" },
         { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "NST Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
 
-            // PM Department Gifts
+        // PM Department Gifts
         { name: "Hisense 1HP Split Copper Inverter AC", department: "CMO Partners", image: "Hisense 1HP Split Copper Inverter AC.png" },
         { name: "rice", department: "CMO Partners", image: "rice.png" },
 
-            // PM Department Gifts
+        // PM Department Gifts
         { name: "Hisense 1HP Split Copper Inverter AC", department: "PI, IMT, PS & PG Partners", image: "Hisense 1HP Split Copper Inverter AC.jpg" },
         { name: "rice", department: "PI, IMT, PS & PG Partners", image: "rice.jpg" },
 
-            // PM Department Gifts
+        // PM Department Gifts
         { name: "Microwave", department: "HR, RAIS & CLUB Partners", image: "microwave.jpg" },
         { name: "rice", department: "HR, RAIS & CLUB Partners", image: "rice.jpg" },
 
@@ -458,6 +516,10 @@
     let results = [];
     let index = 0;
     let isDrawing = false; // NEW: State variable to prevent double clicks
+    
+    // SLIDER STATE
+    let currentGiftIndex = 0;
+    let filteredGifts = []; 
 
     // DOM Elements - Use const for elements that won't be reassigned
     const resultBody = document.querySelector("#resultTable tbody");
@@ -469,7 +531,6 @@
     const loader = document.getElementById("loader");
     const giftImageEl = document.getElementById("giftImage");
     const resultTable = document.getElementById("resultTable");
-    const gallery = document.getElementById("gallery");
     const departmentSelect = document.getElementById("departmentSelect");
     const maxDrawsInput = document.getElementById("maxDrawsInput");
     const totalGiftsDisplay = document.getElementById("totalGiftsDisplay");
@@ -477,6 +538,12 @@
     const restartBtn = document.getElementById("restartBtn");
     const homeBtn = document.getElementById("homeBtn");
     const doneMessage = document.getElementById("doneMessage");
+    // NEW Slider DOM Elements
+    const sliderTrack = document.getElementById("sliderTrack");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const currentDeptDisplay = document.getElementById("currentDeptDisplay");
+
 
     // Utility function for robust HTML escaping (prevent XSS in dynamically generated SVG/text)
     function escapeHtml(str) {
@@ -514,7 +581,7 @@
                 participants = [];
             }
         } else {
-            alert("⚠️ Participants data not found. Please upload on the admin page first.");
+            // alert("⚠️ Participants data not found. Please upload on the admin page first."); // Keep commented for cleaner UX on first load
         }
 
         // 2. Load Gifts for Draw
@@ -529,12 +596,12 @@
                     image: g.image || g.ImageURL || g.Image || g.img || "", 
                 }));
             } catch(e) {
-                 console.error("Error parsing gifts data:", e);
+                   console.error("Error parsing gifts data:", e);
                 alert("⚠️ Error loading gift data. Check console.");
                 giftsForDraw = [];
             }
         } else {
-            alert("⚠️ Gift data not found. Please upload the gift list (for drawing) on the admin page first.");
+            // alert("⚠️ Gift data not found. Please upload the gift list (for drawing) on the admin page first."); // Keep commented for cleaner UX on first load
         }
         
         // 3. Initial UI Update
@@ -546,7 +613,7 @@
         startDrawBtn.disabled = participants.length === 0 || initialGiftCount === 0;
 
         populateDepartmentSelect();
-        updateGallery(); 
+        updateSliderAndPreview(0); // Initial load of the slider and preview
     });
 
     function populateDepartmentSelect() {
@@ -560,44 +627,99 @@
             departmentSelect.appendChild(opt);
         });
 
-        departmentSelect.addEventListener("change", updateGallery);
+        // Event listener is now updated to call the new slider logic
+        departmentSelect.addEventListener("change", () => updateSliderAndPreview(0));
     }
-
-    function updateGallery() {
+    
+    // NEW: Function to manage slider state and UI
+    function updateSliderAndPreview(newIndex) {
         const selected = departmentSelect.value;
-        const filtered = selected 
+        currentDeptDisplay.textContent = selected || "All";
+        filteredGifts = selected 
             ? giftsDisplayData.filter(g => (g.department || "General Draws") === selected) 
             : giftsDisplayData;
-            
-        gallery.innerHTML = "";
 
-        if (!filtered.length) {
-            gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No display gifts found for this department.</div>';
+        // Reset index if out of bounds
+        currentGiftIndex = Math.max(0, Math.min(newIndex, filteredGifts.length - 1));
+
+        sliderTrack.innerHTML = "";
+        if (!filteredGifts.length) {
+            sliderTrack.style.transform = `translateX(0)`;
+            prevBtn.disabled = true;
+            nextBtn.disabled = true;
+            previewGift({ name: "No Gifts Available", department: "N/A" });
             return;
         }
 
-        filtered.forEach(g => {
-            const img = document.createElement("img");
-            img.className = "gallery-thumb";
-            img.alt = `Preview image of ${g.name || "gift"}`;
-            img.title = g.name;
-            img.setAttribute('role', 'button'); // Treat as interactive element
+        filteredGifts.forEach((g, i) => {
+            const item = document.createElement("div");
+            item.className = "slider-item";
+            if (i === currentGiftIndex) {
+                item.classList.add("active");
+            }
+            item.setAttribute('data-index', i);
+            item.setAttribute('role', 'button'); 
 
-            // Fallback SVG if no image is specified
             const imageSrc = (g.image && g.image.trim()) 
                 ? g.image
-                : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="160"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Poppins" font-size="16" fill="#004aad">${escapeHtml(g.name.substring(0, 30) || 'Gift Preview')}</text></svg>`)}`;
+                : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="100"><rect width="100%" height="100%" fill="#203040"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Poppins" font-size="14" fill="#00c6ff">${escapeHtml(g.name.substring(0, 20) || 'Gift')}</text></svg>`)}`;
 
-            img.src = imageSrc;
-            img.addEventListener('click', () => {
-                previewGift(g);
+            item.innerHTML = `
+                <img src="${imageSrc}" alt="Preview of ${g.name}" title="${g.name}">
+                <span class="gallery-label">${g.name}</span>
+            `;
+
+            item.addEventListener('click', () => {
+                updateSliderAndPreview(i);
             });
 
-            gallery.appendChild(img);
+            sliderTrack.appendChild(item);
         });
-    }
+        
+        // Calculate the translation to center the active item (showing 3 items, so center is index 1)
+        let centerOffset = 0;
+        if (filteredGifts.length > 0) {
+             // For 3 visible items (33.333% each), the middle is at 1/3, but we want the currently active item to be visually near the center.
+             // We shift by 33.333% for the active item, then adjust for the position of the active item.
+             // If active is index 0, shift 0%.
+             // If active is index 1, shift -33.333%.
+             // If active is index 2, shift -66.666%.
+             // General formula: - (active index - 1) * 33.333%
+            centerOffset = (currentGiftIndex * 33.333) - 33.333; // Shift to make index 1 centered
+            centerOffset = Math.min(0, Math.max(-(filteredGifts.length - 3) * 33.333, -centerOffset));
+            
+             // Force active item to be visible if less than 3 items
+             if (filteredGifts.length <= 3) {
+                centerOffset = 0;
+             }
+        }
+        
+        // Clamp the offset to prevent excessive scrolling past the ends
+        sliderTrack.style.transform = `translateX(${-centerOffset}%)`;
 
-    // Function to Preview a Gift
+        // Update button states
+        prevBtn.disabled = currentGiftIndex === 0;
+        nextBtn.disabled = currentGiftIndex >= filteredGifts.length - 1;
+        
+        // Now call previewGift for the newly active item
+        previewGift(filteredGifts[currentGiftIndex]);
+    }
+    
+    // NEW: Slider Control Handlers
+    prevBtn.addEventListener('click', () => {
+        if (currentGiftIndex > 0) {
+            updateSliderAndPreview(currentGiftIndex - 1);
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (currentGiftIndex < filteredGifts.length - 1) {
+            updateSliderAndPreview(currentGiftIndex + 1);
+        }
+    });
+
+
+    // Function to Preview a Gift - SLIGHTLY MODIFIED TO USE filteredGifts
     async function previewGift(giftObj) {
         winnerCard.classList.remove("is-active"); // Remove active state on preview
         winnerCard.style.display = "block";
@@ -607,10 +729,15 @@
         divisionNameEl.textContent = "Click 'Start Draw' to begin!";
         giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
 
+        // Find the image source from the hardcoded display data
+        const displayGift = giftsDisplayData.find(g => 
+            g.name === giftObj.name && g.department === giftObj.department
+        ) || giftObj; // Fallback to the object itself if not found in display list
+
         // Fallback SVG for the large card
-        const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
-            ? giftObj.image 
-            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Poppins" font-size="28" fill="#004aad">${escapeHtml(giftObj.name || 'Gift Preview')}</text></svg>`)}`;
+        const giftImageSrc = (displayGift.image && displayGift.image.trim()) 
+            ? displayGift.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Poppins" font-size="28" fill="#004aad">${escapeHtml(displayGift.name || 'Gift Preview')}</text></svg>`)}`;
         
         // Image transition logic
         if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating") || giftImageEl.src) {
@@ -639,6 +766,10 @@
         maxDrawsInput.disabled = true;
         departmentSelect.disabled = true;
         restartBtn.disabled = true;
+        
+        // Disable slider controls during draw
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
 
         if (!participants.length) {
             alert("Participant data is not loaded.");
@@ -665,6 +796,10 @@
             maxDrawsInput.disabled = false;
             departmentSelect.disabled = false;
             restartBtn.disabled = false;
+            
+            // Re-enable slider controls
+            prevBtn.disabled = currentGiftIndex === 0;
+            nextBtn.disabled = currentGiftIndex >= filteredGifts.length - 1;
             return;
         }
 
@@ -703,6 +838,10 @@
         departmentSelect.disabled = false;
         restartBtn.disabled = false;
         isDrawing = false;
+        
+        // Re-enable slider controls
+        prevBtn.disabled = currentGiftIndex === 0;
+        nextBtn.disabled = currentGiftIndex >= filteredGifts.length - 1;
     });
 
     // Event listeners
@@ -730,13 +869,72 @@
                 // Delay before announcing the next winner
                 await startCountdown(3); 
             }
-            await announceWinnerSequence();
+            await announceWinnerSequence(results[i]);
         }
 
         doneMessage.style.display = "block";
         if (typeof confetti === "function") {
             confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
         }
+    }
+
+    async function announceWinnerSequence(winnerData) {
+        
+        // 1. Get the corresponding display gift object for the image
+        const displayGift = giftsDisplayData.find(g => 
+            g.name === winnerData.gift.name && g.department === winnerData.gift.department
+        ) || winnerData.gift; // Fallback
+
+        // 2. Animate out old image
+        giftImageEl.classList.remove("entering", "floating");
+        giftImageEl.classList.add("leaving");
+        await sleep(500); 
+
+        // 3. Update main card content
+        winnerNameEl.textContent = `🏆 Winner: ${winnerData.name}`;
+        idNumberEl.textContent = `🪪 ID: ${winnerData.idCard}`;
+        divisionNameEl.textContent = `🏢 Division: ${winnerData.division}`;
+        giftNameEl.textContent = `🎁 Prize: ${winnerData.gift.name}`;
+
+        // 4. Update the table
+        const newRow = resultBody.insertRow();
+        newRow.innerHTML = `
+            <td>${resultBody.rows.length}</td>
+            <td>${escapeHtml(winnerData.name)}</td>
+            <td>${escapeHtml(winnerData.idCard)}</td>
+            <td>${escapeHtml(winnerData.division)}</td>
+            <td>${escapeHtml(winnerData.gift.name)}</td>
+        `;
+        resultTable.style.display = "table"; // Ensure table is visible
+        resultTable.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        
+        // 5. Animate in new image
+        const giftImageSrc = (displayGift.image && displayGift.image.trim()) 
+            ? displayGift.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#ffedcc"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Poppins" font-size="28" fill="#e63946">WINNER: ${escapeHtml(winnerData.gift.name || 'Prize')}</text></svg>`)}`;
+
+        giftImageEl.src = giftImageSrc;
+        giftImageEl.classList.remove("leaving"); 
+        void giftImageEl.offsetWidth; 
+        giftImageEl.classList.add("entering");
+
+        // 6. After the entering animation, start the continuous floating
+        setTimeout(() => {
+            giftImageEl.classList.remove("entering");
+            giftImageEl.classList.add("floating");
+        }, 700); 
+
+        winnerCard.classList.add("is-active");
+        if (typeof confetti === "function") {
+            // Explode confetti around the winner card
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { x: 0.5, y: 0.8 },
+                zIndex: 100
+            });
+        }
+        await sleep(4000); // Display time for the winner
     }
 
     function startCountdown(seconds) {
@@ -756,67 +954,7 @@
                     resolve();
                 }
             }, 1000);
-        });
-    }
-
-    async function announceWinnerSequence() {
-        const winner = results[index];
-        if (!winner) return;
-
-        const giftObj = winner.gift;
-        const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || "Unknown Gift") : String(giftObj);
-        
-        // Find the corresponding hardcoded gift data for the image
-        // CRITICAL FIX: Use 'some' comparison to make the match more forgiving (e.g., lowercase, trimming)
-        const displayGift = giftsDisplayData.find(g => 
-            (g.name || "").toLowerCase().trim() === (giftText || "").toLowerCase().trim()
-        );
-
-        // Populate card content
-        winnerNameEl.textContent = `🏆 ${winner.name}`;
-        idNumberEl.textContent = `🪪 ${winner.idCard}`;
-        divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
-        giftNameEl.textContent = `🎁 ${giftText}`;
-        winnerCard.style.display = "block";
-        
-        // Winner Card Effect
-        setTimeout(() => {
-            winnerCard.classList.add("is-active"); // Apply winner glow effect
-        }, 100);
-
-        // Image Logic
-        const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
-            ? displayGift.image 
-            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Poppins" font-size="28" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
-
-        giftImageEl.src = imageSource;
-        giftImageEl.classList.remove("leaving");
-        void giftImageEl.offsetWidth; 
-        giftImageEl.classList.add("entering");
-
-        // Add to the winners table
-        const row = resultBody.insertRow();
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${escapeHtml(winner.name)}</td>
-            <td>${escapeHtml(winner.idCard)}</td>
-            <td>${escapeHtml(winner.division || "—")}</td>
-            <td>${escapeHtml(giftText)}</td>
-        `;
-
-        index++;
-        resultTable.style.display = "table"; 
-        resultTable.scrollIntoView({ behavior: 'smooth', block: 'end' }); // Scroll to the new winner
-
-        // Trigger winner confetti
-        if (typeof confetti === "function") {
-            confetti({
-                particleCount: 150,
-                spread: 90,
-                origin: { x: 0.5, y: 0.8 },
-                colors: ['#00c6ff', '#00ff80', '#ffd166', '#e63946']
-            });
-        }
+        })
     }
 </script>
 </body>
