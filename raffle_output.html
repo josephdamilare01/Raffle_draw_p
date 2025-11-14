@@ -6,910 +6,852 @@
     <title>🎁 Animated Raffle Draw</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
-    <link rel="stylesheet" href="carousel.css"> 
-    
     <style>
-        /* Existing Raffle Draw CSS (Only showing relevant context for integration) */
         :root {
             --accent1: #00c6ff;
             --accent2: #0072ff;
             --accent3: #00ff80;
             --dark: #071428;
-            /* ➡️ NEW: Added variable for raffle Z-index to ensure it sits above the carousel */
-            --raffle-z-index: 100;
-            --main-font: "Poppins", sans-serif;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --btn-bg: var(--accent2);
-            --btn-hover-bg: var(--accent1);
-            --transition-speed: 0.3s;
+            /* New Accent Color from Carousel Design */
+            --carousel-accent: #14ff72cb; 
         }
 
         html, body {
             height: 100%;
             margin: 0;
-            font-family: var(--main-font);
+            font-family: "Poppins", sans-serif;
             background: radial-gradient(circle at 10% 20%, #081028, #071428 30%, #0b2a3a 60%, #071428 100%);
             color: white;
             text-align: center;
             overflow-x: hidden;
-            /* ➡️ NEW: Added transition for smooth visibility change */
-            transition: opacity 0.5s ease; 
         }
 
-        /* ➡️ NEW: Style for the main raffle container */
-        .raffle-container {
-            position: relative; /* Keeps it layered */
-            z-index: var(--raffle-z-index);
-            transition: opacity 0.5s ease;
-            min-height: 100vh; /* Ensure it takes up the full viewport height */
+        /* --- Custom Fonts (Added from Carousel CSS) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+        /* Header section styles (Retained from original code, but modified to cooperate with fixed carousel) */
+        header {
+            width: 100%;
+            max-width: 100%;
+            padding-left: 100px;
+            height: 50px;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            padding-bottom: 50px; /* Space for the bottom controls */
+            position: relative;
+            z-index: 1000;
         }
         
-        /* ⬇️ Existing Styles continue... (Full Styles for the Raffle UI) ⬇️ */
-
+        /* Your original styles */
         h1 {
-            color: var(--accent1);
-            margin-top: 50px;
-            font-size: 2.5rem;
-            text-shadow: 0 0 10px rgba(0, 198, 255, 0.5);
-            animation: pulse 1.5s infinite alternate;
+            margin: 10px 0 16px;
+            font-size: 5rem;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 100%;
+            animation: gradientMove 6s linear infinite;
+            position: relative; /* Ensure H1 is above carousel if not using a header element */
+            z-index: 500;
         }
 
-        @keyframes pulse {
-            from { transform: scale(1); }
-            to { transform: scale(1.02); }
-        }
-
-        .logo {
-            position: absolute;
-            top: 20px;
-            left: 30px;
-            z-index: calc(var(--raffle-z-index) + 10); /* Ensure logo is always on top */
-        }
-
-        .logo img {
-            height: 80px; /* Adjust size as needed */
-            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.5));
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .content {
             display: flex;
-            flex-direction: column; /* Changed to column for better responsiveness base */
-            width: 95%;
-            max-width: 1400px;
-            margin: 30px auto 0;
-            gap: 30px;
+            flex-direction: column;
+            gap: 28px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px 0 60px;
+            align-items: stretch;
+            position: relative;
+            z-index: 10; /* Ensure content is above the carousel background */
         }
 
         .top {
             display: flex;
-            flex-direction: row; /* Main area is row on large screen */
-            gap: 30px;
-            width: 100%;
-        }
-
-        .left, .right {
-            flex: 1;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
-        }
-
-        .right {
-            display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: flex-start;
             gap: 20px;
-        }
-        
-        .left {
-            display: flex;
             flex-direction: column;
-            align-items: center;
         }
 
-        .winner-card {
-            background: linear-gradient(135deg, #1f2a40, #0a1428);
-            border: 3px solid var(--accent3);
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 0 30px rgba(0, 255, 128, 0.5);
+        /* Table container (kept for structure, but table itself is hidden) */
+        .left {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            border-radius: 10px;
+            backdrop-filter: blur(8px);
             width: 100%;
-            max-width: 450px;
-            transition: all 0.5s ease-in-out;
-            position: relative;
+            max-width: 100%;
+            overflow-x: auto;
         }
 
-        .winner-name, .id-name, .division-name, .gift-name {
-            font-size: 1.5rem;
-            margin: 10px 0;
-            font-weight: 600;
-            color: #fff;
-            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-            padding: 5px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        /* ... (rest of your raffle page CSS remains the same) ... */
+        
+        /* ➡️ IMPORTANT: Winner Card is now transparent to show the background carousel */
+        .winner-card {
+            width: 100%;
+            max-width: 800px;
+            /* Make background transparent */
+            background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
+            color: #fff; /* White text for contrast */
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+            position: relative;
+            overflow: visible;
+            display: none;
+            animation: popIn 700ms ease;
+            margin: 0 auto;
+            backdrop-filter: blur(5px); /* Add blur for visibility over the moving background */
         }
         
         .winner-name {
-            font-size: 2.2rem;
-            color: var(--accent1);
-            text-shadow: 0 0 15px rgba(0, 198, 255, 0.8);
-        }
-
-        .gift-image-wrap {
-            height: 300px;
-            width: 100%;
-            margin-top: 20px;
-            overflow: hidden;
-            border-radius: 10px;
-            background-color: rgba(255, 255, 255, 0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .gift-image {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-            transition: opacity 0.5s ease-in-out, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* For entering/leaving */
-        }
-        
-        /* Image Animations */
-        .gift-image.entering {
-            opacity: 0;
-            transform: scale(0.5) rotateY(90deg);
-        }
-
-        .gift-image-wrap:has(.gift-image.entering) .gift-image {
-             opacity: 1;
-             transform: scale(1) rotateY(0deg);
-        }
-        
-        .gift-image.leaving {
-            opacity: 0;
-            transform: scale(1.5) rotate(10deg);
-        }
-        
-        .gift-image.floating {
-            /* Continuous subtle floating animation */
-            animation: float 5s ease-in-out infinite alternate;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-10px); }
-        }
-
-
-        .btns {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            justify-content: center;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        .btn {
-            padding: 12px 25px;
-            font-size: 1.2rem;
+            font-size: 1.9rem;
             font-weight: 700;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            background: var(--btn-bg);
-            color: white;
-            transition: background var(--transition-speed), transform var(--transition-speed);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn:hover {
-            background: var(--btn-hover-bg);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            /* Change gradient for better visibility */
+            background: linear-gradient(90deg, #ffd166, #fff); 
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
         }
         
-        /* Select and Input styling */
-        #departmentSelect, #maxDrawsInput {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 10px;
-            border-radius: 10px;
+        .division-name, .id-name {
             font-size: 1.2rem;
-            width: 200px;
-            text-align: center;
-            box-shadow: none;
-            -webkit-appearance: none; /* Remove default arrow on select */
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%23fff' d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px top 50%;
-            background-size: 0.8em auto;
-        }
-        
-        #maxDrawsInput {
-            width: 150px;
-        }
-        
-        #departmentSelect option {
-            background: var(--dark);
-            color: white;
+            font-weight: 600;
+            color: #e6e6e6; /* Lighter color for visibility */
+            margin-bottom: 8px;
         }
 
+        /* ... (The rest of your existing raffle CSS) ... */
 
-        /* Gallery and Table Styles */
-        .department-gallery {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            max-height: 350px;
-            overflow-y: auto;
-            width: 100%;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
 
-        .gallery-thumb {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: border-color 0.2s, transform 0.2s;
-        }
+        /* ========================================================== */
+        /* --- CAROUSEL CSS INTEGRATION (From previous step) --- */
+        /* ========================================================== */
 
-        .gallery-thumb:hover {
-            border-color: var(--accent3);
-            transform: scale(1.05);
-        }
-
-        /* Winners Table */
-        #resultTable {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-            border-radius: 10px;
+        .carousel {
+            width: 100vw;
+            height: 100vh;
+            margin-top: -50px; 
             overflow: hidden;
-            background: rgba(255, 255, 255, 0.05);
+            position: fixed; /* Changed to fixed to act as a background */
+            top: 0;
+            left: 0;
+            z-index: 1; /* Low z-index to sit behind the raffle content */
         }
 
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 1rem;
-        }
-
-        th {
-            background: var(--accent2);
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 700;
-        }
-
-        tr:nth-child(even) {
-            background: rgba(255, 255, 255, 0.03);
-        }
-        
-        /* Loader/Countdown */
-        #loader {
-            position: fixed;
+        .carousel .list {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(7, 20, 40, 0.95);
-            z-index: calc(var(--raffle-z-index) + 50);
-            display: none; /* Initially hidden */
-            justify-content: center;
-            align-items: center;
-            font-size: 8rem;
-            color: var(--accent3);
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(0, 255, 128, 0.8);
-            animation: countdown-pulse 1s infinite alternate;
         }
 
-        @keyframes countdown-pulse {
-            from { transform: scale(1); opacity: 0.8; }
-            to { transform: scale(1.1); opacity: 1; }
-        }
-
-        #doneMessage {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: calc(var(--raffle-z-index) + 50);
-            font-size: 4rem;
-            color: gold;
-            text-shadow: 0 0 20px yellow;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 15px;
-            border: 3px solid gold;
-        }
-        
-        /* ⬆️ Existing Styles continue... (Full Styles for the Raffle UI) ⬆️ */
-
-        /* ➡️ NEW: Media Query for smaller screens (adjusting raffle elements) */
-        @media (max-width: 1200px) {
-            .top {
-                flex-direction: column;
-            }
-            .right {
-                order: 1; /* Move winner card to the top on small screens */
-            }
-            .left {
-                order: 2;
-            }
-        }
-
-        @media (max-width: 640px) {
-            h1 { font-size: 2rem; margin-top: 30px; }
-            .logo img { height: 60px; }
-            .winner-card { max-width: 100%; padding: 18px; }
-            .winner-name { font-size: 1.8rem; }
-            .id-name, .division-name, .gift-name { font-size: 1.2rem; }
-            .gift-image-wrap { height: 200px; }
-            th, td { font-size: 0.8rem; padding: 8px 5px; }
-            #loader { font-size: 6rem; }
-            .btn { font-size: 1rem; padding: 10px 20px; }
-            #departmentSelect, #maxDrawsInput { font-size: 1rem; width: 100%; max-width: 250px; }
-            .btns { flex-direction: column; }
-        }
-
-        /* ➡️ NEW: Hidden utility class for the toggle functionality */
-        .hidden-raffle {
-            opacity: 0;
+        .carousel .list .item {
+            width: 180px;
+            height: 250px;
+            position: absolute;
+            top: 80%;
+            transform: translateY(-70%);
+            left: 70%;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            background-position: 50% 50%;
+            background-size: cover;
+            z-index: 100;
+            transition: 1s;
+            opacity: 0; 
             pointer-events: none;
-            height: 0;
-            overflow: hidden;
-            /* The carousel will be placed behind this, so no Z-index change needed here */
+            display: block;
+            background-repeat: no-repeat;
+        }
+
+        .carousel .list .item.active {
+            top: 0;
+            left: 0;
+            transform: translate(0, 0);
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99; 
+            opacity: 1;
+            pointer-events: auto;
         }
         
+        /* Fallback/Initial state for the first two items */
+        .carousel .list .item:nth-child(1),
+        .carousel .list .item:nth-child(2){
+            top: 0;
+            left: 0;
+            transform: translate(0, 0);
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99; 
+        }
+
+        /* Next items */
+        .carousel .list .item:nth-child(3){ left: 67%; opacity: 1; }
+        .carousel .list .item:nth-child(4){ left: calc(67% + 200px); opacity: 1; }
+        .carousel .list .item:nth-child(5){ left: calc(67% + 400px); opacity: 1; }
+        .carousel .list .item:nth-child(6){ left: calc(67% + 600px); opacity: 1; }
+
+        /* Hidden items */
+        .carousel .list .item:nth-child(n+7){
+            left: calc(67% + 800px);
+            opacity: 0;
+        }
+
+        /* Dark overlay for better text readability on the active item only */
+        .carousel .list .item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.7); 
+            display: none; 
+        }
+        .carousel .list .item.active::before,
+        .carousel .list .item:nth-child(2)::before { 
+            display: block;
+        }
+
+        /* Content (Hidden, as the main page content is used instead) */
+        .carousel .list .item .content { display: none; }
+
+
+        /* Arrows */
+        .arrows {
+            position: absolute;
+            bottom: 50%;
+            right: 20px; /* Moved slightly to the right to be visible */
+            transform: translateY(50%);
+            z-index: 500; /* High z-index */
+            width: 100px; /* Smaller width for two buttons */
+            display: flex;
+            justify-content: flex-end; /* Align right */
+            gap: 10px;
+            padding: 0 20px;
+        }
+        .arrows button {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--carousel-accent);
+            border: none;
+            color: #fff;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-family: monospace;
+        }
+        .arrows button:hover {
+            background-color: #fff;
+            color: #000;
+        }
+
+        /* Time Running */
+        .carousel .timeRunning {
+            position: absolute;
+            z-index: 1000;
+            width: 0%;
+            height: 4px;
+            background-color: var(--carousel-accent);
+            left: 0;
+            top: 0;
+            animation: runningTime 7s linear 1 forwards;
+            transition: none;
+        }
+
+        @keyframes runningTime {
+            from{width: 0%;}
+            to{width: 100%;}
+        }
+
+        /* Animation for content (Used by JS to hide/show elements) */
+        @keyframes animate {
+            from{
+                opacity: 0;
+                transform: translate(0, 100px);
+                filter: blur(33px);
+            }
+            to{
+                opacity: 1;
+                transform: translate(0);
+                filter: blur(0);
+            }
+        }
+        
+        /* Responsive adjustments for carousel */
+        @media screen and (max-width: 999px){
+            .carousel .list .item .content{ left: 50px; }
+            .arrows { right: 0; }
+        }
+        @media screen and (max-width: 690px){
+            .carousel .list .item:nth-child(3){ left: 55%; }
+            .carousel .list .item:nth-child(4){ left: calc(55% + 150px); }
+            .carousel .list .item:nth-child(5){ left: calc(55% + 300px); }
+            .carousel .list .item:nth-child(6){ left: calc(55% + 450px); }
+        }
+
+
     </style>
 </head>
+
 <body>
-
     <div class="carousel" id="giftCarousel">
-
         <div class="list">
             </div>
-
         <div class="arrows">
-            <button class="prev"><i class="fas fa-chevron-left"></i></button>
-            <button class="next"><i class="fas fa-chevron-right"></i></button>
+            <button class="prev"> &lt; </button>
+            <button class="next"> &gt; </button>
         </div>
-
         <div class="timeRunning"></div>
-
     </div>
-    
-    <div class="raffle-container" id="raffleContent">
+    <div class="logo">
+        <img src="nlng-logo.png" alt="NLNG Logo">
+    </div>
+    <h1>🎊 NLNG End of the Year Raffle Draw</h1>
 
-        <div class="logo">
-            <img src="nlng-logo.png" alt="NLNG Logo">
-        </div>
-        
-        <h1>🎊 NLNG End of the Year Raffle Draw</h1>
+    <div class="content">
+        <div class="top">
+            <div class="right">
+                <div class="winner-card" id="winnerCard">
+                    <div class="winner-name" id="winnerName">🎁 Gift Preview / 🏆 Winner Name</div>
+                    <div class="id-name" id="idNumber">🪪 ID Card Number</div>
+                    <div class="division-name" id="divisionName">🏢 Division</div>
+                    <div class="gift-name" id="giftName">🎁 Gift Name</div>
 
-        <div class="content">
-            <div class="top">
-                <div class="right">
-                    <div class="winner-card" id="winnerCard" style="display:none;">
-                        <div class="winner-name" id="winnerName">🎁 Gift Preview / 🏆 Winner Name</div>
-                        <div class="id-name" id="idNumber">🪪 ID Card Number</div>
-                        <div class="division-name" id="divisionName">🏢 Division</div>
-                        <div class="gift-name" id="giftName">🎁 Gift Name</div>
-
-                        <div class="gift-image-wrap">
-                            <img id="giftImage" class="gift-image" src="" alt="Gift image">
-                        </div>
-                    </div>
-
-                    <div class="btns">
-                        <select id="departmentSelect" class="btn" >
-                            <option value="">Select Department (All)</option>
-                        </select>
-
-                        <input type="number" id="maxDrawsInput" class="btn" value="1" min="1" placeholder="Max Draws">
-
-                        <button class="btn" id="startDraw">Start Draw</button>
-                        <button class="btn" id="restartBtn">Restart</button>
-                        <button class="btn" id="homeBtn">🏠 Home</button> 
-                        <button class="btn" id="showRaffleBtn" style="display: none;">Show Raffle Controls</button> 
-
+                    <div class="gift-image-wrap">
+                        <img id="giftImage" class="gift-image" src="" alt="Gift image">
                     </div>
                 </div>
 
-                <div class="left">
-                    <h3>🎁 Department Gifts (Total Gifts Available: <span id="totalGiftsDisplay">0</span>)</h3>
-                    <div id="gallery" class="department-gallery" aria-live="polite"></div>
+                <div class="btns">
+                    <select id="departmentSelect" class="btn" style="background:white;color:black;border:1px solid #ccc;padding:10px;border-radius:10px;font-size:1.2rem;">
+                        <option value="">Select Department (All)</option>
+                    </select>
 
-                    <h3 style="margin-top:18px;">🏆 Winners Table</h3>
-                    <table id="resultTable" aria-live="polite" style="display:none;">
-                        <thead>
-                            <tr>
-                                <th style="width:6%;">#</th>
-                                <th style="width:28%;">Participant Name</th>
-                                <th style="width:20%;">ID Card No.</th>
-                                <th style="width:26%;">Division</th>
-                                <th style="width:20%;">Gift</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
+                    <input type="number" id="maxDrawsInput" class="btn" value="1" min="1" placeholder="Max Draws" style="background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px; border-radius: 10px; font-size: 1.2rem; width: 150px; text-align: center;">
+
+                    <button class="btn" id="startDraw">Start Draw</button>
+                    <button class="btn" id="restartBtn">Restart</button>
+                    <button class="btn" id="homeBtn">🏠 Home</button>
                 </div>
             </div>
         </div>
-        
+
+        <div class="left">
+            <h3>🎁 Department Gifts (Total Gifts Available: <span id="totalGiftsDisplay">0</span>)</h3>
+            <div id="gallery" class="department-gallery" aria-live="polite" style="display:none;"></div> 
+
+            <h3 style="margin-top:18px;">🎁 Winners Table (Hidden for Focus)</h3>
+            <table id="resultTable" aria-live="polite" style="display:none;">
+                <thead>
+                    <tr>
+                        <th style="width:6%;">#</th>
+                        <th style="width:28%;">Participant Name</th>
+                        <th style="width:20%;">ID Card No.</th>
+                        <th style="width:26%;">Division</th>
+                        <th style="width:20%;">Gift</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
     </div>
+
     <div id="loader">10</div>
-    <div id="doneMessage" style="display:none;">DRAW COMPLETE!</div>
-
-
-    <script src="carousel.js"></script>
-
-    <script>
-        // --- Start of Hardcoded Gift Data (USED ONLY FOR DISPLAY/PREVIEW SELECTOR) ---
-        const giftsHardcoded = [
-            // PD Department Gifts
-            { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "PM Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
-            { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "PM Partners", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
-            { name: "hp elitebook x360 touch intel core i5- 16gb ram 1tb ssd backlit keyboard fp reader wins 11 pro +bag61", department: "PM Partners", image: "hp_elitebook_keyboard_reader_wins_pro_bag61.jpg" },
-            { name: "samsung galaxy z fold 5 - 7.6 10mp 3x optical zoom telephoto, 50mp wide angle and 12mp ultrawide - 5g - android (12gb ram, 256gb rom) - 4400mah", department: "PM Partners", image: "samsung galaxy z fold 5 - 7.6 10mp 3x optical zoom telephoto, 50mp wide angle and 12mp ultrawide - 5g - android (12gb ram, 256gb rom) - 4400mah.jpg" },
-            
-            // PI Department Gifts
-            { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "PO Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
-            { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "PO Partners", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
-            { name: "xiaomi redmi note 14 pro+ 5g - 6.67 (512gb 12gb) dual sim, 200mp, 6200mah", department: "PO Partners", image: "xiaomi_redmi_6200mah.jpg" },
-
-            // PS Department Gifts
-            { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "CPM Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
-            { name: "redmi pad pro 8 256 wifi", department: "CPM Partners", image: "redmi pad pro 8 256 wifi.jpg" },
-            { name: "hisense 1hp split unit copper inverter ac r410 gas-as09dk", department: "CPM Partners", image: "hisense 1hp split unit copper inverter ac r410 gas-as09dk.jpg" },
-
-            // PK Department Gifts
-            { name: "hisense 43-inch hisense smart led tv + netflix +youtube", department: "HSE Partners", image: "hisense_netflix_youtube.jpg" },
-            { name: "treadmill 2hp with massager mp3", department: "HSE Partners", image: "treadmill 2hp with massager mp3.jpg" },
-            
-            // PM Department Gifts
-            { name: "hisense front load washing machine, 6 kg, smart control, silver wm 6010", department: "TD Partners", image: "hisense front load washing machine, 6 kg, smart control, silver wm 6010.jpg" },
-            { name: "nexus 18 rechargeable standing fan + remote + led light +usb port", department: "TD Partners", image: "nexus_rechargeable_led_port.jpg" },
-
-            // PM Department Gifts
-            { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR", department: "CSS Partners", image: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
-            { name: "century digital torch screen dual window air fryer caf-8340-c 10l", department: "CSS Partners", image: "century digital torch screen dual window air fryer caf-8340-c 10l.jpg" },
-
-            // PM Department Gifts
-            { name: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts", department: "NST Partners", image: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts.jpg" },
-            { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "NST Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
-
-            // PM Department Gifts
-            { name: "Hisense 1HP Split Copper Inverter AC", department: "CMO Partners", image: "Hisense 1HP Split Copper Inverter AC.png" },
-            { name: "rice", department: "CMO Partners", image: "rice.png" },
-
-            // PM Department Gifts
-            { name: "Hisense 1HP Split Copper Inverter AC", department: "PI, IMT, PS & PG Partners", image: "Hisense 1HP Split Copper Inverter AC.jpg" },
-            { name: "rice", department: "PI, IMT, PS & PG Partners", image: "rice.jpg" },
-
-            // PM Department Gifts
-            { name: "Microwave", department: "HR, RAIS & CLUB Partners", image: "microwave.jpg" },
-            { name: "rice", department: "HR, RAIS & CLUB Partners", image: "rice.jpg" },
-
-            // PM Department Gifts
-            { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "LSS Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
-            { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "LSS Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
-
-            // PM Department Gifts
-            { name: "One week all expense paid trip to Transcorp Hilton Abuja", department: "ESD & CFS Partners", image: "One week all expense paid trip to Transcorp Hilton Abuja.jpg" },
-            { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "ESD & CFS Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
-
-            // PM Department Gifts
-            { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "Train 7", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
-            { name: "hisense 20 litres microwave (h20mows14)", department: "Train 7", image: "hisense 20 litres microwave (h20mows14).jpg" },
-
-            // PM Department Gifts
-            { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "General Draws", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
-            { name: "hisense 20 litres microwave (h20mows14)", department: "General Draws", image: "hisense 20 litres microwave (h20mows14).jpg" },
-
-        ];
-        // --- End of Hardcoded Gift Data ---
+<script>
+    // --- Start of Hardcoded Gift Data ---
+    const giftsHardcoded = [
+        // PD Department Gifts
+        { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "PM Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
+        { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "PM Partners", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
+        { name: "hp elitebook x360 touch intel core i5- 16gb ram 1tb ssd backlit keyboard fp reader wins 11 pro +bag61", department: "PM Partners", image: "hp_elitebook_keyboard_reader_wins_pro_bag61.jpg" },
+        { name: "samsung galaxy z fold 5 - 7.6 10mp 3x optical zoom telephoto, 50mp wide angle and 12mp ultrawide - 5g - android (12gb ram, 256gb rom) - 4400mah", department: "PM Partners", image: "samsung galaxy z fold 5 - 7.6 10mp 3x optical zoom telephoto, 50mp wide angle and 12mp ultrawide - 5g - android (12gb ram, 256gb rom) - 4400mah.jpg" },
         
-        let participants = [];
-        let gifts = giftsHardcoded; 
-        let giftsForDraw = []; 
-        let results = [];
-        let index = 0;
-        const resultBody = document.querySelector("#resultTable tbody");
-        const winnerCard = document.getElementById("winnerCard");
-        const winnerNameEl = document.getElementById("winnerName");
-        const divisionNameEl = document.getElementById("divisionName");
-        const giftNameEl = document.getElementById("giftName");
-        const idNumberEl = document.getElementById("idNumber");
-        const loader = document.getElementById("loader");
-        const giftImageEl = document.getElementById("giftImage");
-        const resultTable = document.getElementById("resultTable");
-        const gallery = document.getElementById("gallery");
-        const departmentSelect = document.getElementById("departmentSelect");
-        const maxDrawsInput = document.getElementById("maxDrawsInput"); 
-        const totalGiftsDisplay = document.getElementById("totalGiftsDisplay"); 
+        // PI Department Gifts
+        { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "PO Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
+        { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "PO Partners", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
+        { name: "xiaomi redmi note 14 pro+ 5g - 6.67 (512gb 12gb) dual sim, 200mp, 6200mah", department: "PO Partners", image: "xiaomi_redmi_6200mah.jpg" },
 
-        // ➡️ NEW: Carousel & Raffle DOM elements
-        const raffleContent = document.getElementById('raffleContent');
-        const giftCarousel = document.getElementById('giftCarousel');
-        const showRaffleBtn = document.getElementById('showRaffleBtn');
+        // PS Department Gifts
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "CPM Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
+        { name: "redmi pad pro 8 256 wifi", department: "CPM Partners", image: "redmi pad pro 8 256 wifi.jpg" },
+        { name: "hisense 1hp split unit copper inverter ac r410 gas-as09dk", department: "CPM Partners", image: "hisense 1hp split unit copper inverter ac r410 gas-as09dk.jpg" },
 
-        // Initial state: Show carousel, hide raffle content
-        giftCarousel.style.display = 'block';
-        raffleContent.classList.add('hidden-raffle');
-
-
-        window.addEventListener("DOMContentLoaded", () => {
-            const savedParticipants = localStorage.getItem("participantsData");
-            const savedGifts = localStorage.getItem("giftsData"); 
-
-            // 1. Load Participants
-            if (savedParticipants) {
-                participants = JSON.parse(savedParticipants);
-                participants = participants.map((p) => ({
-                    name: p.name || p.Name || "Unnamed",
-                    division: p.division || p.Division || p.department || p.Department || "—",
-                    idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
-                }));
-            } else {
-                console.warn("⚠️ Participant data is not loaded.");
-            }
-
-            // 2. Load Gifts for Draw
-            if (savedGifts) {
-                giftsForDraw = JSON.parse(savedGifts);
-                giftsForDraw = giftsForDraw.map((g) => ({
-                    name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
-                    department: g.department || g.Department || g.Division || "General",
-                    image: g.image || g.ImageURL || g.Image || g.img || "", 
-                }));
-                console.log(`Loaded ${giftsForDraw.length} gifts for the draw.`);
-            } else {
-                console.warn("⚠️ Gift data for drawing is not loaded.");
-            }
-            
-            if (gifts.length === 0) {
-                console.error("⚠️ Error: Hardcoded gift data (for display) is empty. Cannot show gallery/carousel.");
-                return;
-            }
-
-            // NEW: Update total gifts display and max draws input
-            totalGiftsDisplay.textContent = giftsForDraw.length;
-            maxDrawsInput.max = giftsForDraw.length;
-            maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-
-            populateDepartmentSelect();
-            updateGallery(); // initial gallery (All)
-
-            // ➡️ NEW: Home Button Logic
-            document.getElementById("homeBtn").addEventListener("click", () => {
-                // Ensure carousel is visible and takes up space
-                giftCarousel.style.display = 'block'; 
-                // Hide raffle content with transition
-                raffleContent.classList.add('hidden-raffle'); 
-                showRaffleBtn.style.display = 'block'; // Show "Show Raffle" button
-                document.getElementById("homeBtn").style.display = 'none'; // Hide Home button
-            });
-            
-            // ➡️ NEW: Show Raffle Button Logic
-            showRaffleBtn.addEventListener('click', () => {
-                // Hide carousel, but keep its display property for carousel.js to function correctly
-                giftCarousel.style.display = 'none'; 
-                // Show raffle content with transition
-                raffleContent.classList.remove('hidden-raffle'); 
-                showRaffleBtn.style.display = 'none'; // Hide "Show Raffle" button
-                document.getElementById("homeBtn").style.display = 'block'; // Show Home button
-            });
-        });
-
-        function escapeHtml(unsafe) {
-            return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-        }
+        // PK Department Gifts
+        { name: "hisense 43-inch hisense smart led tv + netflix +youtube", department: "HSE Partners", image: "hisense_netflix_youtube.jpg" },
+        { name: "treadmill 2hp with massager mp3", department: "HSE Partners", image: "treadmill 2hp with massager mp3.jpg" },
         
-        // --- Existing Raffle Functions (Copied for completeness) ---
-        function populateDepartmentSelect() {
-            // Uses hardcoded gifts (gifts) to populate selector
-            const depts = Array.from(new Set(gifts.map(g => (g.department || "General")))).sort();
-            departmentSelect.innerHTML = '<option value="">Select Department (All)</option>';
-            depts.forEach(d => {
-                const opt = document.createElement("option");
-                opt.value = d;
-                opt.textContent = d;
-                departmentSelect.appendChild(opt);
-            });
+        // PM Department Gifts
+        { name: "hisense front load washing machine, 6 kg, smart control, silver wm 6010", department: "TD Partners", image: "hisense front load washing machine, 6 kg, smart control, silver wm 6010.jpg" },
+        { name: "nexus 18 rechargeable standing fan + remote + led light +usb port", department: "TD Partners", image: "nexus_rechargeable_led_port.jpg" },
 
-            departmentSelect.addEventListener("change", () => {
-                updateGallery();
-            });
-        }
+        // PM Department Gifts
+        { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR", department: "CSS Partners", image: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
+        { name: "century digital torch screen dual window air fryer caf-8340-c 10l", department: "CSS Partners", image: "century digital torch screen dual window air fryer caf-8340-c 10l.jpg" },
 
-        function updateGallery() {
-            const selected = departmentSelect.value;
-            // Uses hardcoded gifts (gifts) to filter gallery
-            const filtered = selected ? gifts.filter(g => (g.department || "General") === selected) : gifts;
-            gallery.innerHTML = "";
+        // PM Department Gifts
+        { name: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts", department: "NST Partners", image: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts.jpg" },
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "NST Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
 
-            if (!filtered.length) {
-                gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts for this department in the hardcoded list.</div>';
-                return;
-            }
+        // PM Department Gifts
+        { name: "Hisense 1HP Split Copper Inverter AC", department: "CMO Partners", image: "Hisense 1HP Split Copper Inverter AC.png" },
+        { name: "rice", department: "CMO Partners", image: "rice.png" },
 
-            filtered.forEach(g => {
-                const img = document.createElement("img");
-                img.className = "gallery-thumb";
-                img.alt = g.name || "gift";
-                // Uses hardcoded image path
-                if (g.image && g.image.trim()) {
-                    img.src = g.image;
-                } else {
-                    img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
-                }
-                img.title = g.name;
-                img.addEventListener('click', () => {
-                    previewGift(g);
-                });
+        // PM Department Gifts
+        { name: "Hisense 1HP Split Copper Inverter AC", department: "PI, IMT, PS & PG Partners", image: "Hisense 1HP Split Copper Inverter AC.jpg" },
+        { name: "rice", department: "PI, IMT, PS & PG Partners", image: "rice.jpg" },
 
-                gallery.appendChild(img);
-            });
-        }
+        // PM Department Gifts
+        { name: "Microwave", department: "HR, RAIS & CLUB Partners", image: "microwave.jpg" },
+        { name: "rice", department: "HR, RAIS & CLUB Partners", image: "rice.jpg" },
 
-        // Function to Preview a Gift
-        async function previewGift(giftObj) {
-            winnerCard.style.display = "block";
-            winnerNameEl.textContent = "🎁 Gift Preview";
-            idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
-            divisionNameEl.textContent = "Click 'Start Draw' to begin!";
-            giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+        // PM Department Gifts
+        { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "LSS Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "LSS Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
 
-            const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
-                ? giftObj.image 
-                : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
+        // PM Department Gifts
+        { name: "One week all expense paid trip to Transcorp Hilton Abuja", department: "ESD & CFS Partners", image: "One week all expense paid trip to Transcorp Hilton Abuja.jpg" },
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "ESD & CFS Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
+
+        // PM Department Gifts
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "Train 7", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
+        { name: "hisense 20 litres microwave (h20mows14)", department: "Train 7", image: "hisense 20 litres microwave (h20mows14).jpg" },
+
+        // PM Department Gifts
+        { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "General Draws", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
+        { name: "hisense 20 litres microwave (h20mows14)", department: "General Draws", image: "hisense 20 litres microwave (h20mows14).jpg" },
+    ];
+    // --- End of Hardcoded Gift Data ---
+
+    let participants = [];
+    let gifts = giftsHardcoded; 
+    let giftsForDraw = [];       
+    let results = [];
+    let index = 0;
+    const resultBody = document.querySelector("#resultTable tbody");
+    const winnerCard = document.getElementById("winnerCard");
+    const winnerNameEl = document.getElementById("winnerName");
+    const divisionNameEl = document.getElementById("divisionName");
+    const giftNameEl = document.getElementById("giftName");
+    const idNumberEl = document.getElementById("idNumber");
+    const loader = document.getElementById("loader");
+    const giftImageEl = document.getElementById("giftImage");
+    const resultTable = document.getElementById("resultTable");
+    const gallery = document.getElementById("gallery");
+    const departmentSelect = document.getElementById("departmentSelect");
+    const maxDrawsInput = document.getElementById("maxDrawsInput"); 
+    const totalGiftsDisplay = document.getElementById("totalGiftsDisplay"); 
+
+    // -------------------------------------------------------------
+    // --- CAROUSEL JS INTEGRATION (From previous step) ---
+    // -------------------------------------------------------------
+
+    // --- Element Selection (Carousel specific) ---
+    const carousel = document.getElementById('giftCarousel');
+    const list = carousel ? carousel.querySelector('.list') : null;
+    const nextButton = carousel ? carousel.querySelector('.next') : null;
+    const prevButton = carousel ? carousel.querySelector('.prev') : null;
+    const timeRunning = carousel ? carousel.querySelector('.timeRunning') : null;
+
+    // --- Configuration (Carousel specific) ---
+    const transitionDuration = 1000; 
+    const autoPlayTime = 7000; 
+
+    // --- Timer Variables (Carousel specific) ---
+    let runTimeOut; 
+    let runNextAuto; 
+
+    /**
+     * Dynamically generates the carousel items from the hardcoded gift list.
+     */
+    function generateCarouselItems() {
+        if (!list || !giftsHardcoded.length) return;
+
+        giftsHardcoded.forEach((gift, index) => {
+            const item = document.createElement('div');
+            item.classList.add('item');
             
-            // Ensure the old image animates out before the new one animates in
-            if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
-                giftImageEl.classList.remove("entering", "floating");
-                giftImageEl.classList.add("leaving");
-                await sleep(500); // Wait for leaving animation to complete
-            } else if (giftImageEl.classList.contains("leaving")) {
-                // If already leaving, just wait
-                await sleep(500);
+            // Set the background image
+            item.style.backgroundImage = `url(${gift.image})`;
+
+            // The second item is the initial active one in this design
+            if (index === 1) {
+                item.classList.add('active'); 
             }
 
-            giftImageEl.src = giftImageSrc;
-            giftImageEl.classList.remove("leaving"); // Remove leaving if it was there
-            void giftImageEl.offsetWidth; // Trigger reflow to restart animation
-            giftImageEl.classList.add("entering");
-
-            // After the entering animation, start the continuous floating
-            setTimeout(() => {
-                giftImageEl.classList.remove("entering");
-                giftImageEl.classList.add("floating"); // Add the new floating animation
-            }, 700); // Duration of the 'entering' animation
-        }
-
-
-        document.getElementById("startDraw").addEventListener("click", async () => {
-            if (!participants.length) {
-                alert("Participant data is not loaded. Please upload participants first.");
-                return;
-            }
-            // ➡️ Check the list used for the actual draw
-            if (!giftsForDraw.length) {
-                alert("Gift data for drawing is empty. Please upload the gift list first.");
-                return;
-            }
-
-            // NEW: Get the desired number of draws
-            const desiredDraws = parseInt(maxDrawsInput.value, 10);
-
-            if (isNaN(desiredDraws) || desiredDraws < 1) {
-                alert("Please enter a valid number of draws (1 or more).");
-                return;
-            }
-
-            // DRAW MODIFICATION: Use giftsForDraw (from localStorage)
-            const usableGifts = giftsForDraw.slice();
-
-            // Calculate the actual number of draws, constrained by participants, gifts, and the user's input
-            const numDraws = Math.min(participants.length, usableGifts.length, desiredDraws);
-
-            if (numDraws === 0) {
-                alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
-                return;
-            }
-
-            // Ensure the table is visible
-            resultTable.style.display = "table";
-
-            const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-            const shuffledGifts = [...usableGifts].sort(() => 0.5 - Math.random());
-
-            results = [];
-            for (let i = 0; i < numDraws; i++) {
-                // The `gift` object here contains the gift details from the UPLOADED file
-                results.push({
-                    name: shuffledParticipants[i].name,
-                    division: shuffledParticipants[i].division,
-                    idCard: shuffledParticipants[i].idCard,
-                    gift: shuffledGifts[i], 
-                });
-            }
-
-            resultBody.innerHTML = "";
-            index = 0;
-
-            // Remove floating animation when draw starts
-            giftImageEl.classList.remove("floating"); 
-            document.getElementById("doneMessage").style.display = "none";
-            runDrawSequence();
-
-            // NEW: Update the total gifts available to reflect the draw (simulated replacement)
-            totalGiftsDisplay.textContent = giftsForDraw.length - results.length;
-            maxDrawsInput.max = giftsForDraw.length - results.length;
-            maxDrawsInput.value = Math.min(1, giftsForDraw.length - results.length);
-        });
-
-        document.getElementById("restartBtn").addEventListener("click", () => {
-            // Reset state
-            results = [];
-            index = 0;
-            resultBody.innerHTML = "";
-            resultTable.style.display = "none";
-            winnerCard.style.display = "none";
-            document.getElementById("doneMessage").style.display = "none";
-            
-            // Ensure image is reset for next preview/draw, including removing floating
-            giftImageEl.src = "";
-            giftImageEl.classList.remove("entering", "leaving", "floating");
-
-
-            // Reset preview content text
-            winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
-            idNumberEl.textContent = "🪪 ID Card Number";
-            divisionNameEl.textContent = "🏢 Division";
-            giftNameEl.textContent = "🎁 Gift Name";
-
-            // NEW: Reset gift count display and max draws input to initial state
-            const savedGifts = localStorage.getItem("giftsData"); 
-            if (savedGifts) {
-                giftsForDraw = JSON.parse(savedGifts).map((g) => ({
-                    name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
-                    department: g.department || g.Department || g.Division || "General",
-                    image: g.image || g.ImageURL || g.Image || g.img || "",
-                }));
-            } else {
-                giftsForDraw = [];
-            }
-            totalGiftsDisplay.textContent = giftsForDraw.length;
-            maxDrawsInput.max = giftsForDraw.length;
-            maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-        });
-
-        async function runDrawSequence() {
-            for (let i = 0; i < results.length; i++) {
-                if (i === 0) {
-                    await startCountdown(10);
-                } else {
-                    // If it's not the first draw, make the current image leave
-                    giftImageEl.classList.remove("entering", "floating"); // Ensure floating is removed
-                    giftImageEl.classList.add("leaving");
-                    await sleep(500); // Wait for the leaving animation to finish
-                    winnerCard.style.display = "none"; // Hide the card temporarily
-                }
-                await announceWinnerSequence();
-            }
-
-            const doneMsg = document.getElementById("doneMessage");
-            doneMsg.style.display = "block";
-
-            if (typeof confetti === "function") {
-                confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
-            }
-        }
-
-        function startCountdown(seconds) {
-            return new Promise((resolve) => {
-                let count = seconds;
-                loader.textContent = count;
-                loader.style.display = "flex";
-
-                const timer = setInterval(() => {
-                    count--;
-                    if (count > 0) {
-                        loader.textContent = count;
-                    } else {
-                        clearInterval(timer);
-                        loader.style.display = "none";
-                        resolve();
-                    }
-                }, 1000);
-            });
-        }
-
-        function sleep(ms) {
-            return new Promise((resolve) => setTimeout(resolve, ms));
-        }
-
-        async function announceWinnerSequence() {
-            const winner = results[index];
-            if (!winner) return;
-
-            // The gift data for the winner comes from the UPLOADED list (winner.gift)
-            const giftObj = winner.gift;
-            const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
-            
-            // Find the corresponding hardcoded gift data for the image
-            const displayGift = gifts.find(g => g.name === giftText);
-
-            // populate text
-            winnerNameEl.textContent = `🏆 ${winner.name}`;
-            idNumberEl.textContent = `🪪 ${winner.idCard}`;
-            divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
-            giftNameEl.textContent = `🎁 ${giftText}`;
-
-
-            // ➡️ Use the hardcoded image if a match is found, otherwise use fallback
-            const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
-                ? displayGift.image 
-                : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">Image Not Found for: ${escapeHtml(giftText)}</text></svg>`)}`;
-            
-            winnerCard.style.display = "block";
-            
-            // Image transition logic:
-            if (index > 0) {
-                // For subsequent draws, the leaving animation should have finished
-                giftImageEl.src = imageSource;
-                giftImageEl.classList.remove("leaving"); 
-                void giftImageEl.offsetWidth; 
-                giftImageEl.classList.add("entering");
-            } else {
-                // For the first draw, just fade in
-                giftImageEl.src = imageSource;
-                giftImageEl.classList.remove("leaving");
-                giftImageEl.classList.add("entering");
-            }
-
-            // Ensure image animation completes
-            await sleep(700); 
-            giftImageEl.classList.remove("entering");
-
-
-            // Add to the winners table
-            const newRow = resultBody.insertRow();
-            newRow.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${winner.name}</td>
-                <td>${winner.idCard}</td>
-                <td>${winner.division}</td>
-                <td>${giftText}</td>
+            // Inject minimal content wrapper, though it's hidden by CSS
+            item.innerHTML = `
+                <div class="content">
+                    <div class="title">Gift Preview</div>
+                    <div class="name">${gift.name}</div>
+                </div>
             `;
+            list.appendChild(item);
+        });
+    }
 
-            // Scroll to show the newest winner
-            resultTable.scrollTop = resultTable.scrollHeight;
-            index++;
+    /**
+     * Resets and restarts the CSS animation for the progress bar.
+     */
+    function resetTimeAnimation() {
+        if (!timeRunning) return;
+        timeRunning.style.animation = 'none';
+        timeRunning.offsetHeight; /* trigger reflow */
+        timeRunning.style.animation = null; 
+        timeRunning.style.animation = `runningTime ${autoPlayTime / 1000}s linear 1 forwards`;
+    }
+
+    /**
+     * Main function to move the slider by reordering DOM elements.
+     * @param {string} type - 'next' or 'prev'.
+     */
+    function showSlider(type) {
+        if (!list) return;
+        const sliderItemsDom = list.querySelectorAll('.carousel .list .item');
+        if (sliderItemsDom.length < 2) return;
+
+        // 1. Reorder the DOM elements
+        if (type === 'next') {
+            list.appendChild(sliderItemsDom[0]);
+            carousel.classList.add('next');
+        } else {
+            list.prepend(sliderItemsDom[sliderItemsDom.length - 1]);
+            carousel.classList.add('prev');
         }
-    </script>
+        
+        // 2. Manage the 'active' class for content/overlay visibility
+        // Remove the 'active' class from ALL items
+        sliderItemsDom.forEach(item => item.classList.remove('active'));
+
+        // Apply 'active' to the item at index 1 (the full-screen, visible item)
+        const newList = list.querySelectorAll('.carousel .list .item');
+        if (newList.length >= 2) {
+            newList[1].classList.add('active'); 
+        }
+
+        // 3. Manage the transition classes
+        clearTimeout(runTimeOut);
+        runTimeOut = setTimeout( () => {
+            carousel.classList.remove('next');
+            carousel.classList.remove('prev');
+        }, transitionDuration); 
+
+        // 4. Reset Auto-Play Timer and Progress Bar
+        clearTimeout(runNextAuto);
+        runNextAuto = setTimeout(() => {
+            nextButton.click(); 
+        }, autoPlayTime);
+
+        resetTimeAnimation();
+    }
+    
+    // --- Event Listeners for Buttons (Carousel specific) ---
+    if (nextButton && prevButton) {
+        nextButton.addEventListener('click', () => { showSlider('next'); });
+        prevButton.addEventListener('click', () => { showSlider('prev'); });
+    }
+
+    // -------------------------------------------------------------
+    // --- END CAROUSEL JS INTEGRATION ---
+    // -------------------------------------------------------------
+
+
+    window.addEventListener("DOMContentLoaded", () => {
+        // --- Raffle Logic Setup ---
+        const savedParticipants = localStorage.getItem("participantsData");
+        const savedGifts = localStorage.getItem("giftsData"); 
+
+        if (savedParticipants) {
+            participants = JSON.parse(savedParticipants).map((p) => ({
+                name: p.name || p.Name || "Unnamed",
+                division: p.division || p.Division || p.department || p.Department || "—",
+                idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
+            }));
+        } else {
+            alert("⚠️ Please upload participants on the admin page first.");
+        }
+
+        if (savedGifts) {
+            giftsForDraw = JSON.parse(savedGifts).map((g) => ({
+                name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
+                department: g.department || g.Department || g.Division || "General",
+                image: g.image || g.ImageURL || g.Image || g.img || "", 
+            }));
+        } else {
+            alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
+        }
+        
+        if (gifts.length === 0) {
+            alert("⚠️ Error: Hardcoded gift data (for display) is empty. Cannot show carousel.");
+            return;
+        }
+
+        // NEW: Update total gifts display and max draws input
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        maxDrawsInput.max = giftsForDraw.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+
+        // --- Carousel Initialization ---
+        generateCarouselItems(); 
+        resetTimeAnimation(); // Start the initial progress bar animation
+        runNextAuto = setTimeout(() => {
+            if(nextButton) nextButton.click();
+        }, autoPlayTime);
+
+        // --- Raffle UI Initialization ---
+        populateDepartmentSelect();
+        // updateGallery is no longer needed since the gallery is hidden
+    });
+
+    // ... (Your other helper functions: populateDepartmentSelect, updateGallery, escapeHtml, sleep) ...
+
+    function populateDepartmentSelect() {
+        // Uses hardcoded gifts (gifts) to populate selector
+        const depts = Array.from(new Set(gifts.map(g => (g.department || "General")))).sort();
+        departmentSelect.innerHTML = '<option value="">Select Department (All)</option>';
+        depts.forEach(d => {
+            const opt = document.createElement("option");
+            opt.value = d;
+            opt.textContent = d;
+            departmentSelect.appendChild(opt);
+        });
+
+        // The gallery update event listener is irrelevant now, but kept in case you want filtering later
+        departmentSelect.addEventListener("change", () => {
+            // Note: The carousel does NOT filter automatically. Filtering must be done manually if needed.
+        });
+    }
+    
+    // Function to Preview a Gift (kept the same, but no longer triggered by gallery)
+    async function previewGift(giftObj) {
+        winnerCard.style.display = "block";
+        winnerNameEl.textContent = "🎁 Gift Preview";
+        idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
+        divisionNameEl.textContent = "Click 'Start Draw' to begin!";
+        giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+
+        const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
+            ? giftObj.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
+        
+        // Ensure the old image animates out before the new one animates in
+        if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
+            giftImageEl.classList.remove("entering", "floating");
+            giftImageEl.classList.add("leaving");
+            await sleep(500); // Wait for leaving animation to complete
+        } else if (giftImageEl.classList.contains("leaving")) {
+                // If already leaving, just wait
+             await sleep(500);
+        }
+
+        giftImageEl.src = giftImageSrc;
+        giftImageEl.classList.remove("leaving"); // Remove leaving if it was there
+        void giftImageEl.offsetWidth; // Trigger reflow to restart animation
+        giftImageEl.classList.add("entering");
+
+        // After the entering animation, start the continuous floating
+        setTimeout(() => {
+            giftImageEl.classList.remove("entering");
+            giftImageEl.classList.add("floating"); // Add the new floating animation
+        }, 700); // Duration of the 'entering' animation
+    }
+
+    // ... (The rest of your raffle logic) ...
+    
+    document.getElementById("startDraw").addEventListener("click", async () => {
+        // ... (existing draw setup logic) ...
+        if (!participants.length) {
+            alert("Participant data is not loaded. Please upload participants first.");
+            return;
+        }
+        if (!giftsForDraw.length) {
+            alert("Gift data for drawing is empty. Please upload the gift list first.");
+            return;
+        }
+
+        const desiredDraws = parseInt(maxDrawsInput.value, 10);
+        if (isNaN(desiredDraws) || desiredDraws < 1) {
+            alert("Please enter a valid number of draws (1 or more).");
+            return;
+        }
+
+        const usableGifts = giftsForDraw.slice();
+        const numDraws = Math.min(participants.length, usableGifts.length, desiredDraws);
+
+        if (numDraws === 0) {
+              alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
+              return;
+        }
+
+        const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
+        const shuffledGifts = [...usableGifts].sort(() => 0.5 - Math.random());
+
+        results = [];
+        for (let i = 0; i < numDraws; i++) {
+            results.push({
+                name: shuffledParticipants[i].name,
+                division: shuffledParticipants[i].division,
+                idCard: shuffledParticipants[i].idCard,
+                gift: shuffledGifts[i], 
+            });
+        }
+
+        resultBody.innerHTML = "";
+        index = 0;
+
+        // Stop carousel auto-play and reset
+        clearTimeout(runNextAuto); 
+        if (timeRunning) timeRunning.style.animation = 'none';
+
+        // Remove floating animation when draw starts
+        giftImageEl.classList.remove("floating"); 
+        runDrawSequence();
+
+        // NEW: Update the total gifts available to reflect the draw (simulated replacement)
+        totalGiftsDisplay.textContent = giftsForDraw.length - results.length;
+        maxDrawsInput.max = giftsForDraw.length - results.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length - results.length);
+    });
+
+    document.getElementById("restartBtn").addEventListener("click", () => {
+        // ... (existing restart logic) ...
+        results = [];
+        index = 0;
+        resultBody.innerHTML = "";
+        resultTable.style.display = "none";
+        winnerCard.style.display = "none";
+        
+        giftImageEl.src = "";
+        giftImageEl.classList.remove("entering", "leaving", "floating");
+
+        winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
+        idNumberEl.textContent = "🪪 ID Card Number";
+        divisionNameEl.textContent = "🏢 Division";
+        giftNameEl.textContent = "🎁 Gift Name";
+
+        // Reset gift count display and max draws input
+        const savedGifts = localStorage.getItem("giftsData"); 
+        if (savedGifts) {
+            giftsForDraw = JSON.parse(savedGifts).map((g) => ({
+                name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
+                department: g.department || g.Department || g.Division || "General",
+                image: g.image || g.ImageURL || g.Image || g.img || "",
+            }));
+        } else {
+            giftsForDraw = [];
+        }
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        maxDrawsInput.max = giftsForDraw.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+
+        // Restart carousel
+        generateCarouselItems(); 
+        resetTimeAnimation();
+        clearTimeout(runNextAuto); 
+        runNextAuto = setTimeout(() => {
+            if(nextButton) nextButton.click();
+        }, autoPlayTime);
+    });
+
+    async function runDrawSequence() {
+        for (let i = 0; i < results.length; i++) {
+            if (i === 0) {
+                await startCountdown(10);
+            } else {
+                giftImageEl.classList.remove("entering", "floating"); 
+                giftImageEl.classList.add("leaving");
+                await sleep(500); 
+                winnerCard.style.display = "none"; 
+            }
+            await announceWinnerSequence();
+        }
+
+        const doneMsg = document.getElementById("doneMessage");
+        doneMsg.style.display = "block";
+
+        if (typeof confetti === "function") {
+            confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
+        }
+    }
+
+    function startCountdown(seconds) {
+        // ... (existing countdown logic) ...
+        return new Promise((resolve) => {
+            let count = seconds;
+            loader.textContent = count;
+            loader.style.display = "flex";
+
+            const timer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    loader.textContent = count;
+                } else {
+                    clearInterval(timer);
+                    loader.style.display = "none";
+                    resolve();
+                }
+            }, 1000);
+        });
+    }
+
+    function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    async function announceWinnerSequence() {
+        const winner = results[index];
+        if (!winner) return;
+
+        const giftObj = winner.gift;
+        const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
+        
+        // Find the corresponding hardcoded gift data for the image
+        const displayGift = gifts.find(g => g.name === giftText);
+
+        // populate text
+        winnerNameEl.textContent = `🏆 ${winner.name}`;
+        idNumberEl.textContent = `🪪 ${winner.idCard}`;
+        divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
+        giftNameEl.textContent = `🎁 ${giftText}`;
+
+
+        // ➡️ Use the hardcoded image if a match is found, otherwise use fallback
+        const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
+            ? displayGift.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText || 'Gift')}</text></svg>`)}`;
+
+        
+        // Set new image and animate in
+        giftImageEl.src = imageSource;
+        giftImageEl.classList.remove("leaving");
+        void giftImageEl.offsetWidth;
+        giftImageEl.classList.add("entering");
+
+        // Show the winner card
+        winnerCard.style.display = "block";
+
+        // Increment index for next draw
+        index++;
+        
+        // Optional: wait a moment for the user to see the winner before the next one starts
+        await sleep(6000); // 6 seconds pause before the next draw sequence starts
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+
+</script>
 </body>
 </html>
