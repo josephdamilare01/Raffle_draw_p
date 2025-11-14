@@ -224,7 +224,7 @@
             resolve(formatted);
           } else {
             const formatted = json.map((row, index) => ({
-            name: row.Gift || row.Item || `Gift ${index + 1}`,
+            name: row.Gift || row.name|| row.Name|| row.NAME||row.Item || `Gift ${index + 1}`,
             department: row.Department || "N/A" // ✅ ensure department exists
             );
             resolve(formatted);
@@ -268,6 +268,7 @@
   </script>
 </body>
 </html>
+
 
 
 
