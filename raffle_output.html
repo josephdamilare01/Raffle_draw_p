@@ -468,22 +468,40 @@
     let allParticipants = [];
     let allGiftsForDraw = [];
     let allHardcodedGifts = [];
-    function filterAllByDepartment(dept) {
-    if (!dept || dept.trim() === "") {
-        return {
-    participants: allParticipants.filter(p => ((p.division || "").trim().toLowerCase() === dept.trim().toLowerCase())),
-    giftsForDraw: allGiftsForDraw.filter(g => ((g.department || "").trim().toLowerCase() === dept.trim().toLowerCase())),
-    hardcodedGifts: allHardcodedGifts.filter(g => ((g.department || "").trim().toLowerCase() === dept.trim().toLowerCase()))
-};
-    }
+    // function filterAllByDepartment(dept) {
+    //if (!dept || dept.trim() === "") {
+       // return {
+    //participants: allParticipants.filter(p => ((p.division || "").trim().toLowerCase() === dept.trim().toLowerCase())),
+   // giftsForDraw: allGiftsForDraw.filter(g => ((g.department || "").trim().toLowerCase() === dept.trim().toLowerCase())),
+  //  hardcodedGifts: allHardcodedGifts.filter(g => ((g.department || "").trim().toLowerCase() === dept.trim().toLowerCase()))
+//};
+    //}
 
-    return {
-        participants: allParticipants.filter(p => (p.division || "").trim() === dept),
-        giftsForDraw: allGiftsForDraw.filter(g => (g.department || "").trim() === dept),
-        hardcodedGifts: allHardcodedGifts.filter(g => (g.department || "").trim() === dept)
-    };
+   // return {
+   //     participants: allParticipants.filter(p => (p.division || "").trim() === dept),
+    //    giftsForDraw: allGiftsForDraw.filter(g => (g.department || "").trim() === dept),
+     //   hardcodedGifts: allHardcodedGifts.filter(g => (g.department || "").trim() === dept)
+    //};
+//}
+
+const allParticipants = JSON.parse(localStorage.getItem("participantsData")) || [];
+const allGifts = JSON.parse(localStorage.getItem("giftsData")) || [];
+const allHardcodedGifts = JSON.parse(localStorage.getItem("hardcodedGiftsData")) || [];
+
+function filterByDepartment(dept) {
+    const participants = allParticipants.filter(p => p.department === dept);
+    const giftsForDraw = allGifts.filter(g => g.department === dept);
+    const hardcodedGifts = allHardcodedGifts.filter(g => g.department === dept);
+
+    console.log("Selected dept:", dept);
+    console.log("Filtered participants:", participants);
+    console.log("Filtered gifts for draw:", giftsForDraw);
+    console.log("Filtered hardcoded gifts:", hardcodedGifts);
+
+    return { participants, giftsForDraw, hardcodedGifts };
 }
 
+    
     window.addEventListener("DOMContentLoaded", () => {
         const savedParticipants = localStorage.getItem("participantsData");
         const savedGifts = localStorage.getItem("giftsData"); // Load gifts for draw from admin page
@@ -530,6 +548,15 @@
         populateDepartmentSelect();
         updateGallery(); // initial gallery (All)
     });
+
+departmentSelect.addEventListener("change", function() {
+    const dept = departmentSelect.value;
+    const filtered = filterByDepartment(dept);
+    participants = filtered.participants;
+    giftsForDraw = filtered.giftsForDraw;
+    gifts = filtered.hardcodedGifts;
+    ...
+});
 
     function populateDepartmentSelect() {
         // Uses hardcoded gifts (gifts) to populate selector
@@ -835,6 +862,7 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 </script>
 </body>
 </html>
+
 
 
 
