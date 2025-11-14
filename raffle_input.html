@@ -204,36 +204,37 @@
     }
 
     // ✅ Updated to include Division and ID Card Number
-    function readExcel(file, isParticipant = false) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
-          const sheetName = workbook.SheetNames[0];
-          const sheet = workbook.Sheets[sheetName];
-          const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
+function readExcel(file, isParticipant = false) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      const json = XLSX.utils.sheet_to_json(sheet, { defval: "" });
 
-          if (isParticipant) {
-            const formatted = json.map((row, index) => ({
-              name: row.Name || row.FullName || `Participant ${index + 1}`,
-              department: row.Department || "N/A", // ✅ department instead of division
-              idCardNumber: row["ID Card Number"] || row.IDCard || row.Card || "N/A", // ✅ Added
-              company: row.Company || row.company || "N/A",
-            }));
-            resolve(formatted);
-          } else {
-            const formatted = json.map((row, index) => ({
-            gift: row.Gift || row.name|| row.Name|| row.NAME||row.Item || `Gift ${index + 1}`,
-            department: row.Department || "N/A" // ✅ ensure department exists
-            );
-            resolve(formatted);
-          }
-        };
-        reader.onerror = (err) => reject(err);
-        reader.readAsArrayBuffer(file);
-      });
-    }
+      if (isParticipant) {
+        const formatted = json.map((row, index) => ({
+          name: row.Name || row.FullName || `Participant ${index + 1}`,
+          department: row.Department || "N/A",
+          idCardNumber: row["ID Card Number"] || row.IDCard || row.Card || "N/A",
+          company: row.Company || row.company || "N/A",
+        }));
+        resolve(formatted);
+      } else {
+        // ✅ FIXED: Correct column mapping for gifts
+        const formatted = json.map((row, index) => ({
+          name: row.Name || row.name || row.Gift || row.Item || `Gift ${index + 1}`,
+          department: row.Department || row.department || "General"
+        }));
+        resolve(formatted);
+      }
+    };
+    reader.onerror = (err) => reject(err);
+    reader.readAsArrayBuffer(file);
+  });
+}
 
     async function saveFiles() {
       const participantsFile = document.getElementById("participantsFile").files[0];
@@ -268,6 +269,7 @@
   </script>
 </body>
 </html>
+
 
 
 
