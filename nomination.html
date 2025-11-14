@@ -350,27 +350,27 @@ awards.forEach((award, i) => {
     // Only manager name input
     inputField = `
       <label>Manager's Name</label>
-      <input type="text" name="nomineeName_${i}" placeholder="Enter manager's full name" required />
+      <input type="text" name="nomineeName_${i}" placeholder="Enter manager's full name" />
       <label>Department</label>
-      <input type="text" name="nomineeDept_${i}" placeholder="Enter manager's Department" required />
+      <input type="text" name="nomineeDept_${i}" placeholder="Enter manager's Department" />
     `;   
   } else if (award === "Most Collaborative Dept of the Year") {
     // Only department name input
     inputField = `
       <label>Department Name</label>
-      <input type="text" name="nomineeDept_${i}" placeholder="Enter department name" required />
+      <input type="text" name="nomineeDept_${i}" placeholder="Enter department name" />
     `;
   } else if (award === "The Continuous Improvement Team (CIT) Award") {
     // Only department name input
     inputField = `
       <label>Team (Unit) Name</label>
-      <input type="text" name="nomineeDept_${i}" placeholder="Enter team (Unit) name" required />
+      <input type="text" name="nomineeDept_${i}" placeholder="Enter team (Unit) name" />
     `;
   }
   else {
     inputField = `
       <label>Nominee</label>
-      <input type="text" list="candidateList_${i}" name="nomineeName_${i}" placeholder="Type candidate name..." autocomplete="off" required>
+      <input type="text" list="candidateList_${i}" name="nomineeName_${i}" placeholder="Type candidate name..." autocomplete="off" >
       <datalist id="candidateList_${i}"></datalist>
       <label>Department</label>
       <input type="text" name="nomineeDept_${i}" readonly />
@@ -510,6 +510,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
 
 
