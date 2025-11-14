@@ -444,6 +444,34 @@
         { name: "hisense 20 litres microwave (h20mows14)", department: "General Draws", image: "hisense 20 litres microwave (h20mows14).jpg" },
 
     ];
+
+    function populateDepartmentSelector() {
+    const select = document.getElementById("departmentSelect");
+
+    // Get unique department names
+    const departments = [...new Set(giftsHardcoded.map(g => g.department))];
+
+    // Add them to the dropdown
+    departments.forEach(dep => {
+        const option = document.createElement("option");
+        option.value = dep;
+        option.textContent = dep;
+        select.appendChild(option);
+    });
+}
+
+populateDepartmentSelector();
+
+document.getElementById("departmentSelect").addEventListener("change", function () {
+    const dep = this.value;
+
+    if (dep === "") {
+        loadGallery(giftsHardcoded);
+    } else {
+        loadGallery(giftsHardcoded.filter(g => g.department === dep));
+    }
+});
+
     // --- End of Hardcoded Gift Data ---
 
     let participants = [];
@@ -862,6 +890,7 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 </script>
 </body>
 </html>
+
 
 
 
