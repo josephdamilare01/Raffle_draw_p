@@ -445,64 +445,15 @@
 
     ];
 
-    function populateDepartmentSelector() {
-    const select = document.getElementById("departmentSelect");
-
-    // Get unique department names
-    const departments = [...new Set(giftsHardcoded.map(g => g.department))];
-
-    // Add them to the dropdown
-    departments.forEach(dep => {
-        const option = document.createElement("option");
-        option.value = dep;
-        option.textContent = dep;
-        select.appendChild(option);
-    });
-}
-
-populateDepartmentSelector();
-
-document.getElementById("departmentSelect").addEventListener("change", function () {
-    const dep = this.value;
-
-    // 1. FILTER HARDCODED GIFTS (gallery preview)
-    if (dep === "") {
-        loadGallery(giftsHardcoded);
-    } else {
-        loadGallery(giftsHardcoded.filter(g => g.department.toLowerCase() === dep.toLowerCase()));
-    }
-
-    // 2. FILTER PARTICIPANTS BASED ON DEPT
-    if (dep === "") {
-        participants = [...fullParticipants];
-    } else {
-        participants = fullParticipants.filter(p =>
-            String(p.department).toLowerCase() === dep.toLowerCase()
-        );
-    }
-
-    // 3. FILTER UPLOADED GIFT LIST
-    if (dep === "") {
-        gifts = [...fullGifts];
-    } else {
-        gifts = fullGifts.filter(g =>
-            String(g.department).toLowerCase() === dep.toLowerCase()
-        );
-    }
-
-    console.log("Filtered Participants:", participants);
-    console.log("Filtered Gifts:", gifts);
-});
-
-
-    // --- End of Hardcoded Gift Data ---
     let fullParticipants = [];
     let fullGifts = [];
     let participants = [];
-    let gifts = giftsHardcoded; // ➡️ Gift list for DISPLAY/PREVIEW (uses hardcoded data)
-    let giftsForDraw = [];       // ➡️ Gift list for DRAWING (loaded from localStorage)
+    let gifts = giftsHardcoded; // For display/preview
+    let giftsForDraw = [];      // For drawing (loaded from localStorage)
     let results = [];
     let index = 0;
+    
+    // DOM elements
     const resultBody = document.querySelector("#resultTable tbody");
     const winnerCard = document.getElementById("winnerCard");
     const winnerNameEl = document.getElementById("winnerName");
@@ -514,160 +465,45 @@ document.getElementById("departmentSelect").addEventListener("change", function 
     const resultTable = document.getElementById("resultTable");
     const gallery = document.getElementById("gallery");
     const departmentSelect = document.getElementById("departmentSelect");
-    const maxDrawsInput = document.getElementById("maxDrawsInput"); // NEW: Input for max draws
-    const totalGiftsDisplay = document.getElementById("totalGiftsDisplay"); // NEW: Display for total gifts
-    
-    let allParticipants = [];
-    let allGiftsForDraw = [];
-    let allHardcodedGifts = [];
-    // function filterAllByDepartment(dept) {
-    //if (!dept || dept.trim() === "") {
-       // return {
-    //participants: allParticipants.filter(p => ((p.division || "").trim().toLowerCase() === dept.trim().toLowerCase())),
-   // giftsForDraw: allGiftsForDraw.filter(g => ((g.department || "").trim().toLowerCase() === dept.trim().toLowerCase())),
-  //  hardcodedGifts: allHardcodedGifts.filter(g => ((g.department || "").trim().toLowerCase() === dept.trim().toLowerCase()))
-//};
-    //}
+    const maxDrawsInput = document.getElementById("maxDrawsInput");
+    const totalGiftsDisplay = document.getElementById("totalGiftsDisplay");
 
-   // return {
-   //     participants: allParticipants.filter(p => (p.division || "").trim() === dept),
-    //    giftsForDraw: allGiftsForDraw.filter(g => (g.department || "").trim() === dept),
-     //   hardcodedGifts: allHardcodedGifts.filter(g => (g.department || "").trim() === dept)
-    //};
-//}
-
-const allParticipants = JSON.parse(localStorage.getItem("participantsData")) || [];
-const allGifts = JSON.parse(localStorage.getItem("giftsData")) || [];
-const allHardcodedGifts = JSON.parse(localStorage.getItem("hardcodedGiftsData")) || [];
-
-function filterByDepartment(dept) {
-    const participants = allParticipants.filter(p => p.department === dept);
-    const giftsForDraw = allGifts.filter(g => g.department === dept);
-    const hardcodedGifts = allHardcodedGifts.filter(g => g.department === dept);
-
-    console.log("Selected dept:", dept);
-    console.log("Filtered participants:", participants);
-    console.log("Filtered gifts for draw:", giftsForDraw);
-    console.log("Filtered hardcoded gifts:", hardcodedGifts);
-
-    return { participants, giftsForDraw, hardcodedGifts };
-}
-
-    
-    window.addEventListener("DOMContentLoaded", () => {
-        const savedParticipants = localStorage.getItem("participantsData");
-        const savedGifts = localStorage.getItem("giftsData"); // Load gifts for draw from admin page
-
-        // 1. Load Participants
-        if (savedParticipants) {
-            participants = JSON.parse(savedParticipants);
-            allParticipants = [...participants];
-            allHardcodedGifts = [...gifts]; // use the hardcoded list for display/gallery
-            participants = participants.map((p) => ({
-                name: p.name || p.Name || "Unnamed",
-                division: p.division || p.Division || p.department || p.Department || "—",
-                idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
-            }));
-        } else {
-            alert("⚠️ Please upload participants on the admin page first.");
-        }
-
-        // 2. Load Gifts for Draw
-        if (savedGifts) {
-            giftsForDraw = JSON.parse(savedGifts);
-            allGiftsForDraw = [...giftsForDraw];
-            // Normalize gifts for drawing (this list needs to match the structure expected by the draw logic)
-            giftsForDraw = giftsForDraw.map((g) => ({
-                name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
-                department: g.department || g.Department || g.Division || "General",
-                image: g.image || g.ImageURL || g.Image || g.img || "", // Image will be overwritten by hardcoded list in winner announce
-            }));
-            console.log(`Loaded ${giftsForDraw.length} gifts for the draw.`);
-        } else {
-            alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
-        }
+    // Function to populate department selector
+    function populateDepartmentSelector() {
+        const select = document.getElementById("departmentSelect");
+        select.innerHTML = '<option value="">Select Department (All)</option>';
         
-        if (gifts.length === 0) {
-            alert("⚠️ Error: Hardcoded gift data (for display) is empty. Cannot show gallery.");
-            return;
-        }
-
-        // NEW: Update total gifts display and max draws input
-        totalGiftsDisplay.textContent = giftsForDraw.length;
-        maxDrawsInput.max = giftsForDraw.length;
-        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-
-        populateDepartmentSelect();
-        updateGallery(); // initial gallery (All)
-    });
-
-departmentSelect.addEventListener("change", function() {
-    const dept = departmentSelect.value;
-    const filtered = filterByDepartment(dept);
-    participants = filtered.participants;
-    giftsForDraw = filtered.giftsForDraw;
-    gifts = filtered.hardcodedGifts;
-    ...
-});
-
-    function populateDepartmentSelect() {
-        // Uses hardcoded gifts (gifts) to populate selector
-        const depts = Array.from(new Set(gifts.map(g => (g.department || "General")))).sort();
-        departmentSelect.innerHTML = '<option value="">Select Department (All)</option>';
-        depts.forEach(d => {
-            const opt = document.createElement("option");
-            opt.value = d;
-            opt.textContent = d;
-            departmentSelect.appendChild(opt);
-        });
-
-        departmentSelect.addEventListener("change", () => {
-            const filtered = filterAllByDepartment(departmentSelect.value);
-
-// Replace global sample lists with filtered values
-participants = filtered.participants;
-giftsForDraw = filtered.giftsForDraw;
-gifts = filtered.hardcodedGifts;
-fullParticipants = parsedParticipants;  
-fullGifts = parsedGifts;
-
-
-// Refresh gallery
-updateGallery();
-// ---- Add debug logs here ----
-    console.log("Selected dept:", dept);
-    console.log("Filtered participants:", participants);
-    console.log("Filtered gifts for draw:", giftsForDraw);
-    console.log("Filtered hardcoded gifts:", gifts);
-// Update gift counters
-totalGiftsDisplay.textContent = giftsForDraw.length;
-maxDrawsInput.max = giftsForDraw.length;
-maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-
+        // Get unique departments from hardcoded gifts
+        const departments = [...new Set(giftsHardcoded.map(g => g.department))];
+        
+        departments.forEach(dep => {
+            const option = document.createElement("option");
+            option.value = dep;
+            option.textContent = dep;
+            select.appendChild(option);
         });
     }
 
-    function updateGallery() {
-        const selected = departmentSelect.value;
-        // Uses hardcoded gifts (gifts) to filter gallery
-        const filtered = selected ? gifts.filter(g => (g.department || "General") === selected) : gifts;
+    // Function to load gallery
+    function loadGallery(giftsArray) {
         gallery.innerHTML = "";
-
-        if (!filtered.length) {
-            gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts for this department in the hardcoded list.</div>';
+        
+        if (!giftsArray || giftsArray.length === 0) {
+            gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts available for this department.</div>';
             return;
         }
 
-        filtered.forEach(g => {
+        giftsArray.forEach(g => {
             const img = document.createElement("img");
             img.className = "gallery-thumb";
             img.alt = g.name || "gift";
-            // Uses hardcoded image path
+            
             if (g.image && g.image.trim()) {
                 img.src = g.image;
             } else {
                 img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
             }
+            
             img.title = g.name;
             img.addEventListener('click', () => {
                 previewGift(g);
@@ -676,6 +512,97 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
             gallery.appendChild(img);
         });
     }
+
+    // Function to filter all data by department
+    function filterAllByDepartment(dept) {
+        if (!dept || dept.trim() === "") {
+            return {
+                participants: fullParticipants,
+                giftsForDraw: fullGifts,
+                hardcodedGifts: giftsHardcoded
+            };
+        }
+
+        const deptLower = dept.trim().toLowerCase();
+        
+        return {
+            participants: fullParticipants.filter(p => 
+                String(p.division || p.department || "").toLowerCase() === deptLower
+            ),
+            giftsForDraw: fullGifts.filter(g => 
+                String(g.department || "").toLowerCase() === deptLower
+            ),
+            hardcodedGifts: giftsHardcoded.filter(g => 
+                String(g.department || "").toLowerCase() === deptLower
+            )
+        };
+    }
+
+    // Initialize the page
+    window.addEventListener("DOMContentLoaded", () => {
+        const savedParticipants = localStorage.getItem("participantsData");
+        const savedGifts = localStorage.getItem("giftsData");
+
+        // Load participants
+        if (savedParticipants) {
+            const parsedParticipants = JSON.parse(savedParticipants);
+            fullParticipants = parsedParticipants.map(p => ({
+                name: p.name || p.Name || "Unnamed",
+                division: p.division || p.Division || p.department || p.Department || "—",
+                idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
+                department: p.department || p.Department || "General" // Ensure department field exists
+            }));
+            participants = [...fullParticipants];
+        } else {
+            alert("⚠️ Please upload participants on the admin page first.");
+        }
+
+        // Load gifts for draw
+        if (savedGifts) {
+            const parsedGifts = JSON.parse(savedGifts);
+            fullGifts = parsedGifts.map(g => ({
+                name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
+                department: g.department || g.Department || g.Division || "General",
+                image: g.image || g.ImageURL || g.Image || g.img || "",
+            }));
+            giftsForDraw = [...fullGifts];
+            console.log(`Loaded ${giftsForDraw.length} gifts for the draw.`);
+        } else {
+            alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
+        }
+
+        // Initialize UI
+        populateDepartmentSelector();
+        loadGallery(giftsHardcoded);
+        
+        // Update counters
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        maxDrawsInput.max = giftsForDraw.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+
+        // Set up department filter
+        departmentSelect.addEventListener("change", function() {
+            const dept = this.value;
+            const filtered = filterAllByDepartment(dept);
+            
+            // Update global arrays with filtered data
+            participants = filtered.participants;
+            giftsForDraw = filtered.giftsForDraw;
+            gifts = filtered.hardcodedGifts;
+
+            // Debug logs
+            console.log("Selected dept:", dept);
+            console.log("Filtered participants:", participants.length);
+            console.log("Filtered gifts for draw:", giftsForDraw.length);
+            console.log("Filtered hardcoded gifts:", gifts.length);
+
+            // Update gallery and counters
+            loadGallery(gifts);
+            totalGiftsDisplay.textContent = giftsForDraw.length;
+            maxDrawsInput.max = giftsForDraw.length;
+            maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+        });
+    });
 
     // Function to Preview a Gift
     async function previewGift(giftObj) {
@@ -689,57 +616,50 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
             ? giftObj.image 
             : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
         
-        // Ensure the old image animates out before the new one animates in
+        // Animation handling
         if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
             giftImageEl.classList.remove("entering", "floating");
             giftImageEl.classList.add("leaving");
-            await sleep(500); // Wait for leaving animation to complete
+            await sleep(500);
         } else if (giftImageEl.classList.contains("leaving")) {
-             // If already leaving, just wait
             await sleep(500);
         }
 
         giftImageEl.src = giftImageSrc;
-        giftImageEl.classList.remove("leaving"); // Remove leaving if it was there
-        void giftImageEl.offsetWidth; // Trigger reflow to restart animation
+        giftImageEl.classList.remove("leaving");
+        void giftImageEl.offsetWidth;
         giftImageEl.classList.add("entering");
 
-        // After the entering animation, start the continuous floating
         setTimeout(() => {
             giftImageEl.classList.remove("entering");
-            giftImageEl.classList.add("floating"); // Add the new floating animation
-        }, 700); // Duration of the 'entering' animation
+            giftImageEl.classList.add("floating");
+        }, 700);
     }
 
-
+    // Event listeners
     document.getElementById("startDraw").addEventListener("click", async () => {
         if (!participants.length) {
-            alert("Participant data is not loaded. Please upload participants first.");
+            alert("No participants available for the selected department.");
             return;
         }
-        // ➡️ Check the list used for the actual draw
+        
         if (!giftsForDraw.length) {
-            alert("Gift data for drawing is empty. Please upload the gift list first.");
+            alert("No gifts available for drawing in the selected department.");
             return;
         }
 
-        // NEW: Get the desired number of draws
         const desiredDraws = parseInt(maxDrawsInput.value, 10);
-
         if (isNaN(desiredDraws) || desiredDraws < 1) {
             alert("Please enter a valid number of draws (1 or more).");
             return;
         }
 
-        // DRAW MODIFICATION: Use giftsForDraw (from localStorage)
         const usableGifts = giftsForDraw.slice();
-
-        // Calculate the actual number of draws, constrained by participants, gifts, and the user's input
         const numDraws = Math.min(participants.length, usableGifts.length, desiredDraws);
 
         if (numDraws === 0) {
-             alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
-             return;
+            alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
+            return;
         }
 
         const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
@@ -747,7 +667,6 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 
         results = [];
         for (let i = 0; i < numDraws; i++) {
-            // The `gift` object here contains the gift details from the UPLOADED file
             results.push({
                 name: shuffledParticipants[i].name,
                 division: shuffledParticipants[i].division,
@@ -759,11 +678,9 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
         resultBody.innerHTML = "";
         index = 0;
 
-        // Remove floating animation when draw starts
         giftImageEl.classList.remove("floating"); 
         runDrawSequence();
 
-        // NEW: Update the total gifts available to reflect the draw (simulated replacement)
         totalGiftsDisplay.textContent = giftsForDraw.length - results.length;
         maxDrawsInput.max = giftsForDraw.length - results.length;
         maxDrawsInput.value = Math.min(1, giftsForDraw.length - results.length);
@@ -774,50 +691,49 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
     });
 
     document.getElementById("restartBtn").addEventListener("click", () => {
-        // Reset state
         results = [];
         index = 0;
         resultBody.innerHTML = "";
         resultTable.style.display = "none";
         winnerCard.style.display = "none";
         
-        // Ensure image is reset for next preview/draw, including removing floating
         giftImageEl.src = "";
         giftImageEl.classList.remove("entering", "leaving", "floating");
 
-
-        // Reset preview content text
         winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
         idNumberEl.textContent = "🪪 ID Card Number";
         divisionNameEl.textContent = "🏢 Division";
         giftNameEl.textContent = "🎁 Gift Name";
 
-        // NEW: Reset gift count display and max draws input to initial state
+        // Reset to full datasets
         const savedGifts = localStorage.getItem("giftsData"); 
         if (savedGifts) {
-             giftsForDraw = JSON.parse(savedGifts).map((g) => ({
+            const parsedGifts = JSON.parse(savedGifts);
+            fullGifts = parsedGifts.map(g => ({
                 name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
                 department: g.department || g.Department || g.Division || "General",
                 image: g.image || g.ImageURL || g.Image || g.img || "",
             }));
+            giftsForDraw = [...fullGifts];
         } else {
-             giftsForDraw = [];
+            giftsForDraw = [];
         }
+        
         totalGiftsDisplay.textContent = giftsForDraw.length;
         maxDrawsInput.max = giftsForDraw.length;
         maxDrawsInput.value = Math.min(1, giftsForDraw.length);
     });
 
+    // Rest of your existing functions remain the same...
     async function runDrawSequence() {
         for (let i = 0; i < results.length; i++) {
             if (i === 0) {
                 await startCountdown(10);
             } else {
-                // If it's not the first draw, make the current image leave
-                giftImageEl.classList.remove("entering", "floating"); // Ensure floating is removed
+                giftImageEl.classList.remove("entering", "floating");
                 giftImageEl.classList.add("leaving");
-                await sleep(500); // Wait for the leaving animation to finish
-                winnerCard.style.display = "none"; // Hide the card temporarily
+                await sleep(500);
+                winnerCard.style.display = "none";
             }
             await announceWinnerSequence();
         }
@@ -857,39 +773,31 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
         const winner = results[index];
         if (!winner) return;
 
-        // The gift data for the winner comes from the UPLOADED list (winner.gift)
         const giftObj = winner.gift;
         const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
         
-        // Find the corresponding hardcoded gift data for the image
         const displayGift = gifts.find(g => g.name === giftText);
 
-        // populate text
         winnerNameEl.textContent = `🏆 ${winner.name}`;
         idNumberEl.textContent = `🪪 ${winner.idCard}`;
         divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
         giftNameEl.textContent = `🎁 ${giftText}`;
 
-
-// ➡️ Use the hardcoded image if a match is found, otherwise use fallback
         const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
             ? displayGift.image 
             : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
         
         giftImageEl.src = imageSource;
-
         winnerCard.style.display = "block";
         
-        // This is where the image enters
-        giftImageEl.classList.remove("leaving", "floating"); // Ensure leaving and floating are removed
-        void giftImageEl.offsetWidth; // Trigger reflow to restart animation
+        giftImageEl.classList.remove("leaving", "floating");
+        void giftImageEl.offsetWidth;
         giftImageEl.classList.add("entering");
 
         if (typeof confetti === "function") {
             confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
         }
 
-        // Add to hidden table (for record)
         const rowHtml = `<tr>
             <td>${index + 1}</td>
             <td>${escapeHtml(winner.name)}</td>
@@ -899,24 +807,22 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
         </tr>`;
         resultBody.insertAdjacentHTML("beforeend", rowHtml);
         
-        // Show table if it's the first draw
         if (index === 0) {
             resultTable.style.display = "table";
         }
         
-        index++; // Increment for the next winner
-        
-        await sleep(4000); // Display the winner for 4 seconds before moving to the next
+        index++;
+        await sleep(4000);
     }
 
     function escapeHtml(unsafe) {
         if (typeof unsafe !== 'string') return unsafe;
         return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
-
 </script>
 </body>
 </html>
+
 
 
 
