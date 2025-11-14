@@ -471,10 +471,10 @@
     function filterAllByDepartment(dept) {
     if (!dept || dept.trim() === "") {
         return {
-            participants: [...allParticipants],
-            giftsForDraw: [...allGiftsForDraw],
-            hardcodedGifts: [...allHardcodedGifts]
-        };
+    participants: allParticipants.filter(p => ((p.division || "").trim().toLowerCase() === dept.trim().toLowerCase())),
+    giftsForDraw: allGiftsForDraw.filter(g => ((g.department || "").trim().toLowerCase() === dept.trim().toLowerCase())),
+    hardcodedGifts: allHardcodedGifts.filter(g => ((g.department || "").trim().toLowerCase() === dept.trim().toLowerCase()))
+};
     }
 
     return {
@@ -492,6 +492,7 @@
         if (savedParticipants) {
             participants = JSON.parse(savedParticipants);
             allParticipants = [...participants];
+            allHardcodedGifts = [...gifts]; // use the hardcoded list for display/gallery
             participants = participants.map((p) => ({
                 name: p.name || p.Name || "Unnamed",
                 division: p.division || p.Division || p.department || p.Department || "—",
@@ -551,7 +552,11 @@ gifts = filtered.hardcodedGifts;
 
 // Refresh gallery
 updateGallery();
-
+// ---- Add debug logs here ----
+    console.log("Selected dept:", dept);
+    console.log("Filtered participants:", participants);
+    console.log("Filtered gifts for draw:", giftsForDraw);
+    console.log("Filtered hardcoded gifts:", gifts);
 // Update gift counters
 totalGiftsDisplay.textContent = giftsForDraw.length;
 maxDrawsInput.max = giftsForDraw.length;
@@ -830,6 +835,7 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 </script>
 </body>
 </html>
+
 
 
 
