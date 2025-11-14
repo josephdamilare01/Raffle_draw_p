@@ -12,8 +12,6 @@
             --accent2: #0072ff;
             --accent3: #00ff80;
             --dark: #071428;
-            /* New Accent Color from Carousel Design */
-            --carousel-accent: #14ff72cb; 
         }
 
         html, body {
@@ -26,22 +24,6 @@
             overflow-x: hidden;
         }
 
-        /* --- Custom Fonts (Added from Carousel CSS) --- */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
-        /* Header section styles (Retained from original code, but modified to cooperate with fixed carousel) */
-        header {
-            width: 100%;
-            max-width: 100%;
-            padding-left: 100px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            position: relative;
-            z-index: 1000;
-        }
-        
-        /* Your original styles */
         h1 {
             margin: 10px 0 16px;
             font-size: 5rem;
@@ -51,8 +33,6 @@
             -webkit-text-fill-color: transparent;
             background-size: 200% 100%;
             animation: gradientMove 6s linear infinite;
-            position: relative; /* Ensure H1 is above carousel if not using a header element */
-            z-index: 500;
         }
 
         @keyframes gradientMove {
@@ -69,8 +49,6 @@
             margin: 0 auto;
             padding: 10px 0 60px;
             align-items: stretch;
-            position: relative;
-            z-index: 10; /* Ensure content is above the carousel background */
         }
 
         .top {
@@ -92,15 +70,37 @@
             overflow-x: auto;
         }
 
-        /* ... (rest of your raffle page CSS remains the same) ... */
-        
-        /* ➡️ IMPORTANT: Winner Card is now transparent to show the background carousel */
+        table {
+            width: 100%;
+            min-width: 90px;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.98);
+            color: #000;
+            font-size: 2rem;
+            border-radius: 10px;
+            overflow: hidden;
+            table-layout: fixed;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            word-break: break-word;
+        }
+
+        thead th {
+            background: linear-gradient(90deg, var(--accent2), #005bb5);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* ➡️ IMPROVEMENT 1: Increased max-width for prominence */
         .winner-card {
             width: 100%;
-            max-width: 800px;
-            /* Make background transparent */
-            background: rgba(0, 0, 0, 0.5); /* Semi-transparent dark overlay */
-            color: #fff; /* White text for contrast */
+            max-width: 800px; 
+            background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+            color: #000;
             border-radius: 16px;
             padding: 24px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.35);
@@ -109,215 +109,226 @@
             display: none;
             animation: popIn 700ms ease;
             margin: 0 auto;
-            backdrop-filter: blur(5px); /* Add blur for visibility over the moving background */
         }
-        
+
         .winner-name {
             font-size: 1.9rem;
             font-weight: 700;
-            /* Change gradient for better visibility */
-            background: linear-gradient(90deg, #ffd166, #fff); 
+            background: linear-gradient(90deg,var(--accent2), var(--accent3));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 6px;
         }
-        
+
         .division-name, .id-name {
             font-size: 1.2rem;
             font-weight: 600;
-            color: #e6e6e6; /* Lighter color for visibility */
+            color: #004aad;
             margin-bottom: 8px;
         }
 
-        /* ... (The rest of your existing raffle CSS) ... */
-
-
-        /* ========================================================== */
-        /* --- CAROUSEL CSS INTEGRATION (From previous step) --- */
-        /* ========================================================== */
-
-        .carousel {
-            width: 100vw;
-            height: 100vh;
-            margin-top: -50px; 
-            overflow: hidden;
-            position: fixed; /* Changed to fixed to act as a background */
-            top: 0;
-            left: 0;
-            z-index: 1; /* Low z-index to sit behind the raffle content */
+        .gift-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e63946;
         }
 
-        .carousel .list {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        /* ➡️ IMPROVEMENT 2: Increased size for gift image */
+        .gift-image-wrap {
+            margin-top: 20px;
+            height: 250px; 
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            position: relative;
+            overflow: visible;
         }
 
-        .carousel .list .item {
-            width: 180px;
-            height: 250px;
-            position: absolute;
-            top: 80%;
-            transform: translateY(-70%);
-            left: 70%;
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            background-position: 50% 50%;
-            background-size: cover;
-            z-index: 100;
-            transition: 1s;
-            opacity: 0; 
-            pointer-events: none;
-            display: block;
-            background-repeat: no-repeat;
-        }
-
-        .carousel .list .item.active {
-            top: 0;
-            left: 0;
-            transform: translate(0, 0);
-            border-radius: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 99; 
-            opacity: 1;
-            pointer-events: auto;
-        }
-        
-        /* Fallback/Initial state for the first two items */
-        .carousel .list .item:nth-child(1),
-        .carousel .list .item:nth-child(2){
-            top: 0;
-            left: 0;
-            transform: translate(0, 0);
-            border-radius: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 99; 
-        }
-
-        /* Next items */
-        .carousel .list .item:nth-child(3){ left: 67%; opacity: 1; }
-        .carousel .list .item:nth-child(4){ left: calc(67% + 200px); opacity: 1; }
-        .carousel .list .item:nth-child(5){ left: calc(67% + 400px); opacity: 1; }
-        .carousel .list .item:nth-child(6){ left: calc(67% + 600px); opacity: 1; }
-
-        /* Hidden items */
-        .carousel .list .item:nth-child(n+7){
-            left: calc(67% + 800px);
+        .gift-image {
+            max-height: 240px; /* Increased max height */
+            max-width: 400px; /* Increased max width */
+            border-radius: 12px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+            transform-origin: center;
             opacity: 0;
         }
 
-        /* Dark overlay for better text readability on the active item only */
-        .carousel .list .item::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.7); 
-            display: none; 
-        }
-        .carousel .list .item.active::before,
-        .carousel .list .item:nth-child(2)::before { 
-            display: block;
+        /* animation for image entering */
+        @keyframes moveIn {
+            0% { transform: translateY(40px) scale(0.9) rotate(-6deg); opacity: 0; }
+            60% { transform: translateY(-6px) scale(1.04) rotate(2deg); opacity: 1; }
+            100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
         }
 
-        /* Content (Hidden, as the main page content is used instead) */
-        .carousel .list .item .content { display: none; }
+        /* animation for image leaving */
+        @keyframes moveOut {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-40px) scale(0.9) rotate(6deg); opacity: 0; }
+        }
 
+        /* NEW: Animation for continuous subtle floating */
+        @keyframes floatHorizontal {
+            0% { transform: translateX(0px); }
+            50% { transform: translateX(8px); }
+            100% { transform: translateX(0px); }
+        }
 
-        /* Arrows */
-        .arrows {
-            position: absolute;
-            bottom: 50%;
-            right: 20px; /* Moved slightly to the right to be visible */
-            transform: translateY(50%);
-            z-index: 500; /* High z-index */
-            width: 100px; /* Smaller width for two buttons */
+        .entering {
+            animation: moveIn 700ms ease forwards;
+        }
+        .leaving {
+            animation: moveOut 500ms ease forwards;
+        }
+        .floating { /* NEW class for continuous floating */
+            animation: floatHorizontal 4s ease-in-out infinite;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            60% { transform: scale(1.02); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .btns {
             display: flex;
-            justify-content: flex-end; /* Align right */
             gap: 10px;
-            padding: 0 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 6px;
+            align-items:center;
         }
-        .arrows button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--carousel-accent);
+
+        .btn {
+            background: linear-gradient(90deg,var(--accent2),var(--accent1));
             border: none;
-            color: #fff;
-            font-size: 1.2em;
+            color: #00151f;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.5rem;
             cursor: pointer;
-            transition: background-color 0.3s;
-            font-family: monospace;
-        }
-        .arrows button:hover {
-            background-color: #fff;
-            color: #000;
+            transition: transform .14s ease, box-shadow .14s ease;
         }
 
-        /* Time Running */
-        .carousel .timeRunning {
-            position: absolute;
-            z-index: 1000;
-            width: 0%;
-            height: 4px;
-            background-color: var(--carousel-accent);
-            left: 0;
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.26);
+        }
+
+        #loader {
+            display: none;
+            position: fixed;
             top: 0;
-            animation: runningTime 7s linear 1 forwards;
-            transition: none;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 20, 40, 0.95);
+            backdrop-filter: blur(6px);
+            color: white;
+            font-size: 10rem;
+            font-weight: 700;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
         }
 
-        @keyframes runningTime {
-            from{width: 0%;}
-            to{width: 100%;}
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        /* Animation for content (Used by JS to hide/show elements) */
-        @keyframes animate {
-            from{
-                opacity: 0;
-                transform: translate(0, 100px);
-                filter: blur(33px);
-            }
-            to{
-                opacity: 1;
-                transform: translate(0);
-                filter: blur(0);
-            }
-        }
-        
-        /* Responsive adjustments for carousel */
-        @media screen and (max-width: 999px){
-            .carousel .list .item .content{ left: 50px; }
-            .arrows { right: 0; }
-        }
-        @media screen and (max-width: 690px){
-            .carousel .list .item:nth-child(3){ left: 55%; }
-            .carousel .list .item:nth-child(4){ left: calc(55% + 150px); }
-            .carousel .list .item:nth-child(5){ left: calc(55% + 300px); }
-            .carousel .list .item:nth-child(6){ left: calc(55% + 450px); }
+        @media (max-width: 640px) {
+            .winner-card { max-width: 100%; padding: 18px; }
+            th, td { font-size: 0.95rem; padding: 10px 8px; }
+            #loader { font-size: 3rem; }
         }
 
+        #doneMessage {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00c6ff, #00ff80, #ffd166);
+            color: #00151f;
+            font-size: 3rem;
+            font-weight: 800;
+            padding: 25px 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            animation: popUp 1s ease forwards, fadeOut 3s 4s forwards;
+            z-index: 2000;
+            letter-spacing: 2px;
+        }
 
+        /* department gallery */
+        .department-gallery {
+            margin: 12px 0 8px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            min-height: 90px;
+        }
+
+        .gallery-thumb {
+            width: 200px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+            transform-origin:center;
+            cursor: pointer; /* Added cursor for better UX */
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* --- NLNG Logo Styling --- */
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 8px var(--nlng-yellow));
+        }
+        @keyframes popUp {
+            0% { transform: translate(-50%, -60%) scale(0.7); opacity: 0; }
+            60% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
     </style>
 </head>
 
+<div class="logo">
+    <img src="nlng-logo.png" alt="NLNG Logo">
+</div>
 <body>
-    <div class="carousel" id="giftCarousel">
-        <div class="list">
-            </div>
-        <div class="arrows">
-            <button class="prev"> &lt; </button>
-            <button class="next"> &gt; </button>
-        </div>
-        <div class="timeRunning"></div>
-    </div>
-    <div class="logo">
-        <img src="nlng-logo.png" alt="NLNG Logo">
-    </div>
     <h1>🎊 NLNG End of the Year Raffle Draw</h1>
 
     <div class="content">
@@ -350,7 +361,7 @@
 
         <div class="left">
             <h3>🎁 Department Gifts (Total Gifts Available: <span id="totalGiftsDisplay">0</span>)</h3>
-            <div id="gallery" class="department-gallery" aria-live="polite" style="display:none;"></div> 
+            <div id="gallery" class="department-gallery" aria-live="polite"></div>
 
             <h3 style="margin-top:18px;">🎁 Winners Table (Hidden for Focus)</h3>
             <table id="resultTable" aria-live="polite" style="display:none;">
@@ -370,7 +381,7 @@
 
     <div id="loader">10</div>
 <script>
-    // --- Start of Hardcoded Gift Data ---
+    // --- Start of Hardcoded Gift Data (USED ONLY FOR DISPLAY/PREVIEW SELECTOR) ---
     const giftsHardcoded = [
         // PD Department Gifts
         { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "PM Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
@@ -400,19 +411,19 @@
         { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR", department: "CSS Partners", image: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
         { name: "century digital torch screen dual window air fryer caf-8340-c 10l", department: "CSS Partners", image: "century digital torch screen dual window air fryer caf-8340-c 10l.jpg" },
 
-        // PM Department Gifts
+    // PM Department Gifts
         { name: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts", department: "NST Partners", image: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts.jpg" },
         { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "NST Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
 
-        // PM Department Gifts
+            // PM Department Gifts
         { name: "Hisense 1HP Split Copper Inverter AC", department: "CMO Partners", image: "Hisense 1HP Split Copper Inverter AC.png" },
         { name: "rice", department: "CMO Partners", image: "rice.png" },
 
-        // PM Department Gifts
+            // PM Department Gifts
         { name: "Hisense 1HP Split Copper Inverter AC", department: "PI, IMT, PS & PG Partners", image: "Hisense 1HP Split Copper Inverter AC.jpg" },
         { name: "rice", department: "PI, IMT, PS & PG Partners", image: "rice.jpg" },
 
-        // PM Department Gifts
+            // PM Department Gifts
         { name: "Microwave", department: "HR, RAIS & CLUB Partners", image: "microwave.jpg" },
         { name: "rice", department: "HR, RAIS & CLUB Partners", image: "rice.jpg" },
 
@@ -431,12 +442,13 @@
         // PM Department Gifts
         { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "General Draws", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
         { name: "hisense 20 litres microwave (h20mows14)", department: "General Draws", image: "hisense 20 litres microwave (h20mows14).jpg" },
+
     ];
     // --- End of Hardcoded Gift Data ---
 
     let participants = [];
-    let gifts = giftsHardcoded; 
-    let giftsForDraw = [];       
+    let gifts = giftsHardcoded; // ➡️ Gift list for DISPLAY/PREVIEW (uses hardcoded data)
+    let giftsForDraw = [];       // ➡️ Gift list for DRAWING (loaded from localStorage)
     let results = [];
     let index = 0;
     const resultBody = document.querySelector("#resultTable tbody");
@@ -450,130 +462,37 @@
     const resultTable = document.getElementById("resultTable");
     const gallery = document.getElementById("gallery");
     const departmentSelect = document.getElementById("departmentSelect");
-    const maxDrawsInput = document.getElementById("maxDrawsInput"); 
-    const totalGiftsDisplay = document.getElementById("totalGiftsDisplay"); 
-
-    // -------------------------------------------------------------
-    // --- CAROUSEL JS INTEGRATION (From previous step) ---
-    // -------------------------------------------------------------
-
-    // --- Element Selection (Carousel specific) ---
-    const carousel = document.getElementById('giftCarousel');
-    const list = carousel ? carousel.querySelector('.list') : null;
-    const nextButton = carousel ? carousel.querySelector('.next') : null;
-    const prevButton = carousel ? carousel.querySelector('.prev') : null;
-    const timeRunning = carousel ? carousel.querySelector('.timeRunning') : null;
-
-    // --- Configuration (Carousel specific) ---
-    const transitionDuration = 1000; 
-    const autoPlayTime = 7000; 
-
-    // --- Timer Variables (Carousel specific) ---
-    let runTimeOut; 
-    let runNextAuto; 
-
-    /**
-     * Dynamically generates the carousel items from the hardcoded gift list.
-     */
-    function generateCarouselItems() {
-        if (!list || !giftsHardcoded.length) return;
-
-        giftsHardcoded.forEach((gift, index) => {
-            const item = document.createElement('div');
-            item.classList.add('item');
-            
-            // Set the background image
-            item.style.backgroundImage = `url(${gift.image})`;
-
-            // The second item is the initial active one in this design
-            if (index === 1) {
-                item.classList.add('active'); 
-            }
-
-            // Inject minimal content wrapper, though it's hidden by CSS
-            item.innerHTML = `
-                <div class="content">
-                    <div class="title">Gift Preview</div>
-                    <div class="name">${gift.name}</div>
-                </div>
-            `;
-            list.appendChild(item);
-        });
-    }
-
-    /**
-     * Resets and restarts the CSS animation for the progress bar.
-     */
-    function resetTimeAnimation() {
-        if (!timeRunning) return;
-        timeRunning.style.animation = 'none';
-        timeRunning.offsetHeight; /* trigger reflow */
-        timeRunning.style.animation = null; 
-        timeRunning.style.animation = `runningTime ${autoPlayTime / 1000}s linear 1 forwards`;
-    }
-
-    /**
-     * Main function to move the slider by reordering DOM elements.
-     * @param {string} type - 'next' or 'prev'.
-     */
-    function showSlider(type) {
-        if (!list) return;
-        const sliderItemsDom = list.querySelectorAll('.carousel .list .item');
-        if (sliderItemsDom.length < 2) return;
-
-        // 1. Reorder the DOM elements
-        if (type === 'next') {
-            list.appendChild(sliderItemsDom[0]);
-            carousel.classList.add('next');
-        } else {
-            list.prepend(sliderItemsDom[sliderItemsDom.length - 1]);
-            carousel.classList.add('prev');
-        }
-        
-        // 2. Manage the 'active' class for content/overlay visibility
-        // Remove the 'active' class from ALL items
-        sliderItemsDom.forEach(item => item.classList.remove('active'));
-
-        // Apply 'active' to the item at index 1 (the full-screen, visible item)
-        const newList = list.querySelectorAll('.carousel .list .item');
-        if (newList.length >= 2) {
-            newList[1].classList.add('active'); 
-        }
-
-        // 3. Manage the transition classes
-        clearTimeout(runTimeOut);
-        runTimeOut = setTimeout( () => {
-            carousel.classList.remove('next');
-            carousel.classList.remove('prev');
-        }, transitionDuration); 
-
-        // 4. Reset Auto-Play Timer and Progress Bar
-        clearTimeout(runNextAuto);
-        runNextAuto = setTimeout(() => {
-            nextButton.click(); 
-        }, autoPlayTime);
-
-        resetTimeAnimation();
-    }
+    const maxDrawsInput = document.getElementById("maxDrawsInput"); // NEW: Input for max draws
+    const totalGiftsDisplay = document.getElementById("totalGiftsDisplay"); // NEW: Display for total gifts
     
-    // --- Event Listeners for Buttons (Carousel specific) ---
-    if (nextButton && prevButton) {
-        nextButton.addEventListener('click', () => { showSlider('next'); });
-        prevButton.addEventListener('click', () => { showSlider('prev'); });
+    let allParticipants = [];
+    let allGiftsForDraw = [];
+    let allHardcodedGifts = [];
+    function filterAllByDepartment(dept) {
+    if (!dept || dept.trim() === "") {
+        return {
+            participants: [...allParticipants],
+            giftsForDraw: [...allGiftsForDraw],
+            hardcodedGifts: [...allHardcodedGifts]
+        };
     }
 
-    // -------------------------------------------------------------
-    // --- END CAROUSEL JS INTEGRATION ---
-    // -------------------------------------------------------------
-
+    return {
+        participants: allParticipants.filter(p => (p.division || "").trim() === dept),
+        giftsForDraw: allGiftsForDraw.filter(g => (g.department || "").trim() === dept),
+        hardcodedGifts: allHardcodedGifts.filter(g => (g.department || "").trim() === dept)
+    };
+}
 
     window.addEventListener("DOMContentLoaded", () => {
-        // --- Raffle Logic Setup ---
         const savedParticipants = localStorage.getItem("participantsData");
-        const savedGifts = localStorage.getItem("giftsData"); 
+        const savedGifts = localStorage.getItem("giftsData"); // Load gifts for draw from admin page
 
+        // 1. Load Participants
         if (savedParticipants) {
-            participants = JSON.parse(savedParticipants).map((p) => ({
+            participants = JSON.parse(savedParticipants);
+            allParticipants = [...participants];
+            participants = participants.map((p) => ({
                 name: p.name || p.Name || "Unnamed",
                 division: p.division || p.Division || p.department || p.Department || "—",
                 idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
@@ -582,18 +501,23 @@
             alert("⚠️ Please upload participants on the admin page first.");
         }
 
+        // 2. Load Gifts for Draw
         if (savedGifts) {
-            giftsForDraw = JSON.parse(savedGifts).map((g) => ({
+            giftsForDraw = JSON.parse(savedGifts);
+            allGiftsForDraw = [...giftsForDraw];
+            // Normalize gifts for drawing (this list needs to match the structure expected by the draw logic)
+            giftsForDraw = giftsForDraw.map((g) => ({
                 name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
                 department: g.department || g.Department || g.Division || "General",
-                image: g.image || g.ImageURL || g.Image || g.img || "", 
+                image: g.image || g.ImageURL || g.Image || g.img || "", // Image will be overwritten by hardcoded list in winner announce
             }));
+            console.log(`Loaded ${giftsForDraw.length} gifts for the draw.`);
         } else {
             alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
         }
         
         if (gifts.length === 0) {
-            alert("⚠️ Error: Hardcoded gift data (for display) is empty. Cannot show carousel.");
+            alert("⚠️ Error: Hardcoded gift data (for display) is empty. Cannot show gallery.");
             return;
         }
 
@@ -602,19 +526,9 @@
         maxDrawsInput.max = giftsForDraw.length;
         maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 
-        // --- Carousel Initialization ---
-        generateCarouselItems(); 
-        resetTimeAnimation(); // Start the initial progress bar animation
-        runNextAuto = setTimeout(() => {
-            if(nextButton) nextButton.click();
-        }, autoPlayTime);
-
-        // --- Raffle UI Initialization ---
         populateDepartmentSelect();
-        // updateGallery is no longer needed since the gallery is hidden
+        updateGallery(); // initial gallery (All)
     });
-
-    // ... (Your other helper functions: populateDepartmentSelect, updateGallery, escapeHtml, sleep) ...
 
     function populateDepartmentSelect() {
         // Uses hardcoded gifts (gifts) to populate selector
@@ -627,13 +541,56 @@
             departmentSelect.appendChild(opt);
         });
 
-        // The gallery update event listener is irrelevant now, but kept in case you want filtering later
         departmentSelect.addEventListener("change", () => {
-            // Note: The carousel does NOT filter automatically. Filtering must be done manually if needed.
+            const filtered = filterAllByDepartment(departmentSelect.value);
+
+// Replace global sample lists with filtered values
+participants = filtered.participants;
+giftsForDraw = filtered.giftsForDraw;
+gifts = filtered.hardcodedGifts;
+
+// Refresh gallery
+updateGallery();
+
+// Update gift counters
+totalGiftsDisplay.textContent = giftsForDraw.length;
+maxDrawsInput.max = giftsForDraw.length;
+maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+
         });
     }
-    
-    // Function to Preview a Gift (kept the same, but no longer triggered by gallery)
+
+    function updateGallery() {
+        const selected = departmentSelect.value;
+        // Uses hardcoded gifts (gifts) to filter gallery
+        const filtered = selected ? gifts.filter(g => (g.department || "General") === selected) : gifts;
+        gallery.innerHTML = "";
+
+        if (!filtered.length) {
+            gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts for this department in the hardcoded list.</div>';
+            return;
+        }
+
+        filtered.forEach(g => {
+            const img = document.createElement("img");
+            img.className = "gallery-thumb";
+            img.alt = g.name || "gift";
+            // Uses hardcoded image path
+            if (g.image && g.image.trim()) {
+                img.src = g.image;
+            } else {
+                img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
+            }
+            img.title = g.name;
+            img.addEventListener('click', () => {
+                previewGift(g);
+            });
+
+            gallery.appendChild(img);
+        });
+    }
+
+    // Function to Preview a Gift
     async function previewGift(giftObj) {
         winnerCard.style.display = "block";
         winnerNameEl.textContent = "🎁 Gift Preview";
@@ -651,8 +608,8 @@
             giftImageEl.classList.add("leaving");
             await sleep(500); // Wait for leaving animation to complete
         } else if (giftImageEl.classList.contains("leaving")) {
-                // If already leaving, just wait
-             await sleep(500);
+             // If already leaving, just wait
+            await sleep(500);
         }
 
         giftImageEl.src = giftImageSrc;
@@ -667,31 +624,35 @@
         }, 700); // Duration of the 'entering' animation
     }
 
-    // ... (The rest of your raffle logic) ...
-    
+
     document.getElementById("startDraw").addEventListener("click", async () => {
-        // ... (existing draw setup logic) ...
         if (!participants.length) {
             alert("Participant data is not loaded. Please upload participants first.");
             return;
         }
+        // ➡️ Check the list used for the actual draw
         if (!giftsForDraw.length) {
             alert("Gift data for drawing is empty. Please upload the gift list first.");
             return;
         }
 
+        // NEW: Get the desired number of draws
         const desiredDraws = parseInt(maxDrawsInput.value, 10);
+
         if (isNaN(desiredDraws) || desiredDraws < 1) {
             alert("Please enter a valid number of draws (1 or more).");
             return;
         }
 
+        // DRAW MODIFICATION: Use giftsForDraw (from localStorage)
         const usableGifts = giftsForDraw.slice();
+
+        // Calculate the actual number of draws, constrained by participants, gifts, and the user's input
         const numDraws = Math.min(participants.length, usableGifts.length, desiredDraws);
 
         if (numDraws === 0) {
-              alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
-              return;
+             alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
+             return;
         }
 
         const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
@@ -699,6 +660,7 @@
 
         results = [];
         for (let i = 0; i < numDraws; i++) {
+            // The `gift` object here contains the gift details from the UPLOADED file
             results.push({
                 name: shuffledParticipants[i].name,
                 division: shuffledParticipants[i].division,
@@ -710,10 +672,6 @@
         resultBody.innerHTML = "";
         index = 0;
 
-        // Stop carousel auto-play and reset
-        clearTimeout(runNextAuto); 
-        if (timeRunning) timeRunning.style.animation = 'none';
-
         // Remove floating animation when draw starts
         giftImageEl.classList.remove("floating"); 
         runDrawSequence();
@@ -724,44 +682,43 @@
         maxDrawsInput.value = Math.min(1, giftsForDraw.length - results.length);
     });
 
+    document.getElementById("homeBtn").addEventListener("click", () => {
+        window.location.href = "/index.html";
+    });
+
     document.getElementById("restartBtn").addEventListener("click", () => {
-        // ... (existing restart logic) ...
+        // Reset state
         results = [];
         index = 0;
         resultBody.innerHTML = "";
         resultTable.style.display = "none";
         winnerCard.style.display = "none";
         
+        // Ensure image is reset for next preview/draw, including removing floating
         giftImageEl.src = "";
         giftImageEl.classList.remove("entering", "leaving", "floating");
 
+
+        // Reset preview content text
         winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
         idNumberEl.textContent = "🪪 ID Card Number";
         divisionNameEl.textContent = "🏢 Division";
         giftNameEl.textContent = "🎁 Gift Name";
 
-        // Reset gift count display and max draws input
+        // NEW: Reset gift count display and max draws input to initial state
         const savedGifts = localStorage.getItem("giftsData"); 
         if (savedGifts) {
-            giftsForDraw = JSON.parse(savedGifts).map((g) => ({
+             giftsForDraw = JSON.parse(savedGifts).map((g) => ({
                 name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
                 department: g.department || g.Department || g.Division || "General",
                 image: g.image || g.ImageURL || g.Image || g.img || "",
             }));
         } else {
-            giftsForDraw = [];
+             giftsForDraw = [];
         }
         totalGiftsDisplay.textContent = giftsForDraw.length;
         maxDrawsInput.max = giftsForDraw.length;
         maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-
-        // Restart carousel
-        generateCarouselItems(); 
-        resetTimeAnimation();
-        clearTimeout(runNextAuto); 
-        runNextAuto = setTimeout(() => {
-            if(nextButton) nextButton.click();
-        }, autoPlayTime);
     });
 
     async function runDrawSequence() {
@@ -769,10 +726,11 @@
             if (i === 0) {
                 await startCountdown(10);
             } else {
-                giftImageEl.classList.remove("entering", "floating"); 
+                // If it's not the first draw, make the current image leave
+                giftImageEl.classList.remove("entering", "floating"); // Ensure floating is removed
                 giftImageEl.classList.add("leaving");
-                await sleep(500); 
-                winnerCard.style.display = "none"; 
+                await sleep(500); // Wait for the leaving animation to finish
+                winnerCard.style.display = "none"; // Hide the card temporarily
             }
             await announceWinnerSequence();
         }
@@ -786,7 +744,6 @@
     }
 
     function startCountdown(seconds) {
-        // ... (existing countdown logic) ...
         return new Promise((resolve) => {
             let count = seconds;
             loader.textContent = count;
@@ -813,6 +770,7 @@
         const winner = results[index];
         if (!winner) return;
 
+        // The gift data for the winner comes from the UPLOADED list (winner.gift)
         const giftObj = winner.gift;
         const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
         
@@ -826,32 +784,52 @@
         giftNameEl.textContent = `🎁 ${giftText}`;
 
 
-        // ➡️ Use the hardcoded image if a match is found, otherwise use fallback
+// ➡️ Use the hardcoded image if a match is found, otherwise use fallback
         const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
             ? displayGift.image 
-            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText || 'Gift')}</text></svg>`)}`;
-
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
         
-        // Set new image and animate in
         giftImageEl.src = imageSource;
-        giftImageEl.classList.remove("leaving");
-        void giftImageEl.offsetWidth;
+
+        winnerCard.style.display = "block";
+        
+        // This is where the image enters
+        giftImageEl.classList.remove("leaving", "floating"); // Ensure leaving and floating are removed
+        void giftImageEl.offsetWidth; // Trigger reflow to restart animation
         giftImageEl.classList.add("entering");
 
-        // Show the winner card
-        winnerCard.style.display = "block";
+        if (typeof confetti === "function") {
+            confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
+        }
 
-        // Increment index for next draw
-        index++;
+        // Add to hidden table (for record)
+        const rowHtml = `<tr>
+            <td>${index + 1}</td>
+            <td>${escapeHtml(winner.name)}</td>
+            <td>${escapeHtml(winner.idCard)}</td>
+            <td>${escapeHtml(winner.division || "—")}</td>
+            <td>${escapeHtml(giftText)}</td>
+        </tr>`;
+        resultBody.insertAdjacentHTML("beforeend", rowHtml);
         
-        // Optional: wait a moment for the user to see the winner before the next one starts
-        await sleep(6000); // 6 seconds pause before the next draw sequence starts
+        // Show table if it's the first draw
+        if (index === 0) {
+            resultTable.style.display = "table";
+        }
+        
+        index++; // Increment for the next winner
+        
+        await sleep(4000); // Display the winner for 4 seconds before moving to the next
     }
 
     function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return unsafe;
         return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
 
 </script>
 </body>
 </html>
+
+
+
