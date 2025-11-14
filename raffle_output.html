@@ -468,20 +468,27 @@
     const maxDrawsInput = document.getElementById("maxDrawsInput");
     const totalGiftsDisplay = document.getElementById("totalGiftsDisplay");
 
-    // Function to populate department selector
+    // Function to populate department selector with ALL available departments
     function populateDepartmentSelector() {
         const select = document.getElementById("departmentSelect");
         select.innerHTML = '<option value="">Select Department (All)</option>';
         
-        // Get unique departments from hardcoded gifts
-        const departments = [...new Set(giftsHardcoded.map(g => g.department))];
+        // Get unique departments from ALL sources: hardcoded gifts, uploaded participants, and uploaded gifts
+        const hardcodedDepts = [...new Set(giftsHardcoded.map(g => g.department))];
+        const participantDepts = [...new Set(fullParticipants.map(p => p.department))];
+        const giftDepts = [...new Set(fullGifts.map(g => g.department))];
         
-        departments.forEach(dep => {
+        // Combine all departments and remove duplicates
+        const allDepartments = [...new Set([...hardcodedDepts, ...participantDepts, ...giftDepts])].filter(dept => dept && dept.trim() !== "");
+        
+        allDepartments.sort().forEach(dep => {
             const option = document.createElement("option");
             option.value = dep;
             option.textContent = dep;
             select.appendChild(option);
         });
+
+        console.log("Available departments:", allDepartments);
     }
 
     // Function to load gallery
@@ -513,7 +520,7 @@
         });
     }
 
-    // Function to filter all data by department
+    // Function to filter all data by department - FIXED VERSION
     function filterAllByDepartment(dept) {
         if (!dept || dept.trim() === "") {
             return {
@@ -525,48 +532,87 @@
 
         const deptLower = dept.trim().toLowerCase();
         
+        console.log(`Filtering for department: ${dept}`);
+        console.log(`Full participants:`, fullParticipants);
+        console.log(`Full gifts for draw:`, fullGifts);
+        
+        const filteredParticipants = fullParticipants.filter(p => {
+            const participantDept = String(p.department || p.division || "").toLowerCase();
+            console.log(`Participant: ${p.name}, Department: ${participantDept}, Match: ${participantDept === deptLower}`);
+            return participantDept === deptLower;
+        });
+        
+        const filteredGiftsForDraw = fullGifts.filter(g => {
+            const giftDept = String(g.department || "").toLowerCase();
+            console.log(`Gift: ${g.name}, Department: ${giftDept}, Match: ${giftDept === deptLower}`);
+            return giftDept === deptLower;
+        });
+        
+        const filteredHardcodedGifts = giftsHardcoded.filter(g => {
+            const hardcodedDept = String(g.department || "").toLowerCase();
+            return hardcodedDept === deptLower;
+        });
+
+        console.log(`Filtered results - Participants: ${filteredParticipants.length}, Gifts: ${filteredGiftsForDraw.length}, Hardcoded: ${filteredHardcodedGifts.length}`);
+
         return {
-            participants: fullParticipants.filter(p => 
-                String(p.division || p.department || "").toLowerCase() === deptLower
-            ),
-            giftsForDraw: fullGifts.filter(g => 
-                String(g.department || "").toLowerCase() === deptLower
-            ),
-            hardcodedGifts: giftsHardcoded.filter(g => 
-                String(g.department || "").toLowerCase() === deptLower
-            )
+            participants: filteredParticipants,
+            giftsForDraw: filteredGiftsForDraw,
+            hardcodedGifts: filteredHardcodedGifts
         };
     }
 
-    // Initialize the page
+    // Improved data normalization function
+    function normalizeParticipantData(participant) {
+        // Handle various column name possibilities
+        return {
+            name: participant.name || participant.Name || participant.Participant || "Unnamed",
+            division: participant.division || participant.Division || participant.department || participant.Department || "—",
+            idCard: participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
+            department: participant.department || participant.Department || participant.division || participant.Division || "General"
+        };
+    }
+
+    function normalizeGiftData(gift) {
+        // Handle various column name possibilities
+        return {
+            name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
+            department: gift.department || gift.Department || gift.division || gift.Division || "General",
+            image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
+        };
+    }
+
+    // Initialize the page - FIXED VERSION
     window.addEventListener("DOMContentLoaded", () => {
         const savedParticipants = localStorage.getItem("participantsData");
         const savedGifts = localStorage.getItem("giftsData");
 
-        // Load participants
+        console.log("Initializing page...");
+        console.log("Saved participants:", savedParticipants ? JSON.parse(savedParticipants) : "None");
+        console.log("Saved gifts:", savedGifts ? JSON.parse(savedGifts) : "None");
+
+        // Load participants - IMPROVED MAPPING
         if (savedParticipants) {
             const parsedParticipants = JSON.parse(savedParticipants);
-            fullParticipants = parsedParticipants.map(p => ({
-                name: p.name || p.Name || "Unnamed",
-                division: p.division || p.Division || p.department || p.Department || "—",
-                idCard: p.idCard || p["ID Card Number"] || p["ID"] || "—",
-                department: p.department || p.Department || "General" // Ensure department field exists
-            }));
+            console.log("Raw participants data:", parsedParticipants);
+            
+            fullParticipants = parsedParticipants.map(normalizeParticipantData);
             participants = [...fullParticipants];
+            
+            console.log("Normalized participants:", fullParticipants);
         } else {
             alert("⚠️ Please upload participants on the admin page first.");
         }
 
-        // Load gifts for draw
+        // Load gifts for draw - IMPROVED MAPPING
         if (savedGifts) {
             const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(g => ({
-                name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
-                department: g.department || g.Department || g.Division || "General",
-                image: g.image || g.ImageURL || g.Image || g.img || "",
-            }));
+            console.log("Raw gifts data:", parsedGifts);
+            
+            fullGifts = parsedGifts.map(normalizeGiftData);
             giftsForDraw = [...fullGifts];
-            console.log(`Loaded ${giftsForDraw.length} gifts for the draw.`);
+            
+            console.log(`Loaded ${giftsForDraw.length} gifts for the draw:`, giftsForDraw);
         } else {
             alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
         }
@@ -580,9 +626,11 @@
         maxDrawsInput.max = giftsForDraw.length;
         maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 
-        // Set up department filter
+        // Set up department filter - FIXED EVENT LISTENER
         departmentSelect.addEventListener("change", function() {
             const dept = this.value;
+            console.log(`Department selected: "${dept}"`);
+            
             const filtered = filterAllByDepartment(dept);
             
             // Update global arrays with filtered data
@@ -592,15 +640,22 @@
 
             // Debug logs
             console.log("Selected dept:", dept);
-            console.log("Filtered participants:", participants.length);
-            console.log("Filtered gifts for draw:", giftsForDraw.length);
-            console.log("Filtered hardcoded gifts:", gifts.length);
+            console.log("Filtered participants:", participants);
+            console.log("Filtered gifts for draw:", giftsForDraw);
+            console.log("Filtered hardcoded gifts:", gifts);
 
             // Update gallery and counters
             loadGallery(gifts);
             totalGiftsDisplay.textContent = giftsForDraw.length;
             maxDrawsInput.max = giftsForDraw.length;
             maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+            
+            // Show summary alert for debugging
+            if (dept) {
+                setTimeout(() => {
+                    alert(`Department: ${dept}\nParticipants: ${participants.length}\nGifts: ${giftsForDraw.length}\nDisplay Gifts: ${gifts.length}`);
+                }, 100);
+            }
         });
     });
 
@@ -706,19 +761,28 @@
         giftNameEl.textContent = "🎁 Gift Name";
 
         // Reset to full datasets
+        const savedParticipants = localStorage.getItem("participantsData");
         const savedGifts = localStorage.getItem("giftsData"); 
+        
+        if (savedParticipants) {
+            const parsedParticipants = JSON.parse(savedParticipants);
+            fullParticipants = parsedParticipants.map(normalizeParticipantData);
+            participants = [...fullParticipants];
+        }
+        
         if (savedGifts) {
             const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(g => ({
-                name: g.name || g.Gift || g.GiftName || g["Gift Name"] || g.Name || String(g).trim(),
-                department: g.department || g.Department || g.Division || "General",
-                image: g.image || g.ImageURL || g.Image || g.img || "",
-            }));
+            fullGifts = parsedGifts.map(normalizeGiftData);
             giftsForDraw = [...fullGifts];
         } else {
             giftsForDraw = [];
         }
         
+        // Reset department selector to "All"
+        departmentSelect.value = "";
+        
+        // Update gallery and counters
+        loadGallery(giftsHardcoded);
         totalGiftsDisplay.textContent = giftsForDraw.length;
         maxDrawsInput.max = giftsForDraw.length;
         maxDrawsInput.value = Math.min(1, giftsForDraw.length);
@@ -822,6 +886,7 @@
 </script>
 </body>
 </html>
+
 
 
 
