@@ -217,14 +217,15 @@
           if (isParticipant) {
             const formatted = json.map((row, index) => ({
               name: row.Name || row.FullName || `Participant ${index + 1}`,
-              division: row.Division || row.Department || "N/A",
+              department: row.Department || "N/A", // ✅ department instead of division
               idCardNumber: row["ID Card Number"] || row.IDCard || row.Card || "N/A", // ✅ Added
-              id: row.ID || row.UniqueID || row.EmployeeID || index + 1,
+              company: row.Company || row.company || "N/A",
             }));
             resolve(formatted);
           } else {
-            const formatted = json.map((row, index) =>
-              row.Gift || row.Item || `Gift ${index + 1}`
+            const formatted = json.map((row, index) => ({
+            name: row.Gift || row.Item || `Gift ${index + 1}`,
+            department: row.Department || "N/A" // ✅ ensure department exists
             );
             resolve(formatted);
           }
@@ -267,5 +268,6 @@
   </script>
 </body>
 </html>
+
 
 
