@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎁 Test Data Generator - NLNG Raffle Draw</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .preview {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #4ECDC4;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        .instructions {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .success {
+            background: rgba(46, 204, 113, 0.3);
+            border: 1px solid #2ecc71;
+        }
+        .info {
+            background: rgba(52, 152, 219, 0.3);
+            border: 1px solid #3498db;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎁 NLNG Raffle Draw - Test Data Generator</h1>
+    
+    <div class="container">
+        <div class="instructions">
+            <h2>📋 Instructions</h2>
+            <p>This tool generates realistic test data for the NLNG Raffle Draw system.</p>
+            <p>Click the buttons below to generate and download sample Excel files for:</p>
+            <ul>
+                <li><strong>Participants Data</strong> - Employee information with departments</li>
+                <li><strong>Gifts Data</strong> - Raffle prizes organized by department</li>
+            </ul>
+            <p>After downloading, upload these files to the admin page to test the raffle system.</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>👥 Generate Participants Test Data</h2>
+        <div class="btn-group">
+            <button class="btn" onclick="generateParticipantsData(50)">Generate 50 Participants</button>
+            <button class="btn" onclick="generateParticipantsData(100)">Generate 100 Participants</button>
+            <button class="btn" onclick="generateParticipantsData(200)">Generate 200 Participants</button>
+        </div>
+        
+        <div id="participantsPreview" class="preview" style="display: none;">
+            <h3>Participants Preview (First 10 records)</h3>
+            <table id="participantsTable">
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Name</th>
+                        <th>ID CARD NO</th>
+                        <th>Department</th>
+                        <th>Company</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <div id="participantsStatus" class="status"></div>
+    </div>
+
+    <div class="container">
+        <h2>🎁 Generate Gifts Test Data</h2>
+        <div class="btn-group">
+            <button class="btn" onclick="generateGiftsData(30)">Generate 30 Gifts</button>
+            <button class="btn" onclick="generateGiftsData(50)">Generate 50 Gifts</button>
+            <button class="btn" onclick="generateGiftsData(80)">Generate 80 Gifts</button>
+        </div>
+        
+        <div id="giftsPreview" class="preview" style="display: none;">
+            <h3>Gifts Preview (First 10 records)</h3>
+            <table id="giftsTable">
+                <thead>
+                    <tr>
+                        <th>SN</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        
+        <div id="giftsStatus" class="status"></div>
+    </div>
+
+    <div class="container">
+        <h2>🚀 Quick Setup</h2>
+        <div class="btn-group">
+            <button class="btn" onclick="generateCompleteTestSet()">Generate Complete Test Set</button>
+            <button class="btn" onclick="clearLocalStorage()">Clear Local Storage</button>
+            <button class="btn" onclick="goToRaffle()">Go to Raffle Page</button>
+            <button class="btn" onclick="goToAdmin()">Go to Admin Page</button>
+        </div>
+    </div>
+
+<script>
+// Department structure matching your hardcoded gifts
+const departments = [
+    "PM Partners", "PO Partners", "CPM Partners", "HSE Partners", 
+    "TD Partners", "CSS Partners", "NST Partners", "CMO Partners",
+    "PI, IMT, PS & PG Partners", "HR, RAIS & CLUB Partners", 
+    "LSS Partners", "ESD & CFS Partners", "Train 7", "General Draws"
+];
+
+// Nigerian names for realistic test data
+const firstNames = [
+    "Abayomi", "Adebola", "Adebayo", "Adeola", "Adewale", "Afolabi", "Akintade", "Akinwumi",
+    "Aminat", "Amaka", "Babatunde", "Bankole", "Bimbo", "Biola", "Bosede", "Bukola",
+    "Chiamaka", "Chibuzor", "Chidi", "Chidiebere", "Chika", "Chinedu", "Chinyere", "Chioma",
+    "Emeka", "Efe", "Ejiro", "Ekene", "Emmanuel", "Esther", "Fatima", "Femi",
+    "Folake", "Funke", "Grace", "Habibat", "Halima", "Hassan", "Ibrahim", "Ifeanyi",
+    "Ijeoma", "Ikenna", "Ireti", "Jumoke", "Kafilat", "Kelechi", "Kemi", "Kingsley",
+    "Kudirat", "Kunle", "Lola", "Maryam", "Micheal", "Mobolaji", "Mohammed", "Mojisola",
+    "Musa", "Ngozi", "Nkechi", "Nneka", "Obinna", "Olamide", "Oluchi", "Olufemi",
+    "Olumide", "Oluwaseun", "Oluwatoyin", "Omolara", "Omowumi", "Opeyemi", "Osaretin", "Osereme",
+    "Oyinkansola", "Patience", "Peace", "Rasheed", "Rukayat", "Sade", "Saheed", "Salma",
+    "Samuel", "Sanusi", "Sarah", "Segun", "Sekinat", "Shade", "Shittu", "Sulaiman",
+    "Taiwo", "Temitope", "Tijani", "Titi", "Tobiloba", "Tola", "Uche", "Uchenna",
+    "Ugochi", "Umar", "Victoria", "Wasiu", "Yakubu", "Yemi", "Yusuf", "Zainab"
+];
+
+const lastNames = [
+    "Adebayo", "Adeyemi", "Afolayan", "Agboola", "Akinwande", "Alabi", "Amaechi", "Bakare",
+    "Balogun", "Bello", "Chukwu", "Daramola", "Eke", "Eze", "Falana", "Garba",
+    "Ibe", "Ige", "Jaja", "Kalu", "Lawal", "Mbah", "Nwosu", "Obi",
+    "Odedina", "Ogundipe", "Okafor", "Okoro", "Oladeji", "Olanrewaju", "Olatunji", "Oluwaseyi",
+    "Oni", "Oso", "Oyekanmi", "Salami", "Sani", "Taiwo", "Ude", "Uzor",
+    "Yakubu", "Yusuf", "Adewumi", "Ajayi", "Akande", "Alade", "Bada", "Dada"
+];
+
+const companies = [
+    "Dovers", "Amaiden", "ASOSE", "CFSS", "NLNG Staff", "Tech Solutions", "Global Partners",
+    "Energy Corp", "Project Managers", "Consulting Group", "Operations Team", "Support Services"
+];
+
+// Gift items matching your hardcoded structure
+const giftItems = [
+    "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", "rice", "Hisense 1HP Split Copper Inverter AC",
+    "Microwave", "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100",
+    "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)",
+    "hp elitebook x360 touch intel core i5- 16gb ram 1tb ssd backlit keyboard fp reader wins 11 pro +bag61",
+    "samsung galaxy z fold 5 - 7.6 10mp 3x optical zoom telephoto, 50mp wide angle and 12mp ultrawide - 5g - android (12gb ram, 256gb rom) - 4400mah",
+    "xiaomi redmi note 14 pro+ 5g - 6.67 (512gb 12gb) dual sim, 200mp, 6200mah",
+    "redmi pad pro 8 256 wifi", "hisense 1hp split unit copper inverter ac r410 gas-as09dk",
+    "hisense 43-inch hisense smart led tv + netflix +youtube", "treadmill 2hp with massager mp3",
+    "hisense front load washing machine, 6 kg, smart control, silver wm 6010",
+    "nexus 18 rechargeable standing fan + remote + led light +usb port",
+    "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR",
+    "century digital torch screen dual window air fryer caf-8340-c 10l",
+    "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts",
+    "hisense 20 litres microwave (h20mows14)",
+    "One week all expense paid trip to Transcorp Hilton Abuja"
+];
+
+// Utility functions
+function getRandomItem(array) {
+    return array[Math.floor(Math.random() * array.length)];
+}
+
+function generateID() {
+    const prefix = "CP";
+    const number = Math.floor(Math.random() * 900) + 100; // 100-999
+    return prefix + number;
+}
+
+function generateParticipantsData(count) {
+    const participants = [];
+    
+    for (let i = 1; i <= count; i++) {
+        const firstName = getRandomItem(firstNames);
+        const lastName = getRandomItem(lastNames);
+        
+        participants.push({
+            "SN": i,
+            "Name": `${firstName} ${lastName}`,
+            "ID CARD NO": generateID(),
+            "Department": getRandomItem(departments),
+            "Company": getRandomItem(companies)
+        });
+    }
+    
+    // Show preview
+    showParticipantsPreview(participants.slice(0, 10));
+    
+    // Create Excel file
+    const ws = XLSX.utils.json_to_sheet(participants);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Participants");
+    
+    // Save to file
+    XLSX.writeFile(wb, `NLNG_Participants_Test_Data_${count}.xlsx`);
+    
+    // Update status
+    document.getElementById('participantsStatus').innerHTML = 
+        `<div class="success">✅ Generated ${count} participants and downloaded Excel file!</div>`;
+    
+    // Also save to localStorage for immediate testing
+    localStorage.setItem("participantsData", JSON.stringify(participants));
+    
+    console.log("Generated Participants:", participants);
+    return participants;
+}
+
+function generateGiftsData(count) {
+    const gifts = [];
+    
+    // Ensure we have at least some gifts for each department
+    const giftsPerDept = Math.ceil(count / departments.length);
+    
+    let sn = 1;
+    departments.forEach(dept => {
+        const numGiftsForDept = Math.min(giftsPerDept, count - gifts.length);
+        for (let i = 0; i < numGiftsForDept && gifts.length < count; i++) {
+            gifts.push({
+                "SN": sn++,
+                "Name": getRandomItem(giftItems),
+                "Department": dept
+            });
+        }
+    });
+    
+    // Fill remaining slots if any
+    while (gifts.length < count) {
+        gifts.push({
+            "SN": sn++,
+            "Name": getRandomItem(giftItems),
+            "Department": getRandomItem(departments)
+        });
+    }
+    
+    // Show preview
+    showGiftsPreview(gifts.slice(0, 10));
+    
+    // Create Excel file
+    const ws = XLSX.utils.json_to_sheet(gifts);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Gifts");
+    
+    // Save to file
+    XLSX.writeFile(wb, `NLNG_Gifts_Test_Data_${count}.xlsx`);
+    
+    // Update status
+    document.getElementById('giftsStatus').innerHTML = 
+        `<div class="success">✅ Generated ${count} gifts and downloaded Excel file!</div>`;
+    
+    // Also save to localStorage for immediate testing
+    localStorage.setItem("giftsData", JSON.stringify(gifts));
+    
+    console.log("Generated Gifts:", gifts);
+    return gifts;
+}
+
+function showParticipantsPreview(participants) {
+    const preview = document.getElementById('participantsPreview');
+    const tbody = document.querySelector('#participantsTable tbody');
+    
+    tbody.innerHTML = '';
+    participants.forEach(p => {
+        const row = tbody.insertRow();
+        row.insertCell(0).textContent = p.SN;
+        row.insertCell(1).textContent = p.Name;
+        row.insertCell(2).textContent = p["ID CARD NO"];
+        row.insertCell(3).textContent = p.Department;
+        row.insertCell(4).textContent = p.Company;
+    });
+    
+    preview.style.display = 'block';
+}
+
+function showGiftsPreview(gifts) {
+    const preview = document.getElementById('giftsPreview');
+    const tbody = document.querySelector('#giftsTable tbody');
+    
+    tbody.innerHTML = '';
+    gifts.forEach(g => {
+        const row = tbody.insertRow();
+        row.insertCell(0).textContent = g.SN;
+        row.insertCell(1).textContent = g.Name;
+        row.insertCell(2).textContent = g.Department;
+    });
+    
+    preview.style.display = 'block';
+}
+
+function generateCompleteTestSet() {
+    const participants = generateParticipantsData(150);
+    const gifts = generateGiftsData(60);
+    
+    document.getElementById('participantsStatus').innerHTML = 
+        `<div class="success">✅ Complete test set generated! 150 participants and 60 gifts created.</div>`;
+    
+    // Show department distribution
+    const deptDistribution = {};
+    participants.forEach(p => {
+        deptDistribution[p.Department] = (deptDistribution[p.Department] || 0) + 1;
+    });
+    
+    console.log("Department Distribution (Participants):", deptDistribution);
+    
+    const giftDistribution = {};
+    gifts.forEach(g => {
+        giftDistribution[g.Department] = (giftDistribution[g.Department] || 0) + 1;
+    });
+    
+    console.log("Department Distribution (Gifts):", giftDistribution);
+}
+
+function clearLocalStorage() {
+    localStorage.removeItem("participantsData");
+    localStorage.removeItem("giftsData");
+    document.getElementById('participantsStatus').innerHTML = 
+        `<div class="info">🗑️ Local storage cleared! Upload new files on admin page.</div>`;
+    document.getElementById('giftsStatus').innerHTML = '';
+}
+
+function goToRaffle() {
+    window.location.href = "raffle.html";
+}
+
+function goToAdmin() {
+    window.location.href = "admin.html";
+}
+
+// Initialize with some sample data preview
+document.addEventListener('DOMContentLoaded', function() {
+    // Generate small preview datasets
+    const sampleParticipants = generateParticipantsData(5);
+    const sampleGifts = generateGiftsData(5);
+    
+    // Don't download files on load, just show preview
+    document.getElementById('participantsStatus').innerHTML = 
+        `<div class="info">👆 Click buttons above to generate test data</div>`;
+    document.getElementById('giftsStatus').innerHTML = 
+        `<div class="info">👆 Click buttons above to generate test data</div>`;
+    
+    // Remove the auto-downloaded files notification
+    console.log("Test Data Generator Ready!");
+});
+</script>
+</body>
+</html>
