@@ -1,164 +1,317 @@
-/* --- Carousel Container --- */
+/* --- Carousel Container - Adjusted for Centered Layering --- */
 .carousel {
-    position: fixed; /* Fixed position so it acts as a background */
-    top: 0;
-    left: 0;
+    /* Changes from fixed to relative/block to contain the elements */
     width: 100vw;
     height: 100vh;
+    margin-top: -50px; /* Assuming this is to offset a 50px header */
     overflow: hidden;
-    z-index: 1; /* Low z-index to sit behind the raffle content */
-    transition: opacity 0.5s ease;
+    position: relative; /* Now the container for the absolute items */
+    z-index: 1; /* Retain low z-index if content is layered on top */
 }
 
+/* --- Carousel List (Wrapper) --- */
 .carousel .list {
-    position: absolute;
+    position: absolute; /* Kept absolute, but inset is no longer needed */
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    /* Added to contain items for the new layout logic */
 }
 
-/* --- Individual Carousel Item Styling --- */
+/* --- Individual Carousel Item Styling - Key Adjustments --- */
 .carousel .list .item {
+    width: 180px; /* Small, next item size */
+    height: 250px; /* Small, next item size */
     position: absolute;
-    inset: 0;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 1s; /* Only transition opacity */
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    /* Initial state for small items, roughly centered vertically and placed on the right */
+    top: 80%;
+    transform: translateY(-70%);
+    left: 70%;
     
-    /* Center the content */
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    /* New design aesthetics */
+    border-radius: 20px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+    background-position: 50% 50%; /* Using 50% 50% instead of 'center' */
+    background-size: cover;
+    z-index: 100; /* High z-index for the smaller items */
+    transition: 1s; /* Important for the movement animation */
+    
+    /* Resetting your original styles that conflict with the new design */
+    opacity: 0; /* Items are initially hidden until positioned by JS/CSS */
+    pointer-events: none;
+    display: block; /* Removing flex display, as content is now positioned absolute */
+    
+    /* Added back for image display if images are used as background */
+    background-repeat: no-repeat;
 }
 
-/* Dark overlay for better text readability */
-.carousel .list .item::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.7); 
-}
+/* --- Positioning Logic for Active and Next Items --- */
 
-/* Active Item - The one currently visible */
+/* Active Item - The currently visible one (Your original `.active` class)
+   This needs to combine with the Nth-child logic from the new design.
+   If using JS to add/remove classes: */
 .carousel .list .item.active {
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99; /* Lower z-index than the small items so they sit on top */
     opacity: 1;
     pointer-events: auto;
 }
 
-/* --- Content Styling (Customized for your Raffle Gift data) --- */
+/* Fallback/Initial state for the first two items (item 1 will move out, item 2 is active) */
+.carousel .list .item:nth-child(1),
+.carousel .list .item:nth-child(2){
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
+    border-radius: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99; /* Ensures they act as the full-screen background */
+    /* Note: JS/Backend logic is required to apply the 'active' class correctly */
+}
+
+/* Next items */
+.carousel .list .item:nth-child(3){ left: 67%; }
+.carousel .list .item:nth-child(4){ left: calc(67% + 200px); }
+.carousel .list .item:nth-child(5){ left: calc(67% + 400px); }
+.carousel .list .item:nth-child(6){ left: calc(67% + 600px); }
+
+/* Hidden items */
+.carousel .list .item:nth-child(n+7){
+    left: calc(67% + 800px);
+    opacity: 0;
+    /* z-index remains 100 or less */
+}
+
+
+/* Dark overlay for better text readability on the active item only */
+.carousel .list .item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Use a semi-transparent black or a darker shade for the active item */
+    background-color: rgba(0, 0, 0, 0.7); 
+    /* Ensures the overlay only appears on the full-screen item */
+    display: none; 
+}
+.carousel .list .item.active::before,
+.carousel .list .item:nth-child(2)::before { /* Adjust nth-child if active is always the 2nd */
+    display: block;
+}
+
+/* --- Content Styling - Adjusted for Positioning --- */
 .carousel .list .item .content {
-    position: relative;
-    z-index: 2;
-    width: 80%;
-    max-width: 600px;
-    padding: 30px;
+    position: absolute; /* Changed from relative */
+    top: 50%;
+    left: 100px;
+    transform: translateY(-50%);
+    width: 400px;
+    text-align: left; /* Changed from center */
     color: #fff;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 15px;
-    backdrop-filter: blur(5px);
-    text-align: center;
+    /* The new design uses `display: none` and `display: block` */
+    display: none; 
+
+    /* Removed your original background/padding/blur styles */
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    backdrop-filter: none;
+    max-width: none;
+    z-index: 2;
+}
+
+/* Content should only show on the active item (or nth-child(2) as per the sample) */
+.carousel .list .item.active .content,
+.carousel .list .item:nth-child(2) .content {
+    display: block;
 }
 
 .carousel .list .item .content .title {
-    font-size: 1.2em;
-    font-weight: 300;
-    letter-spacing: 5px;
+    font-size: 100px; /* Larger size */
+    text-transform: uppercase;
+    color: #14ff72cb; /* Accent color */
+    font-weight: bold;
+    letter-spacing: normal; /* Resetting your original spacing */
+    line-height: 1;
+    /* Animation is handled by the new keyframes */
     opacity: 0;
-    animation: fadeInDown 1s ease-in-out 0.5s forwards; 
+    animation: animate 1s ease-in-out 0.3s 1 forwards;
 }
 
 .carousel .list .item .content .name {
-    font-size: 3em;
-    font-weight: 700;
-    line-height: 1.2;
-    margin: 10px 0 15px;
+    font-size: 100px; /* Larger size */
+    text-transform: uppercase;
+    font-weight: bold;
+    line-height: 1;
+    margin: 0; /* Resetting your original margin */
+    text-shadow: 3px 4px 4px rgba(255, 255, 255, 0.8); /* Added shadow */
+    /* Resetting background clip/fill for the shadow to work */
+    background: none; 
+    -webkit-background-clip: unset; 
+    -webkit-text-fill-color: unset; 
+    color: #fff; /* Need to explicitly set color */
+
     opacity: 0;
-    animation: fadeInDown 1s ease-in-out 0.7s forwards;
-    background: linear-gradient(90deg, #ffd700, #ff8c00);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    animation: animate 1s ease-in-out 0.6s 1 forwards;
 }
 
 .carousel .list .item .content .des {
-    font-size: 1em;
-    line-height: 1.6;
+    margin-top: 10px;
     margin-bottom: 20px;
+    font-size: 18px; /* Larger size */
+    margin-left: 5px; /* Added left margin */
+    line-height: 1.6;
+    
     opacity: 0;
-    animation: fadeInDown 1s ease-in-out 0.9s forwards;
+    animation: animate 1s ease-in-out 0.9s 1 forwards;
 }
 
+/* Gift Image: Hide the image in this design */
 .carousel .list .item .content img.gift-preview-img {
-    max-width: 100%;
-    max-height: 200px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    display: none;
+}
+
+/* --- Button Styling (from new design, assuming you have a .btn wrapper) --- */
+.carousel .list .item .content .btn{
+    margin-left: 5px;
     opacity: 0;
-    animation: fadeInDown 1s ease-in-out 1.1s forwards;
+    animation: animate 1s ease-in-out 1.2s 1 forwards;
 }
 
-/* Keyframe Animations for Content */
-@keyframes fadeInDown {
-    from {
+.carousel .list .item .content .btn button{
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border: 2px solid #fff;
+}
+
+.carousel .list .item .content .btn button:nth-child(1){
+    margin-right: 15px;
+}
+
+.carousel .list .item .content .btn button:nth-child(2){
+    background: transparent;
+    color: #14ff72cb;
+    border: 2px solid #fff;
+    transition: 0.3s;
+}
+
+.carousel .list .item .content .btn button:nth-child(2):hover{
+    background-color: #14ff72cb;
+    color: #fff;
+    border-color: #14ff72cb;
+}
+
+
+/* Keyframe Animations - Replaced fadeInDown with the new 'animate' */
+@keyframes animate {
+    from{
         opacity: 0;
-        transform: translateY(-20px);
+        transform: translate(0, 100px);
+        filter: blur(33px);
     }
-    to {
+    to{
         opacity: 1;
-        transform: translateY(0);
+        transform: translate(0);
+        filter: blur(0);
     }
 }
 
-/* --- Arrows (Next/Prev Buttons) --- */
+/* --- Arrows (Next/Prev Buttons) - Adjusted for Positioning --- */
 .arrows {
     position: absolute;
-    bottom: 50%;
-    transform: translateY(50%);
-    z-index: 5;
-    width: 100%;
+    top: 80%; /* Lower position */
+    right: 52%; /* Positioned from the right */
+    transform: none; /* Removing the original transform */
+    z-index: 100; /* High z-index */
+    width: 300px;
+    max-width: 30%;
     display: flex;
-    justify-content: space-between;
-    padding: 0 20px;
+    justify-content: flex-start; /* Resetting original space-between */
+    gap: 10px;
+    padding: 0; /* Resetting original padding */
 }
 
 .arrows button {
-    width: 40px;
-    height: 40px;
+    width: 50px; /* Larger size */
+    height: 50px;
     border-radius: 50%;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: none;
+    background-color: #14ff72cb; /* Accent color */
     color: #fff;
-    font-size: 1.2em;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    font-family: monospace;
+    font-weight: bold;
+    transition: .5s;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
 .arrows button:hover {
-    background-color: rgba(255, 255, 255, 0.5);
+    background: #fff;
+    color: #000;
 }
 
-/* --- Time Running / Progress Bar --- */
-.timeRunning {
+/* --- Time Running / Progress Bar - Adjusted for Positioning/Animation --- */
+.carousel .timeRunning {
     position: absolute;
-    bottom: 0;
+    z-index: 1000; /* Highest z-index */
+    width: 0%; 
+    height: 4px; /* Thinner */
+    background-color: #14ff72cb; 
     left: 0;
-    width: 0; 
-    height: 5px;
-    background-color: var(--accent3); 
-    z-index: 1;
-    transition: width 0.1s linear; 
+    top: 0; /* Positioned at the very top */
+    /* Note: JS is typically needed to reset this animation on slide change */
+    animation: runningTime 7s linear 1 forwards;
+    transition: none; /* Removed original transition */
 }
 
-/* --- Responsive Adjustments --- */
-@media screen and (max-width: 768px) {
-    .carousel .list .item .content {
-        width: 90%;
-        padding: 20px;
+@keyframes runningTime {
+    from{width: 0%;}
+    to{width: 100%;}
+}
+
+/* --- Responsive Adjustments - Adopted from the target design --- */
+@media screen and (max-width: 999px){
+    /* Assuming a header padding adjustment is needed */
+    /* header{ padding-left: 50px; } */ 
+
+    .carousel .list .item .content{
+        left: 50px;
     }
-    .carousel .list .item .content .name {
-        font-size: 2em;
+
+    .carousel .list .item .content .title, 
+    .carousel .list .item .content .name{
+        font-size: 70px;
+    }
+
+    .carousel .list .item .content .des{
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 690px){
+    /* Assuming nav adjustments are needed */
+    /* header nav a{ font-size: 14px; margin-right: 0; } */
+
+    .carousel .list .item .content{
+        top: 40%;
+    }
+
+    .carousel .list .item .content .title, 
+    .carousel .list .item .content .name{
+        font-size: 45px;
+    }
+
+    .carousel .list .item .content .btn button{
+        padding: 10px 15px;
+        font-size: 14px;
     }
 }
