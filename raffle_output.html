@@ -465,15 +465,39 @@ populateDepartmentSelector();
 document.getElementById("departmentSelect").addEventListener("change", function () {
     const dep = this.value;
 
+    // 1. FILTER HARDCODED GIFTS (gallery preview)
     if (dep === "") {
         loadGallery(giftsHardcoded);
     } else {
-        loadGallery(giftsHardcoded.filter(g => g.department === dep));
+        loadGallery(giftsHardcoded.filter(g => g.department.toLowerCase() === dep.toLowerCase()));
     }
+
+    // 2. FILTER PARTICIPANTS BASED ON DEPT
+    if (dep === "") {
+        participants = [...fullParticipants];
+    } else {
+        participants = fullParticipants.filter(p =>
+            String(p.department).toLowerCase() === dep.toLowerCase()
+        );
+    }
+
+    // 3. FILTER UPLOADED GIFT LIST
+    if (dep === "") {
+        gifts = [...fullGifts];
+    } else {
+        gifts = fullGifts.filter(g =>
+            String(g.department).toLowerCase() === dep.toLowerCase()
+        );
+    }
+
+    console.log("Filtered Participants:", participants);
+    console.log("Filtered Gifts:", gifts);
 });
 
-    // --- End of Hardcoded Gift Data ---
 
+    // --- End of Hardcoded Gift Data ---
+    let fullParticipants = [];
+    let fullGifts = [];
     let participants = [];
     let gifts = giftsHardcoded; // ➡️ Gift list for DISPLAY/PREVIEW (uses hardcoded data)
     let giftsForDraw = [];       // ➡️ Gift list for DRAWING (loaded from localStorage)
@@ -604,6 +628,9 @@ departmentSelect.addEventListener("change", function() {
 participants = filtered.participants;
 giftsForDraw = filtered.giftsForDraw;
 gifts = filtered.hardcodedGifts;
+fullParticipants = parsedParticipants;  
+fullGifts = parsedGifts;
+
 
 // Refresh gallery
 updateGallery();
@@ -890,6 +917,7 @@ maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 </script>
 </body>
 </html>
+
 
 
 
