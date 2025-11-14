@@ -520,9 +520,10 @@
         });
     }
 
-    // Function to filter all data by department - FIXED VERSION
+    // IMPROVED Function to filter all data by department
     function filterAllByDepartment(dept) {
         if (!dept || dept.trim() === "") {
+            console.log("No department selected - showing ALL data");
             return {
                 participants: fullParticipants,
                 giftsForDraw: fullGifts,
@@ -532,28 +533,50 @@
 
         const deptLower = dept.trim().toLowerCase();
         
-        console.log(`Filtering for department: ${dept}`);
-        console.log(`Full participants:`, fullParticipants);
-        console.log(`Full gifts for draw:`, fullGifts);
+        console.log(`🔍 FILTERING for department: "${dept}" (${deptLower})`);
+        console.log(`📊 Full participants count:`, fullParticipants.length);
+        console.log(`🎁 Full gifts for draw count:`, fullGifts.length);
         
+        // Filter participants - check ALL possible department fields
         const filteredParticipants = fullParticipants.filter(p => {
-            const participantDept = String(p.department || p.division || "").toLowerCase();
-            console.log(`Participant: ${p.name}, Department: ${participantDept}, Match: ${participantDept === deptLower}`);
-            return participantDept === deptLower;
+            const participantDept = String(p.department || p.division || p.Department || p.Division || "").toLowerCase().trim();
+            const matches = participantDept === deptLower;
+            if (matches) {
+                console.log(`✅ Participant MATCH: ${p.name} - Department: "${participantDept}"`);
+            }
+            return matches;
         });
         
+        // Filter gifts for draw - check ALL possible department fields
         const filteredGiftsForDraw = fullGifts.filter(g => {
-            const giftDept = String(g.department || "").toLowerCase();
-            console.log(`Gift: ${g.name}, Department: ${giftDept}, Match: ${giftDept === deptLower}`);
-            return giftDept === deptLower;
+            const giftDept = String(g.department || g.Department || g.division || g.Division || "").toLowerCase().trim();
+            const matches = giftDept === deptLower;
+            if (matches) {
+                console.log(`✅ Gift MATCH: ${g.name} - Department: "${giftDept}"`);
+            }
+            return matches;
         });
         
+        // Filter hardcoded gifts
         const filteredHardcodedGifts = giftsHardcoded.filter(g => {
-            const hardcodedDept = String(g.department || "").toLowerCase();
+            const hardcodedDept = String(g.department || "").toLowerCase().trim();
             return hardcodedDept === deptLower;
         });
 
-        console.log(`Filtered results - Participants: ${filteredParticipants.length}, Gifts: ${filteredGiftsForDraw.length}, Hardcoded: ${filteredHardcodedGifts.length}`);
+        console.log(`📋 Filtered results:`);
+        console.log(`   👥 Participants: ${filteredParticipants.length}`);
+        console.log(`   🎁 Gifts for draw: ${filteredGiftsForDraw.length}`);
+        console.log(`   🖼️  Hardcoded gifts: ${filteredHardcodedGifts.length}`);
+
+        // DEBUG: Show what gifts were found
+        if (filteredGiftsForDraw.length === 0 && fullGifts.length > 0) {
+            console.log("❌ NO GIFTS FOUND for department. Available departments in gifts:");
+            const availableGiftDepts = [...new Set(fullGifts.map(g => g.department))];
+            console.log("Available gift departments:", availableGiftDepts);
+            
+            // Show first few gifts to see their structure
+            console.log("First 5 gifts structure:", fullGifts.slice(0, 5));
+        }
 
         return {
             participants: filteredParticipants,
@@ -562,57 +585,85 @@
         };
     }
 
-    // Improved data normalization function
+    // IMPROVED data normalization functions
     function normalizeParticipantData(participant) {
-        // Handle various column name possibilities
+        // Extract department from any possible column name
+        let department = participant.department || participant.Department || 
+                        participant.division || participant.Division || 
+                        participant["Department"] || "General";
+        
+        // Clean up department name
+        department = department.toString().trim();
+        
         return {
             name: participant.name || participant.Name || participant.Participant || "Unnamed",
-            division: participant.division || participant.Division || participant.department || participant.Department || "—",
+            division: participant.division || participant.Division || department || "—",
             idCard: participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
-            department: participant.department || participant.Department || participant.division || participant.Division || "General"
+            department: department
         };
     }
 
     function normalizeGiftData(gift) {
-        // Handle various column name possibilities
+        // Extract department from any possible column name
+        let department = gift.department || gift.Department || 
+                        gift.division || gift.Division || 
+                        gift["Department"] || "General";
+        
+        // Clean up department name
+        department = department.toString().trim();
+        
         return {
             name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
-            department: gift.department || gift.Department || gift.division || gift.Division || "General",
+            department: department,
             image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
         };
     }
 
-    // Initialize the page - FIXED VERSION
+    // IMPROVED initialization
     window.addEventListener("DOMContentLoaded", () => {
         const savedParticipants = localStorage.getItem("participantsData");
         const savedGifts = localStorage.getItem("giftsData");
 
-        console.log("Initializing page...");
-        console.log("Saved participants:", savedParticipants ? JSON.parse(savedParticipants) : "None");
-        console.log("Saved gifts:", savedGifts ? JSON.parse(savedGifts) : "None");
-
-        // Load participants - IMPROVED MAPPING
+        console.log("🚀 INITIALIZING PAGE...");
+        
+        // Load participants
         if (savedParticipants) {
             const parsedParticipants = JSON.parse(savedParticipants);
-            console.log("Raw participants data:", parsedParticipants);
+            console.log("📥 Raw participants data (first 3):", parsedParticipants.slice(0, 3));
             
             fullParticipants = parsedParticipants.map(normalizeParticipantData);
             participants = [...fullParticipants];
             
-            console.log("Normalized participants:", fullParticipants);
+            console.log("✅ Normalized participants (first 3):", fullParticipants.slice(0, 3));
+            console.log(`📊 Total participants loaded: ${fullParticipants.length}`);
+            
+            // Show department distribution
+            const deptCount = {};
+            fullParticipants.forEach(p => {
+                deptCount[p.department] = (deptCount[p.department] || 0) + 1;
+            });
+            console.log("👥 Participant department distribution:", deptCount);
         } else {
             alert("⚠️ Please upload participants on the admin page first.");
         }
 
-        // Load gifts for draw - IMPROVED MAPPING
+        // Load gifts for draw
         if (savedGifts) {
             const parsedGifts = JSON.parse(savedGifts);
-            console.log("Raw gifts data:", parsedGifts);
+            console.log("📥 Raw gifts data (first 3):", parsedGifts.slice(0, 3));
             
             fullGifts = parsedGifts.map(normalizeGiftData);
             giftsForDraw = [...fullGifts];
             
-            console.log(`Loaded ${giftsForDraw.length} gifts for the draw:`, giftsForDraw);
+            console.log("✅ Normalized gifts for draw (first 3):", giftsForDraw.slice(0, 3));
+            console.log(`🎁 Total gifts for draw loaded: ${giftsForDraw.length}`);
+            
+            // Show department distribution
+            const giftDeptCount = {};
+            giftsForDraw.forEach(g => {
+                giftDeptCount[g.department] = (giftDeptCount[g.department] || 0) + 1;
+            });
+            console.log("🎁 Gift department distribution:", giftDeptCount);
         } else {
             alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
         }
@@ -626,37 +677,39 @@
         maxDrawsInput.max = giftsForDraw.length;
         maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 
-        // Set up department filter - FIXED EVENT LISTENER
-        departmentSelect.addEventListener("change", function() {
-            const dept = this.value;
-            console.log(`Department selected: "${dept}"`);
-            
-            const filtered = filterAllByDepartment(dept);
-            
-            // Update global arrays with filtered data
-            participants = filtered.participants;
-            giftsForDraw = filtered.giftsForDraw;
-            gifts = filtered.hardcodedGifts;
+        console.log("✅ PAGE INITIALIZATION COMPLETE");
+    });
 
-            // Debug logs
-            console.log("Selected dept:", dept);
-            console.log("Filtered participants:", participants);
-            console.log("Filtered gifts for draw:", giftsForDraw);
-            console.log("Filtered hardcoded gifts:", gifts);
+    // IMPROVED department filter event listener
+    departmentSelect.addEventListener("change", function() {
+        const dept = this.value;
+        console.log(`\n🎯 DEPARTMENT CHANGED: "${dept}"`);
+        
+        const filtered = filterAllByDepartment(dept);
+        
+        // Update global arrays with filtered data
+        participants = filtered.participants;
+        giftsForDraw = filtered.giftsForDraw;
+        gifts = filtered.hardcodedGifts;
 
-            // Update gallery and counters
-            loadGallery(gifts);
-            totalGiftsDisplay.textContent = giftsForDraw.length;
-            maxDrawsInput.max = giftsForDraw.length;
-            maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-            
-            // Show summary alert for debugging
-            if (dept) {
-                setTimeout(() => {
-                    alert(`Department: ${dept}\nParticipants: ${participants.length}\nGifts: ${giftsForDraw.length}\nDisplay Gifts: ${gifts.length}`);
-                }, 100);
-            }
-        });
+        console.log("📋 FINAL FILTERED DATA:");
+        console.log("   👥 Participants:", participants.length);
+        console.log("   🎁 Gifts for draw:", giftsForDraw.length);
+        console.log("   🖼️  Hardcoded gifts:", gifts.length);
+
+        // Update gallery and counters
+        loadGallery(gifts);
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        maxDrawsInput.max = giftsForDraw.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+        
+        // Show summary alert for debugging
+        if (dept && giftsForDraw.length === 0) {
+            setTimeout(() => {
+                const availableDepts = [...new Set(fullGifts.map(g => g.department))];
+                alert(`⚠️ No gifts found for department: "${dept}"\n\nAvailable departments in gifts:\n- ${availableDepts.join('\n- ')}`);
+            }, 100);
+        }
     });
 
     // Function to Preview a Gift
@@ -786,6 +839,8 @@
         totalGiftsDisplay.textContent = giftsForDraw.length;
         maxDrawsInput.max = giftsForDraw.length;
         maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+        
+        console.log("🔄 SYSTEM RESET - All data restored to full datasets");
     });
 
     // Rest of your existing functions remain the same...
@@ -886,6 +941,7 @@
 </script>
 </body>
 </html>
+
 
 
 
