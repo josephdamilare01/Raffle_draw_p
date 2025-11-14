@@ -1,0 +1,164 @@
+/* --- Carousel Container --- */
+.carousel {
+    position: fixed; /* Fixed position so it acts as a background */
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1; /* Low z-index to sit behind the raffle content */
+    transition: opacity 0.5s ease;
+}
+
+.carousel .list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/* --- Individual Carousel Item Styling --- */
+.carousel .list .item {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s; /* Only transition opacity */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    
+    /* Center the content */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dark overlay for better text readability */
+.carousel .list .item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.7); 
+}
+
+/* Active Item - The one currently visible */
+.carousel .list .item.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* --- Content Styling (Customized for your Raffle Gift data) --- */
+.carousel .list .item .content {
+    position: relative;
+    z-index: 2;
+    width: 80%;
+    max-width: 600px;
+    padding: 30px;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    text-align: center;
+}
+
+.carousel .list .item .content .title {
+    font-size: 1.2em;
+    font-weight: 300;
+    letter-spacing: 5px;
+    opacity: 0;
+    animation: fadeInDown 1s ease-in-out 0.5s forwards; 
+}
+
+.carousel .list .item .content .name {
+    font-size: 3em;
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 10px 0 15px;
+    opacity: 0;
+    animation: fadeInDown 1s ease-in-out 0.7s forwards;
+    background: linear-gradient(90deg, #ffd700, #ff8c00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.carousel .list .item .content .des {
+    font-size: 1em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeInDown 1s ease-in-out 0.9s forwards;
+}
+
+.carousel .list .item .content img.gift-preview-img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    animation: fadeInDown 1s ease-in-out 1.1s forwards;
+}
+
+/* Keyframe Animations for Content */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Arrows (Next/Prev Buttons) --- */
+.arrows {
+    position: absolute;
+    bottom: 50%;
+    transform: translateY(50%);
+    z-index: 5;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 20px;
+}
+
+.arrows button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: #fff;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.arrows button:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+/* --- Time Running / Progress Bar --- */
+.timeRunning {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0; 
+    height: 5px;
+    background-color: var(--accent3); 
+    z-index: 1;
+    transition: width 0.1s linear; 
+}
+
+/* --- Responsive Adjustments --- */
+@media screen and (max-width: 768px) {
+    .carousel .list .item .content {
+        width: 90%;
+        padding: 20px;
+    }
+    .carousel .list .item .content .name {
+        font-size: 2em;
+    }
+}
