@@ -492,207 +492,204 @@
     }
 
     // Function to load gallery
-    function loadGallery(giftsArray) {
-        gallery.innerHTML = "";
-        
-        if (!giftsArray || giftsArray.length === 0) {
-            gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts available for this department.</div>';
-            return;
-        }
-
-        giftsArray.forEach(g => {
-            const img = document.createElement("img");
-            img.className = "gallery-thumb";
-            img.alt = g.name || "gift";
-            
-            if (g.image && g.image.trim()) {
-                img.src = g.image;
-            } else {
-                img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
-            }
-            
-            img.title = g.name;
-            img.addEventListener('click', () => {
-                previewGift(g);
-            });
-
-            gallery.appendChild(img);
-        });
+    // Function to load gallery
+function loadGallery(giftsArray) {
+    gallery.innerHTML = "";
+    
+    if (!giftsArray || giftsArray.length === 0) {
+        gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts available for this department.</div>';
+        return;
     }
 
-    // Function to filter all data by department - FIXED VERSION
-    function filterAllByDepartment(dept) {
-        if (!dept || dept.trim() === "") {
-            return {
-                participants: fullParticipants,
-                giftsForDraw: fullGifts,
-                hardcodedGifts: giftsHardcoded
-            };
-        }
-
-        const deptLower = dept.trim().toLowerCase();
+    giftsArray.forEach(g => {
+        const img = document.createElement("img");
+        img.className = "gallery-thumb";
+        img.alt = g.name || "gift";
         
-        console.log(`Filtering for department: ${dept}`);
-        console.log(`Full participants:`, fullParticipants);
-        console.log(`Full gifts for draw:`, fullGifts);
-        
-        const filteredParticipants = fullParticipants.filter(p => {
-            const participantDept = String(p.department || p.division || "").toLowerCase();
-            console.log(`Participant: ${p.name}, Department: ${participantDept}, Match: ${participantDept === deptLower}`);
-            return participantDept === deptLower;
-        });
-        
-        const filteredGiftsForDraw = fullGifts.filter(g => {
-            const giftDept = String(g.department || "").toLowerCase();
-            console.log(`Gift: ${g.name}, Department: ${giftDept}, Match: ${giftDept === deptLower}`);
-            return giftDept === deptLower;
-        });
-        
-        const filteredHardcodedGifts = giftsHardcoded.filter(g => {
-            const hardcodedDept = String(g.department || "").toLowerCase();
-            return hardcodedDept === deptLower;
-        });
-
-        console.log(`Filtered results - Participants: ${filteredParticipants.length}, Gifts: ${filteredGiftsForDraw.length}, Hardcoded: ${filteredHardcodedGifts.length}`);
-
-        return {
-            participants: filteredParticipants,
-            giftsForDraw: filteredGiftsForDraw,
-            hardcodedGifts: filteredHardcodedGifts
-        };
-    }
-
-    // Improved data normalization function
-    function normalizeParticipantData(participant) {
-        // Handle various column name possibilities
-        return {
-            name: participant.name || participant.Name || participant.Participant || "Unnamed",
-            division: participant.division || participant.Division || participant.department || participant.Department || "—",
-            idCard: participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
-            department: participant.department || participant.Department || participant.division || participant.Division || "General"
-        };
-    }
-
-    function normalizeGiftData(gift) {
-        // Handle various column name possibilities
-        return {
-            name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
-            department: gift.department || gift.Department || gift.division || gift.Division || "General",
-            image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
-        };
-    }
-
-    // Initialize the page - FIXED VERSION
-    window.addEventListener("DOMContentLoaded", () => {
-        const savedParticipants = localStorage.getItem("participantsData");
-        const savedGifts = localStorage.getItem("giftsData");
-
-        console.log("Initializing page...");
-        console.log("Saved participants:", savedParticipants ? JSON.parse(savedParticipants) : "None");
-        console.log("Saved gifts:", savedGifts ? JSON.parse(savedGifts) : "None");
-
-        // Load participants - IMPROVED MAPPING
-        if (savedParticipants) {
-            const parsedParticipants = JSON.parse(savedParticipants);
-            console.log("Raw participants data:", parsedParticipants);
-            
-            fullParticipants = parsedParticipants.map(normalizeParticipantData);
-            participants = [...fullParticipants];
-            
-            console.log("Normalized participants:", fullParticipants);
+        if (g.image && g.image.trim()) {
+            img.src = g.image;
         } else {
-            alert("⚠️ Please upload participants on the admin page first.");
+            img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
         }
-
-        // Load gifts for draw - IMPROVED MAPPING
-        if (savedGifts) {
-            const parsedGifts = JSON.parse(savedGifts);
-            console.log("Raw gifts data:", parsedGifts);
-            
-            fullGifts = parsedGifts.map(normalizeGiftData);
-            giftsForDraw = [...fullGifts];
-            
-            console.log(`Loaded ${giftsForDraw.length} gifts for the draw:`, giftsForDraw);
-        } else {
-            alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
-        }
-
-        // Initialize UI
-        populateDepartmentSelector();
-        loadGallery(giftsHardcoded);
         
-        // Update counters
-        totalGiftsDisplay.textContent = giftsForDraw.length;
-        maxDrawsInput.max = giftsForDraw.length;
-        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-
-        // Set up department filter - FIXED EVENT LISTENER
-        departmentSelect.addEventListener("change", function() {
-            const dept = this.value;
-            console.log(`Department selected: "${dept}"`);
-            
-            const filtered = filterAllByDepartment(dept);
-            
-            // Update global arrays with filtered data
-            participants = filtered.participants;
-            giftsForDraw = filtered.giftsForDraw;
-            gifts = filtered.hardcodedGifts;
-
-            // Debug logs
-            console.log("Selected dept:", dept);
-            console.log("Filtered participants:", participants);
-            console.log("Filtered gifts for draw:", giftsForDraw);
-            console.log("Filtered hardcoded gifts:", gifts);
-
-            // Update gallery and counters
-            loadGallery(gifts);
-            totalGiftsDisplay.textContent = giftsForDraw.length;
-            maxDrawsInput.max = giftsForDraw.length;
-            maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-            
-            // Show summary alert for debugging
-            if (dept) {
-                setTimeout(() => {
-                    alert(`Department: ${dept}\nParticipants: ${participants.length}\nGifts: ${giftsForDraw.length}\nDisplay Gifts: ${gifts.length}`);
-                }, 100);
-            }
+        img.title = g.name;
+        img.addEventListener('click', () => {
+            previewGift(g);
         });
+
+        gallery.appendChild(img);
+    });
+}
+
+// Function to filter all data by department - FIXED VERSION
+function filterAllByDepartment(dept) {
+    if (!dept || dept.trim() === "") {
+        return {
+            participants: fullParticipants,
+            giftsForDraw: fullGifts,
+            hardcodedGifts: giftsHardcoded
+        };
+    }
+
+    const deptLower = dept.trim().toLowerCase();
+    
+    console.log(`Filtering for department: ${dept}`);
+    console.log(`Full participants:`, fullParticipants);
+    console.log(`Full gifts for draw:`, fullGifts);
+    
+    const filteredParticipants = fullParticipants.filter(p => {
+        const participantDept = String(p.department || p.division || "").toLowerCase();
+        console.log(`Participant: ${p.name}, Department: ${participantDept}, Match: ${participantDept === deptLower}`);
+        return participantDept === deptLower;
+    });
+    
+    const filteredGiftsForDraw = fullGifts.filter(g => {
+        const giftDept = String(g.department || "").toLowerCase();
+        console.log(`Gift: ${g.name}, Department: ${giftDept}, Match: ${giftDept === deptLower}`);
+        return giftDept === deptLower;
+    });
+    
+    const filteredHardcodedGifts = giftsHardcoded.filter(g => {
+        const hardcodedDept = String(g.department || "").toLowerCase();
+        return hardcodedDept === deptLower;
     });
 
-    // Function to Preview a Gift
-    async function previewGift(giftObj) {
-        winnerCard.style.display = "block";
-        winnerNameEl.textContent = "🎁 Gift Preview";
-        idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
-        divisionNameEl.textContent = "Click 'Start Draw' to begin!";
-        giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+    console.log(`Filtered results - Participants: ${filteredParticipants.length}, Gifts: ${filteredGiftsForDraw.length}, Hardcoded: ${filteredHardcodedGifts.length}`);
 
-        const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
-            ? giftObj.image 
-            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
+    return {
+        participants: filteredParticipants,
+        giftsForDraw: filteredGiftsForDraw,
+        hardcodedGifts: filteredHardcodedGifts
+    };
+}
+
+// Improved data normalization function
+function normalizeParticipantData(participant) {
+    // Handle various column name possibilities
+    return {
+        name: participant.name || participant.Name || participant.Participant || "Unnamed",
+        division: participant.division || participant.Division || participant.department || participant.Department || "—",
+        idCard: participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
+        department: participant.department || participant.Department || participant.division || participant.Division || "General"
+    };
+}
+
+function normalizeGiftData(gift) {
+    // Handle various column name possibilities
+    return {
+        name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
+        department: gift.department || gift.Department || gift.division || gift.Division || "General",
+        image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
+    };
+}
+
+// Initialize the page - FIXED VERSION
+window.addEventListener("DOMContentLoaded", () => {
+    const savedParticipants = localStorage.getItem("participantsData");
+    const savedGifts = localStorage.getItem("giftsData");
+
+    console.log("Initializing page...");
+    console.log("Saved participants:", savedParticipants ? JSON.parse(savedParticipants) : "None");
+    console.log("Saved gifts:", savedGifts ? JSON.parse(savedGifts) : "None");
+
+    // Load participants - IMPROVED MAPPING
+    if (savedParticipants) {
+        const parsedParticipants = JSON.parse(savedParticipants);
+        console.log("Raw participants data:", parsedParticipants);
         
-        // Animation handling
-        if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
-            giftImageEl.classList.remove("entering", "floating");
-            giftImageEl.classList.add("leaving");
-            await sleep(500);
-        } else if (giftImageEl.classList.contains("leaving")) {
-            await sleep(500);
-        }
-
-        giftImageEl.src = giftImageSrc;
-        giftImageEl.classList.remove("leaving");
-        void giftImageEl.offsetWidth;
-        giftImageEl.classList.add("entering");
-
-        setTimeout(() => {
-            giftImageEl.classList.remove("entering");
-            giftImageEl.classList.add("floating");
-        }, 700);
+        fullParticipants = parsedParticipants.map(normalizeParticipantData);
+        participants = [...fullParticipants];
+        
+        console.log("Normalized participants:", fullParticipants);
+    } else {
+        alert("⚠️ Please upload participants on the admin page first.");
     }
 
-    // Event listeners
-    // NEW: Function to remove drawn items from active arrays
+    // Load gifts for draw - IMPROVED MAPPING
+    if (savedGifts) {
+        const parsedGifts = JSON.parse(savedGifts);
+        console.log("Raw gifts data:", parsedGifts);
+        
+        fullGifts = parsedGifts.map(normalizeGiftData);
+        giftsForDraw = [...fullGifts];
+        
+        console.log(`Loaded ${giftsForDraw.length} gifts for the draw:`, giftsForDraw);
+    } else {
+        alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
+    }
+
+    // Initialize UI
+    populateDepartmentSelector();
+    loadGallery(giftsHardcoded);
+    
+    // Update counters
+    totalGiftsDisplay.textContent = giftsForDraw.length;
+    maxDrawsInput.max = giftsForDraw.length;
+    maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+});
+
+// Set up department filter - FIXED to maintain drawn state
+departmentSelect.addEventListener("change", function() {
+    const dept = this.value;
+    console.log(`Department selected: "${dept}"`);
+    
+    // Always start with full datasets when changing departments
+    const filtered = filterAllByDepartment(dept);
+    
+    // Update global arrays with filtered data
+    participants = [...filtered.participants]; // Create fresh copies
+    giftsForDraw = [...filtered.giftsForDraw];
+    gifts = [...filtered.hardcodedGifts];
+
+    console.log("Selected dept:", dept);
+    console.log("Filtered participants:", participants.length);
+    console.log("Filtered gifts for draw:", giftsForDraw.length);
+    console.log("Filtered hardcoded gifts:", gifts.length);
+
+    // Update gallery and counters
+    loadGallery(gifts);
+    totalGiftsDisplay.textContent = giftsForDraw.length;
+    maxDrawsInput.max = giftsForDraw.length;
+    maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+});
+
+// Function to Preview a Gift
+async function previewGift(giftObj) {
+    winnerCard.style.display = "block";
+    winnerNameEl.textContent = "🎁 Gift Preview";
+    idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
+    divisionNameEl.textContent = "Click 'Start Draw' to begin!";
+    giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+
+    const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
+        ? giftObj.image 
+        : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
+    
+    // Animation handling
+    if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
+        giftImageEl.classList.remove("entering", "floating");
+        giftImageEl.classList.add("leaving");
+        await sleep(500);
+    } else if (giftImageEl.classList.contains("leaving")) {
+        await sleep(500);
+    }
+
+    giftImageEl.src = giftImageSrc;
+    giftImageEl.classList.remove("leaving");
+    void giftImageEl.offsetWidth;
+    giftImageEl.classList.add("entering");
+
+    setTimeout(() => {
+        giftImageEl.classList.remove("entering");
+        giftImageEl.classList.add("floating");
+    }, 700);
+}
+
+// NEW: Track drawn items globally to prevent redrawing
+let drawnParticipants = new Set();
+let drawnGifts = new Set();
+
+// NEW: Function to remove drawn items from active arrays
 function removeDrawnItems() {
     if (results.length === 0) return;
     
@@ -701,25 +698,30 @@ function removeDrawnItems() {
     
     // Remove drawn participants
     results.forEach(result => {
+        const participantKey = `${result.name}-${result.idCard}`;
         const participantIndex = participants.findIndex(p => 
             p.name === result.name && p.idCard === result.idCard
         );
         if (participantIndex !== -1) {
             participants.splice(participantIndex, 1);
+            drawnParticipants.add(participantKey);
             console.log(`❌ Removed participant: ${result.name}`);
         }
         
         // Remove drawn gifts
+        const giftKey = result.gift.name;
         const giftIndex = giftsForDraw.findIndex(g => 
             g.name === result.gift.name
         );
         if (giftIndex !== -1) {
             giftsForDraw.splice(giftIndex, 1);
+            drawnGifts.add(giftKey);
             console.log(`❌ Removed gift: ${result.gift.name}`);
         }
     });
     
     console.log("After removal - Participants:", participants.length, "Gifts:", giftsForDraw.length);
+    console.log("Drawn participants:", drawnParticipants.size, "Drawn gifts:", drawnGifts.size);
 }
 
 // CORRECTED Event listener for Start Draw
@@ -779,6 +781,13 @@ document.getElementById("startDraw").addEventListener("click", async () => {
     maxDrawsInput.value = Math.min(1, giftsForDraw.length);
 
     console.log(`✅ Draw completed. Remaining: ${participants.length} participants, ${giftsForDraw.length} gifts`);
+    
+    // Show success message
+    if (giftsForDraw.length === 0) {
+        setTimeout(() => {
+            alert(`🎉 All gifts for this department have been drawn!`);
+        }, 1000);
+    }
 });
 
 document.getElementById("homeBtn").addEventListener("click", () => {
@@ -818,6 +827,10 @@ document.getElementById("restartBtn").addEventListener("click", () => {
         giftsForDraw = [];
     }
     
+    // Reset drawn items tracking
+    drawnParticipants.clear();
+    drawnGifts.clear();
+    
     // Reset department selector to "All"
     departmentSelect.value = "";
     
@@ -826,6 +839,8 @@ document.getElementById("restartBtn").addEventListener("click", () => {
     totalGiftsDisplay.textContent = giftsForDraw.length;
     maxDrawsInput.max = giftsForDraw.length;
     maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+    
+    console.log("🔄 SYSTEM RESET - All data restored to full datasets");
 });
 
 // UPDATED runDrawSequence function with proper async handling
