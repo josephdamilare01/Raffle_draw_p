@@ -692,197 +692,237 @@
     }
 
     // Event listeners
-    document.getElementById("startDraw").addEventListener("click", async () => {
-        if (!participants.length) {
-            alert("No participants available for the selected department.");
-            return;
+    // NEW: Function to remove drawn items from active arrays
+function removeDrawnItems() {
+    if (results.length === 0) return;
+    
+    console.log("🔄 Removing drawn items from active arrays...");
+    console.log("Before removal - Participants:", participants.length, "Gifts:", giftsForDraw.length);
+    
+    // Remove drawn participants
+    results.forEach(result => {
+        const participantIndex = participants.findIndex(p => 
+            p.name === result.name && p.idCard === result.idCard
+        );
+        if (participantIndex !== -1) {
+            participants.splice(participantIndex, 1);
+            console.log(`❌ Removed participant: ${result.name}`);
         }
         
-        if (!giftsForDraw.length) {
-            alert("No gifts available for drawing in the selected department.");
-            return;
+        // Remove drawn gifts
+        const giftIndex = giftsForDraw.findIndex(g => 
+            g.name === result.gift.name
+        );
+        if (giftIndex !== -1) {
+            giftsForDraw.splice(giftIndex, 1);
+            console.log(`❌ Removed gift: ${result.gift.name}`);
         }
-
-        const desiredDraws = parseInt(maxDrawsInput.value, 10);
-        if (isNaN(desiredDraws) || desiredDraws < 1) {
-            alert("Please enter a valid number of draws (1 or more).");
-            return;
-        }
-
-        const usableGifts = giftsForDraw.slice();
-        const numDraws = Math.min(participants.length, usableGifts.length, desiredDraws);
-
-        if (numDraws === 0) {
-            alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
-            return;
-        }
-
-        const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-        const shuffledGifts = [...usableGifts].sort(() => 0.5 - Math.random());
-
-        results = [];
-        for (let i = 0; i < numDraws; i++) {
-            results.push({
-                name: shuffledParticipants[i].name,
-                division: shuffledParticipants[i].division,
-                idCard: shuffledParticipants[i].idCard,
-                gift: shuffledGifts[i], 
-            });
-        }
-
-        resultBody.innerHTML = "";
-        index = 0;
-
-        giftImageEl.classList.remove("floating"); 
-        runDrawSequence();
-
-        totalGiftsDisplay.textContent = giftsForDraw.length - results.length;
-        maxDrawsInput.max = giftsForDraw.length - results.length;
-        maxDrawsInput.value = Math.min(1, giftsForDraw.length - results.length);
     });
+    
+    console.log("After removal - Participants:", participants.length, "Gifts:", giftsForDraw.length);
+}
 
-    document.getElementById("homeBtn").addEventListener("click", () => {
-        window.location.href = "/index.html";
-    });
-
-    document.getElementById("restartBtn").addEventListener("click", () => {
-        results = [];
-        index = 0;
-        resultBody.innerHTML = "";
-        resultTable.style.display = "none";
-        winnerCard.style.display = "none";
-        
-        giftImageEl.src = "";
-        giftImageEl.classList.remove("entering", "leaving", "floating");
-
-        winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
-        idNumberEl.textContent = "🪪 ID Card Number";
-        divisionNameEl.textContent = "🏢 Division";
-        giftNameEl.textContent = "🎁 Gift Name";
-
-        // Reset to full datasets
-        const savedParticipants = localStorage.getItem("participantsData");
-        const savedGifts = localStorage.getItem("giftsData"); 
-        
-        if (savedParticipants) {
-            const parsedParticipants = JSON.parse(savedParticipants);
-            fullParticipants = parsedParticipants.map(normalizeParticipantData);
-            participants = [...fullParticipants];
-        }
-        
-        if (savedGifts) {
-            const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(normalizeGiftData);
-            giftsForDraw = [...fullGifts];
-        } else {
-            giftsForDraw = [];
-        }
-        
-        // Reset department selector to "All"
-        departmentSelect.value = "";
-        
-        // Update gallery and counters
-        loadGallery(giftsHardcoded);
-        totalGiftsDisplay.textContent = giftsForDraw.length;
-        maxDrawsInput.max = giftsForDraw.length;
-        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-    });
-
-    // Rest of your existing functions remain the same...
-    async function runDrawSequence() {
-        for (let i = 0; i < results.length; i++) {
-            if (i === 0) {
-                await startCountdown(10);
-            } else {
-                giftImageEl.classList.remove("entering", "floating");
-                giftImageEl.classList.add("leaving");
-                await sleep(500);
-                winnerCard.style.display = "none";
-            }
-            await announceWinnerSequence();
-        }
-
-        const doneMsg = document.getElementById("doneMessage");
-        doneMsg.style.display = "block";
-
-        if (typeof confetti === "function") {
-            confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
-        }
+// CORRECTED Event listener for Start Draw
+document.getElementById("startDraw").addEventListener("click", async () => {
+    if (!participants.length) {
+        alert("No participants available for the selected department.");
+        return;
+    }
+    
+    if (!giftsForDraw.length) {
+        alert("No gifts available for drawing in the selected department.");
+        return;
     }
 
-    function startCountdown(seconds) {
-        return new Promise((resolve) => {
-            let count = seconds;
-            loader.textContent = count;
-            loader.style.display = "flex";
+    const desiredDraws = parseInt(maxDrawsInput.value, 10);
+    if (isNaN(desiredDraws) || desiredDraws < 1) {
+        alert("Please enter a valid number of draws (1 or more).");
+        return;
+    }
 
-            const timer = setInterval(() => {
-                count--;
-                if (count > 0) {
-                    loader.textContent = count;
-                } else {
-                    clearInterval(timer);
-                    loader.style.display = "none";
-                    resolve();
-                }
-            }, 1000);
+    // ✅ FIXED: Use current available gifts (not a copy)
+    const numDraws = Math.min(participants.length, giftsForDraw.length, desiredDraws);
+
+    if (numDraws === 0) {
+        alert("Cannot run draw. Check participant count, gift count, and desired draws input.");
+        return;
+    }
+
+    console.log(`🎯 Starting ${numDraws} draws with ${participants.length} participants and ${giftsForDraw.length} gifts`);
+
+    // ✅ FIXED: Shuffle current arrays (not copies)
+    const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
+    const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
+
+    results = [];
+    for (let i = 0; i < numDraws; i++) {
+        results.push({
+            name: shuffledParticipants[i].name,
+            division: shuffledParticipants[i].division,
+            idCard: shuffledParticipants[i].idCard,
+            gift: shuffledGifts[i], 
         });
     }
 
-    function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
+    resultBody.innerHTML = "";
+    index = 0;
+
+    giftImageEl.classList.remove("floating"); 
+    await runDrawSequence();
+
+    // ✅ FIXED: Actually remove drawn items from active arrays
+    removeDrawnItems();
+
+    // Update counters with REAL remaining counts
+    totalGiftsDisplay.textContent = giftsForDraw.length;
+    maxDrawsInput.max = giftsForDraw.length;
+    maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+
+    console.log(`✅ Draw completed. Remaining: ${participants.length} participants, ${giftsForDraw.length} gifts`);
+});
+
+document.getElementById("homeBtn").addEventListener("click", () => {
+    window.location.href = "/index.html";
+});
+
+document.getElementById("restartBtn").addEventListener("click", () => {
+    results = [];
+    index = 0;
+    resultBody.innerHTML = "";
+    resultTable.style.display = "none";
+    winnerCard.style.display = "none";
+    
+    giftImageEl.src = "";
+    giftImageEl.classList.remove("entering", "leaving", "floating");
+
+    winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
+    idNumberEl.textContent = "🪪 ID Card Number";
+    divisionNameEl.textContent = "🏢 Division";
+    giftNameEl.textContent = "🎁 Gift Name";
+
+    // Reset to full datasets
+    const savedParticipants = localStorage.getItem("participantsData");
+    const savedGifts = localStorage.getItem("giftsData"); 
+    
+    if (savedParticipants) {
+        const parsedParticipants = JSON.parse(savedParticipants);
+        fullParticipants = parsedParticipants.map(normalizeParticipantData);
+        participants = [...fullParticipants];
     }
+    
+    if (savedGifts) {
+        const parsedGifts = JSON.parse(savedGifts);
+        fullGifts = parsedGifts.map(normalizeGiftData);
+        giftsForDraw = [...fullGifts];
+    } else {
+        giftsForDraw = [];
+    }
+    
+    // Reset department selector to "All"
+    departmentSelect.value = "";
+    
+    // Update gallery and counters
+    loadGallery(giftsHardcoded);
+    totalGiftsDisplay.textContent = giftsForDraw.length;
+    maxDrawsInput.max = giftsForDraw.length;
+    maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+});
 
-    async function announceWinnerSequence() {
-        const winner = results[index];
-        if (!winner) return;
-
-        const giftObj = winner.gift;
-        const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
-        
-        const displayGift = gifts.find(g => g.name === giftText);
-
-        winnerNameEl.textContent = `🏆 ${winner.name}`;
-        idNumberEl.textContent = `🪪 ${winner.idCard}`;
-        divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
-        giftNameEl.textContent = `🎁 ${giftText}`;
-
-        const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
-            ? displayGift.image 
-            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
-        
-        giftImageEl.src = imageSource;
-        winnerCard.style.display = "block";
-        
-        giftImageEl.classList.remove("leaving", "floating");
-        void giftImageEl.offsetWidth;
-        giftImageEl.classList.add("entering");
-
-        if (typeof confetti === "function") {
-            confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
+// UPDATED runDrawSequence function with proper async handling
+async function runDrawSequence() {
+    for (let i = 0; i < results.length; i++) {
+        if (i === 0) {
+            await startCountdown(10);
+        } else {
+            giftImageEl.classList.remove("entering", "floating");
+            giftImageEl.classList.add("leaving");
+            await sleep(500);
+            winnerCard.style.display = "none";
         }
-
-        const rowHtml = `<tr>
-            <td>${index + 1}</td>
-            <td>${escapeHtml(winner.name)}</td>
-            <td>${escapeHtml(winner.idCard)}</td>
-            <td>${escapeHtml(winner.division || "—")}</td>
-            <td>${escapeHtml(giftText)}</td>
-        </tr>`;
-        resultBody.insertAdjacentHTML("beforeend", rowHtml);
-        
-        if (index === 0) {
-            resultTable.style.display = "table";
-        }
-        
-        index++;
-        await sleep(4000);
+        await announceWinnerSequence();
     }
 
-    function escapeHtml(unsafe) {
-        if (typeof unsafe !== 'string') return unsafe;
-        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    const doneMsg = document.getElementById("doneMessage");
+    doneMsg.style.display = "block";
+
+    if (typeof confetti === "function") {
+        confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
     }
+}
+
+function startCountdown(seconds) {
+    return new Promise((resolve) => {
+        let count = seconds;
+        loader.textContent = count;
+        loader.style.display = "flex";
+
+        const timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                loader.textContent = count;
+            } else {
+                clearInterval(timer);
+                loader.style.display = "none";
+                resolve();
+            }
+        }, 1000);
+    });
+}
+
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function announceWinnerSequence() {
+    const winner = results[index];
+    if (!winner) return;
+
+    const giftObj = winner.gift;
+    const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
+    
+    const displayGift = gifts.find(g => g.name === giftText);
+
+    winnerNameEl.textContent = `🏆 ${winner.name}`;
+    idNumberEl.textContent = `🪪 ${winner.idCard}`;
+    divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
+    giftNameEl.textContent = `🎁 ${giftText}`;
+
+    const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
+        ? displayGift.image 
+        : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
+    
+    giftImageEl.src = imageSource;
+    winnerCard.style.display = "block";
+    
+    giftImageEl.classList.remove("leaving", "floating");
+    void giftImageEl.offsetWidth;
+    giftImageEl.classList.add("entering");
+
+    if (typeof confetti === "function") {
+        confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
+    }
+
+    const rowHtml = `<tr>
+        <td>${index + 1}</td>
+        <td>${escapeHtml(winner.name)}</td>
+        <td>${escapeHtml(winner.idCard)}</td>
+        <td>${escapeHtml(winner.division || "—")}</td>
+        <td>${escapeHtml(giftText)}</td>
+    </tr>`;
+    resultBody.insertAdjacentHTML("beforeend", rowHtml);
+    
+    if (index === 0) {
+        resultTable.style.display = "table";
+    }
+    
+    index++;
+    await sleep(4000);
+}
+
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') return unsafe;
+    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
 </script>
 </body>
 </html>
