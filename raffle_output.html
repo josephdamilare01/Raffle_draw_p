@@ -492,7 +492,7 @@
     }
 
     // Function to load gallery
-    // Function to load gallery
+   // Function to load gallery
 function loadGallery(giftsArray) {
     gallery.innerHTML = "";
     
@@ -521,7 +521,7 @@ function loadGallery(giftsArray) {
     });
 }
 
-// Function to filter all data by department - FIXED VERSION
+// Function to filter all data by department - UPDATED to maintain drawn state
 function filterAllByDepartment(dept) {
     if (!dept || dept.trim() === "") {
         return {
@@ -534,18 +534,14 @@ function filterAllByDepartment(dept) {
     const deptLower = dept.trim().toLowerCase();
     
     console.log(`Filtering for department: ${dept}`);
-    console.log(`Full participants:`, fullParticipants);
-    console.log(`Full gifts for draw:`, fullGifts);
     
     const filteredParticipants = fullParticipants.filter(p => {
         const participantDept = String(p.department || p.division || "").toLowerCase();
-        console.log(`Participant: ${p.name}, Department: ${participantDept}, Match: ${participantDept === deptLower}`);
         return participantDept === deptLower;
     });
     
     const filteredGiftsForDraw = fullGifts.filter(g => {
         const giftDept = String(g.department || "").toLowerCase();
-        console.log(`Gift: ${g.name}, Department: ${giftDept}, Match: ${giftDept === deptLower}`);
         return giftDept === deptLower;
     });
     
@@ -565,7 +561,6 @@ function filterAllByDepartment(dept) {
 
 // Improved data normalization function
 function normalizeParticipantData(participant) {
-    // Handle various column name possibilities
     return {
         name: participant.name || participant.Name || participant.Participant || "Unnamed",
         division: participant.division || participant.Division || participant.department || participant.Department || "—",
@@ -575,12 +570,39 @@ function normalizeParticipantData(participant) {
 }
 
 function normalizeGiftData(gift) {
-    // Handle various column name possibilities
     return {
         name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
         department: gift.department || gift.Department || gift.division || gift.Division || "General",
         image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
     };
+}
+
+// NEW: Function to update remaining gifts display
+function updateRemainingGiftsDisplay() {
+    const remainingGiftsContainer = document.getElementById('remainingGiftsList');
+    if (!remainingGiftsContainer) {
+        // Create the container if it doesn't exist
+        const newContainer = document.createElement('div');
+        newContainer.id = 'remainingGiftsList';
+        newContainer.style.marginTop = '10px';
+        newContainer.style.padding = '10px';
+        newContainer.style.background = 'rgba(255,255,255,0.1)';
+        newContainer.style.borderRadius = '8px';
+        newContainer.style.maxHeight = '200px';
+        newContainer.style.overflowY = 'auto';
+        document.querySelector('.left').appendChild(newContainer);
+    }
+    
+    const container = document.getElementById('remainingGiftsList');
+    
+    if (giftsForDraw.length === 0) {
+        container.innerHTML = '<div style="color:#ff6b6b;font-weight:bold;">🎉 All gifts have been drawn for this department!</div>';
+    } else {
+        container.innerHTML = `<div style="color:#00ff80;margin-bottom:8px;font-weight:bold;">Remaining Gifts (${giftsForDraw.length}):</div>
+            <div style="text-align:left;font-size:0.9rem;">${giftsForDraw.map((g, i) => 
+                `${i + 1}. ${g.name}`
+            ).join('<br>')}</div>`;
+    }
 }
 
 // Initialize the page - FIXED VERSION
@@ -589,31 +611,23 @@ window.addEventListener("DOMContentLoaded", () => {
     const savedGifts = localStorage.getItem("giftsData");
 
     console.log("Initializing page...");
-    console.log("Saved participants:", savedParticipants ? JSON.parse(savedParticipants) : "None");
-    console.log("Saved gifts:", savedGifts ? JSON.parse(savedGifts) : "None");
 
-    // Load participants - IMPROVED MAPPING
+    // Load participants
     if (savedParticipants) {
         const parsedParticipants = JSON.parse(savedParticipants);
-        console.log("Raw participants data:", parsedParticipants);
-        
         fullParticipants = parsedParticipants.map(normalizeParticipantData);
         participants = [...fullParticipants];
-        
-        console.log("Normalized participants:", fullParticipants);
+        console.log(`Loaded ${fullParticipants.length} participants`);
     } else {
         alert("⚠️ Please upload participants on the admin page first.");
     }
 
-    // Load gifts for draw - IMPROVED MAPPING
+    // Load gifts for draw
     if (savedGifts) {
         const parsedGifts = JSON.parse(savedGifts);
-        console.log("Raw gifts data:", parsedGifts);
-        
         fullGifts = parsedGifts.map(normalizeGiftData);
         giftsForDraw = [...fullGifts];
-        
-        console.log(`Loaded ${giftsForDraw.length} gifts for the draw:`, giftsForDraw);
+        console.log(`Loaded ${giftsForDraw.length} gifts for the draw`);
     } else {
         alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
     }
@@ -626,31 +640,38 @@ window.addEventListener("DOMContentLoaded", () => {
     totalGiftsDisplay.textContent = giftsForDraw.length;
     maxDrawsInput.max = giftsForDraw.length;
     maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+    
+    // Show remaining gifts
+    updateRemainingGiftsDisplay();
 });
 
-// Set up department filter - FIXED to maintain drawn state
+// Set up department filter - UPDATED to maintain drawn state
+let currentDepartment = "";
 departmentSelect.addEventListener("change", function() {
     const dept = this.value;
     console.log(`Department selected: "${dept}"`);
+    currentDepartment = dept;
     
-    // Always start with full datasets when changing departments
+    // Get filtered data
     const filtered = filterAllByDepartment(dept);
     
     // Update global arrays with filtered data
-    participants = [...filtered.participants]; // Create fresh copies
+    participants = [...filtered.participants];
     giftsForDraw = [...filtered.giftsForDraw];
     gifts = [...filtered.hardcodedGifts];
 
     console.log("Selected dept:", dept);
     console.log("Filtered participants:", participants.length);
     console.log("Filtered gifts for draw:", giftsForDraw.length);
-    console.log("Filtered hardcoded gifts:", gifts.length);
 
     // Update gallery and counters
     loadGallery(gifts);
     totalGiftsDisplay.textContent = giftsForDraw.length;
     maxDrawsInput.max = giftsForDraw.length;
     maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+    
+    // Update remaining gifts display
+    updateRemainingGiftsDisplay();
 });
 
 // Function to Preview a Gift
@@ -685,10 +706,6 @@ async function previewGift(giftObj) {
     }, 700);
 }
 
-// NEW: Track drawn items globally to prevent redrawing
-let drawnParticipants = new Set();
-let drawnGifts = new Set();
-
 // NEW: Function to remove drawn items from active arrays
 function removeDrawnItems() {
     if (results.length === 0) return;
@@ -698,33 +715,28 @@ function removeDrawnItems() {
     
     // Remove drawn participants
     results.forEach(result => {
-        const participantKey = `${result.name}-${result.idCard}`;
         const participantIndex = participants.findIndex(p => 
             p.name === result.name && p.idCard === result.idCard
         );
         if (participantIndex !== -1) {
             participants.splice(participantIndex, 1);
-            drawnParticipants.add(participantKey);
             console.log(`❌ Removed participant: ${result.name}`);
         }
         
         // Remove drawn gifts
-        const giftKey = result.gift.name;
         const giftIndex = giftsForDraw.findIndex(g => 
             g.name === result.gift.name
         );
         if (giftIndex !== -1) {
             giftsForDraw.splice(giftIndex, 1);
-            drawnGifts.add(giftKey);
             console.log(`❌ Removed gift: ${result.gift.name}`);
         }
     });
     
     console.log("After removal - Participants:", participants.length, "Gifts:", giftsForDraw.length);
-    console.log("Drawn participants:", drawnParticipants.size, "Drawn gifts:", drawnGifts.size);
 }
 
-// CORRECTED Event listener for Start Draw
+// CORRECTED Event listener for Start Draw - FIXED table issue
 document.getElementById("startDraw").addEventListener("click", async () => {
     if (!participants.length) {
         alert("No participants available for the selected department.");
@@ -742,7 +754,7 @@ document.getElementById("startDraw").addEventListener("click", async () => {
         return;
     }
 
-    // ✅ FIXED: Use current available gifts (not a copy)
+    // Use current available gifts
     const numDraws = Math.min(participants.length, giftsForDraw.length, desiredDraws);
 
     if (numDraws === 0) {
@@ -752,7 +764,7 @@ document.getElementById("startDraw").addEventListener("click", async () => {
 
     console.log(`🎯 Starting ${numDraws} draws with ${participants.length} participants and ${giftsForDraw.length} gifts`);
 
-    // ✅ FIXED: Shuffle current arrays (not copies)
+    // Shuffle current arrays
     const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
     const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
 
@@ -766,26 +778,30 @@ document.getElementById("startDraw").addEventListener("click", async () => {
         });
     }
 
-    resultBody.innerHTML = "";
+    // DON'T clear the table - let it accumulate
+    // resultBody.innerHTML = ""; // REMOVED THIS LINE
     index = 0;
 
     giftImageEl.classList.remove("floating"); 
     await runDrawSequence();
 
-    // ✅ FIXED: Actually remove drawn items from active arrays
+    // Actually remove drawn items from active arrays
     removeDrawnItems();
 
     // Update counters with REAL remaining counts
     totalGiftsDisplay.textContent = giftsForDraw.length;
     maxDrawsInput.max = giftsForDraw.length;
     maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+    
+    // Update remaining gifts display
+    updateRemainingGiftsDisplay();
 
     console.log(`✅ Draw completed. Remaining: ${participants.length} participants, ${giftsForDraw.length} gifts`);
     
     // Show success message
     if (giftsForDraw.length === 0) {
         setTimeout(() => {
-            alert(`🎉 All gifts for this department have been drawn!`);
+            alert(`🎉 All gifts for ${currentDepartment || "this department"} have been drawn!`);
         }, 1000);
     }
 });
@@ -797,7 +813,8 @@ document.getElementById("homeBtn").addEventListener("click", () => {
 document.getElementById("restartBtn").addEventListener("click", () => {
     results = [];
     index = 0;
-    resultBody.innerHTML = "";
+    // Don't clear the result body - keep the history
+    // resultBody.innerHTML = ""; // REMOVED THIS LINE
     resultTable.style.display = "none";
     winnerCard.style.display = "none";
     
@@ -827,18 +844,18 @@ document.getElementById("restartBtn").addEventListener("click", () => {
         giftsForDraw = [];
     }
     
-    // Reset drawn items tracking
-    drawnParticipants.clear();
-    drawnGifts.clear();
-    
     // Reset department selector to "All"
     departmentSelect.value = "";
+    currentDepartment = "";
     
     // Update gallery and counters
     loadGallery(giftsHardcoded);
     totalGiftsDisplay.textContent = giftsForDraw.length;
     maxDrawsInput.max = giftsForDraw.length;
     maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+    
+    // Update remaining gifts display
+    updateRemainingGiftsDisplay();
     
     console.log("🔄 SYSTEM RESET - All data restored to full datasets");
 });
@@ -918,13 +935,13 @@ async function announceWinnerSequence() {
     }
 
     const rowHtml = `<tr>
-        <td>${index + 1}</td>
+        <td>${results.length - index}</td>
         <td>${escapeHtml(winner.name)}</td>
         <td>${escapeHtml(winner.idCard)}</td>
         <td>${escapeHtml(winner.division || "—")}</td>
         <td>${escapeHtml(giftText)}</td>
     </tr>`;
-    resultBody.insertAdjacentHTML("beforeend", rowHtml);
+    resultBody.insertAdjacentHTML("afterbegin", rowHtml); // Changed to afterbegin to add to top
     
     if (index === 0) {
         resultTable.style.display = "table";
