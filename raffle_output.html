@@ -646,13 +646,14 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 // Set up department filter - UPDATED to maintain drawn state
+// Set up department filter - COMPLETELY REWRITTEN to maintain drawn state
 let currentDepartment = "";
 departmentSelect.addEventListener("change", function() {
     const dept = this.value;
     console.log(`Department selected: "${dept}"`);
     currentDepartment = dept;
     
-    // Get filtered data
+    // Get fresh filtered data from full datasets
     const filtered = filterAllByDepartment(dept);
     
     // Update global arrays with filtered data
@@ -663,6 +664,7 @@ departmentSelect.addEventListener("change", function() {
     console.log("Selected dept:", dept);
     console.log("Filtered participants:", participants.length);
     console.log("Filtered gifts for draw:", giftsForDraw.length);
+    console.log("Available gifts:", giftsForDraw.map(g => g.name));
 
     // Update gallery and counters
     loadGallery(gifts);
@@ -706,37 +708,42 @@ async function previewGift(giftObj) {
     }, 700);
 }
 
-// NEW: Function to remove drawn items from active arrays
+// GLOBAL tracking of ALL drawn items across ALL departments
+let allDrawnParticipants = new Set();
+let allDrawnGifts = new Set();
+
+// NEW: Improved function to remove drawn items from active arrays
 function removeDrawnItems() {
     if (results.length === 0) return;
     
     console.log("🔄 Removing drawn items from active arrays...");
     console.log("Before removal - Participants:", participants.length, "Gifts:", giftsForDraw.length);
+    console.log("Results to remove:", results.map(r => ({name: r.name, gift: r.gift.name})));
     
-    // Remove drawn participants
+    // Add to global drawn sets
     results.forEach(result => {
-        const participantIndex = participants.findIndex(p => 
-            p.name === result.name && p.idCard === result.idCard
-        );
-        if (participantIndex !== -1) {
-            participants.splice(participantIndex, 1);
-            console.log(`❌ Removed participant: ${result.name}`);
-        }
+        const participantKey = `${result.name}-${result.idCard}-${currentDepartment}`;
+        const giftKey = `${result.gift.name}-${currentDepartment}`;
         
-        // Remove drawn gifts
-        const giftIndex = giftsForDraw.findIndex(g => 
-            g.name === result.gift.name
-        );
-        if (giftIndex !== -1) {
-            giftsForDraw.splice(giftIndex, 1);
-            console.log(`❌ Removed gift: ${result.gift.name}`);
-        }
+        allDrawnParticipants.add(participantKey);
+        allDrawnGifts.add(giftKey);
     });
     
+    // Remove drawn participants from current department
+    participants = participants.filter(p => 
+        !allDrawnParticipants.has(`${p.name}-${p.idCard}-${currentDepartment}`)
+    );
+    
+    // Remove drawn gifts from current department
+    giftsForDraw = giftsForDraw.filter(g => 
+        !allDrawnGifts.has(`${g.name}-${currentDepartment}`)
+    );
+    
     console.log("After removal - Participants:", participants.length, "Gifts:", giftsForDraw.length);
+    console.log("Remaining gifts:", giftsForDraw.map(g => g.name));
 }
 
-// CORRECTED Event listener for Start Draw - FIXED table issue
+// COMPLETELY REWRITTEN Event listener for Start Draw
 document.getElementById("startDraw").addEventListener("click", async () => {
     if (!participants.length) {
         alert("No participants available for the selected department.");
@@ -754,7 +761,7 @@ document.getElementById("startDraw").addEventListener("click", async () => {
         return;
     }
 
-    // Use current available gifts
+    // ✅ FIXED: Cannot draw more than available gifts
     const numDraws = Math.min(participants.length, giftsForDraw.length, desiredDraws);
 
     if (numDraws === 0) {
@@ -762,30 +769,34 @@ document.getElementById("startDraw").addEventListener("click", async () => {
         return;
     }
 
-    console.log(`🎯 Starting ${numDraws} draws with ${participants.length} participants and ${giftsForDraw.length} gifts`);
+    console.log(`🎯 Starting ${numDraws} draws with ${participants.length} participants and ${giftsForDraw.length} gifts in ${currentDepartment}`);
 
-    // Shuffle current arrays
+    // ✅ FIXED: Create ONE-TIME shuffle for this draw session
     const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
     const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
+
+    // ✅ FIXED: Take only the number we need for this draw
+    const drawParticipants = shuffledParticipants.slice(0, numDraws);
+    const drawGifts = shuffledGifts.slice(0, numDraws);
 
     results = [];
     for (let i = 0; i < numDraws; i++) {
         results.push({
-            name: shuffledParticipants[i].name,
-            division: shuffledParticipants[i].division,
-            idCard: shuffledParticipants[i].idCard,
-            gift: shuffledGifts[i], 
+            name: drawParticipants[i].name,
+            division: drawParticipants[i].division,
+            idCard: drawParticipants[i].idCard,
+            gift: drawGifts[i], 
         });
     }
 
-    // DON'T clear the table - let it accumulate
-    // resultBody.innerHTML = ""; // REMOVED THIS LINE
+    console.log("🎁 This draw results:", results.map(r => ({name: r.name, gift: r.gift.name})));
+
     index = 0;
 
     giftImageEl.classList.remove("floating"); 
     await runDrawSequence();
 
-    // Actually remove drawn items from active arrays
+    // ✅ FIXED: Actually remove drawn items from active arrays
     removeDrawnItems();
 
     // Update counters with REAL remaining counts
@@ -813,8 +824,7 @@ document.getElementById("homeBtn").addEventListener("click", () => {
 document.getElementById("restartBtn").addEventListener("click", () => {
     results = [];
     index = 0;
-    // Don't clear the result body - keep the history
-    // resultBody.innerHTML = ""; // REMOVED THIS LINE
+    resultBody.innerHTML = ""; // Clear table on restart
     resultTable.style.display = "none";
     winnerCard.style.display = "none";
     
@@ -844,6 +854,10 @@ document.getElementById("restartBtn").addEventListener("click", () => {
         giftsForDraw = [];
     }
     
+    // Reset drawn items tracking
+    allDrawnParticipants.clear();
+    allDrawnGifts.clear();
+    
     // Reset department selector to "All"
     departmentSelect.value = "";
     currentDepartment = "";
@@ -860,7 +874,7 @@ document.getElementById("restartBtn").addEventListener("click", () => {
     console.log("🔄 SYSTEM RESET - All data restored to full datasets");
 });
 
-// UPDATED runDrawSequence function with proper async handling
+// UPDATED runDrawSequence function
 async function runDrawSequence() {
     for (let i = 0; i < results.length; i++) {
         if (i === 0) {
@@ -905,6 +919,7 @@ function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+// UPDATED announceWinnerSequence with proper row numbering
 async function announceWinnerSequence() {
     const winner = results[index];
     if (!winner) return;
@@ -934,16 +949,18 @@ async function announceWinnerSequence() {
         confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
     }
 
+    // ✅ FIXED: Proper row numbering based on total rows + 1
+    const currentRowCount = resultBody.querySelectorAll('tr').length;
     const rowHtml = `<tr>
-        <td>${results.length - index}</td>
+        <td>${currentRowCount + 1}</td>
         <td>${escapeHtml(winner.name)}</td>
         <td>${escapeHtml(winner.idCard)}</td>
         <td>${escapeHtml(winner.division || "—")}</td>
         <td>${escapeHtml(giftText)}</td>
     </tr>`;
-    resultBody.insertAdjacentHTML("afterbegin", rowHtml); // Changed to afterbegin to add to top
+    resultBody.insertAdjacentHTML("beforeend", rowHtml);
     
-    if (index === 0) {
+    if (currentRowCount === 0) {
         resultTable.style.display = "table";
     }
     
