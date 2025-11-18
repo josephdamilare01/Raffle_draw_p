@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <style>
-        /* ALL YOUR EXISTING CSS REMAINS EXACTLY THE SAME */
+        /* Your existing CSS remains the same */
         :root {
             --accent1: #00c6ff;
             --accent2: #0072ff;
@@ -60,6 +60,7 @@
             flex-direction: column;
         }
 
+        /* Table container (kept for structure, but table itself is hidden) */
         .left {
             background: rgba(255, 255, 255, 0.05);
             padding: 18px;
@@ -95,14 +96,14 @@
             font-weight: 600;
         }
 
+        /* ➡️ IMPROVEMENT 1: Increased max-width for prominence */
         .winner-card {
-            width: 900%;
-            max-width: 500px; 
-            max-height: 300px;
+            width: 100%;
+            max-width: 800px; 
             background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
             color: #000;
             border-radius: 16px;
-            padding: 20px;
+            padding: 24px;
             box-shadow: 0 12px 30px rgba(0,0,0,0.35);
             position: relative;
             overflow: visible;
@@ -133,9 +134,10 @@
             color: #e63946;
         }
 
+        /* ➡️ IMPROVEMENT 2: Increased size for gift image */
         .gift-image-wrap {
             margin-top: 20px;
-            height: 100px; 
+            height: 250px; 
             display:flex;
             justify-content:center;
             align-items:center;
@@ -144,25 +146,28 @@
         }
 
         .gift-image {
-            max-height: 100px;
-            max-width: 100px;
+            max-height: 240px; /* Increased max height */
+            max-width: 400px; /* Increased max width */
             border-radius: 12px;
             box-shadow: 0 16px 40px rgba(0,0,0,0.35);
             transform-origin: center;
             opacity: 0;
         }
 
+        /* animation for image entering */
         @keyframes moveIn {
-            0% { transform: translateY(40px) scale(0.9) rotate(-6deg) !important; opacity: 0; }
-            60% { transform: translateY(-6px) scale(1.04) rotate(2deg) !important; opacity: 1; }
+            0% { transform: translateY(40px) scale(0.9) rotate(-6deg); opacity: 0; }
+            60% { transform: translateY(-6px) scale(1.04) rotate(2deg); opacity: 1; }
             100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
         }
 
+        /* animation for image leaving */
         @keyframes moveOut {
-            0% { transform: translateY(0) scale(1) rotate(0deg) !important; opacity: 1; }
-            100% { transform: translateY(-10px) scale(0.9) rotate(6deg) !important; opacity: 0; }
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-40px) scale(0.9) rotate(6deg); opacity: 0; }
         }
 
+        /* NEW: Animation for continuous subtle floating */
         @keyframes floatHorizontal {
             0% { transform: translateX(0px); }
             50% { transform: translateX(8px); }
@@ -170,13 +175,13 @@
         }
 
         .entering {
-            animation: moveIn 1500ms ease forwards;
+            animation: moveIn 700ms ease forwards;
         }
         .leaving {
-            animation: moveOut 1200ms ease forwards;
+            animation: moveOut 500ms ease forwards;
         }
-        .floating {
-            animation: floatHorizontal 6s ease-in-out infinite;
+        .floating { /* NEW class for continuous floating */
+            animation: floatHorizontal 4s ease-in-out infinite;
         }
 
         @keyframes popIn {
@@ -259,106 +264,34 @@
             letter-spacing: 2px;
         }
 
-        /* NEW: Carousel Styles */
-        .carousel-container {
-            margin: 20px auto;
-            width: 95%;
-            max-width: 1200px;
-        }
-
-        .carousel {
-            width: 100%;
+        /* department gallery */
+        .department-gallery {
+            margin: 12px 0 8px;
             display: flex;
-            overflow-x: auto;
-            gap: 1em;
-            padding: 10px 0;
-            scroll-behavior: smooth;
-        }
-
-        .carousel::-webkit-scrollbar{
-            display: none;
-        }
-
-        .carousel-group {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 1em;
-            animation: spin 100s infinite linear;
-            padding-right: 1em;
-        }
-
-        .carousel-card {
-            flex: 0 0 auto;
-            width: 300px;
-            height: 350px;
-            padding: 0.5em;
-            background: linear-gradient(135deg, var(--accent1), var(--accent2));
-            border-radius: 12px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            gap: 12px;
             justify-content: center;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
+            flex-wrap: wrap;
+            min-height: 90px;
         }
 
-        .carousel-card:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
-        }
-
-        .carousel-image {
-            width: 100%;
-            height: 300px;
+        .gallery-thumb {
+            width: 200px;
+            height: 100px;
+            border-radius: 10px;
             object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 5px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+            transform-origin:center;
+            cursor: pointer; /* Added cursor for better UX */
+            animation: float 4s ease-in-out infinite;
         }
 
-        .carousel-text {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 180px;
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+            100% { transform: translateY(0) rotate(0deg); }
         }
 
-        @keyframes spin {
-            from { transform: translateX(0); }
-            to { transform: translateX(-50%); }
-        }
-
-        .carousel:hover .carousel-group {
-            animation-play-state: paused;
-        }
-
-        .carousel-controls {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .carousel-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .carousel-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
+        /* --- NLNG Logo Styling --- */
         .logo {
             position: absolute;
             top: 20px;
@@ -380,7 +313,6 @@
             transform: scale(1.05);
             filter: drop-shadow(0 0 8px var(--nlng-yellow));
         }
-
         @keyframes popUp {
             0% { transform: translate(-50%, -60%) scale(0.7); opacity: 0; }
             60% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
@@ -391,35 +323,9 @@
             0% { opacity: 1; }
             100% { opacity: 0; display: none; }
         }
-
-        .department-gallery {
-            margin: 12px 0 8px;
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-            min-height: 90px;
-        }
-
-        .gallery-thumb {
-            width: 200px;
-            height: 100px;
-            border-radius: 10px;
-            object-fit: cover;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
-            transform-origin:center;
-            cursor: pointer;
-            animation: float 4s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(1deg); }
-            100% { transform: translateY(0) rotate(0deg); }
-        }
     </style>
 </head>
-<body>
+ <body>
 
 <div class="logo">
     <img src="nlng-logo.png" alt="NLNG Logo">
@@ -455,23 +361,8 @@
         </div>
 
         <div class="left">
-            <h3>🎁 Department Gifts </h3>
-            
-            <!-- NEW: Carousel Container -->
-            <div class="carousel-container">
-                <div class="carousel" id="giftCarousel">
-                    <div class="carousel-group" id="carouselGroup">
-                        <!-- Carousel items will be dynamically added here -->
-                    </div>
-                </div>
-                <div class="carousel-controls">
-                    <button class="carousel-btn" onclick="pauseCarousel()">⏸️ Pause</button>
-                    <button class="carousel-btn" onclick="playCarousel()">▶️ Play</button>
-                </div>
-            </div>
-
-            <!-- Keeping the original gallery hidden -->
-            <div id="gallery" class="department-gallery" aria-live="polite" style="display:none;"></div>
+            <h3>🎁 Department Gifts (Total Gifts Available: <span id="totalGiftsDisplay">0</span>)</h3>
+            <div id="gallery" class="department-gallery" aria-live="polite"></div>
 
             <h3 style="margin-top:18px;">🎁 Winners Table (Hidden for Focus)</h3>
             <table id="resultTable" aria-live="polite" style="display:none;">
@@ -490,7 +381,6 @@
     </div>
 
     <div id="loader">10</div>
-
 <script>
     // --- Start of Hardcoded Gift Data (USED ONLY FOR DISPLAY/PREVIEW SELECTOR) ---
     const giftsHardcoded = [
@@ -522,19 +412,19 @@
         { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR", department: "CSS Partners", image: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
         { name: "century digital torch screen dual window air fryer caf-8340-c 10l", department: "CSS Partners", image: "century digital torch screen dual window air fryer caf-8340-c 10l.jpg" },
 
-        // PM Department Gifts
+    // PM Department Gifts
         { name: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts", department: "NST Partners", image: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts.jpg" },
         { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "NST Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
 
-        // PM Department Gifts
+            // PM Department Gifts
         { name: "Hisense 1HP Split Copper Inverter AC", department: "CMO Partners", image: "Hisense 1HP Split Copper Inverter AC.png" },
         { name: "rice", department: "CMO Partners", image: "rice.png" },
 
-        // PM Department Gifts
+            // PM Department Gifts
         { name: "Hisense 1HP Split Copper Inverter AC", department: "PI, IMT, PS & PG Partners", image: "Hisense 1HP Split Copper Inverter AC.jpg" },
         { name: "rice", department: "PI, IMT, PS & PG Partners", image: "rice.jpg" },
 
-        // PM Department Gifts
+            // PM Department Gifts
         { name: "Microwave", department: "HR, RAIS & CLUB Partners", image: "microwave.jpg" },
         { name: "rice", department: "HR, RAIS & CLUB Partners", image: "rice.jpg" },
 
@@ -553,507 +443,488 @@
         // PM Department Gifts
         { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "General Draws", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
         { name: "hisense 20 litres microwave (h20mows14)", department: "General Draws", image: "hisense 20 litres microwave (h20mows14).jpg" },
+
     ];
 
-    let fullParticipants = [];
-    let fullGifts = [];
-    let participants = [];
-    let gifts = giftsHardcoded;
-    let giftsForDraw = [];
-    let results = [];
-    let index = 0;
-    let currentDepartment = "";
 
-    // DOM elements
-    const resultBody = document.querySelector("#resultTable tbody");
-    const winnerCard = document.getElementById("winnerCard");
-    const winnerNameEl = document.getElementById("winnerName");
-    const divisionNameEl = document.getElementById("divisionName");
-    const giftNameEl = document.getElementById("giftName");
-    const idNumberEl = document.getElementById("idNumber");
-    const loader = document.getElementById("loader");
-    const giftImageEl = document.getElementById("giftImage");
-    const resultTable = document.getElementById("resultTable");
-    const gallery = document.getElementById("gallery");
-    const departmentSelect = document.getElementById("departmentSelect");
-    const maxDrawsInput = document.getElementById("maxDrawsInput");
-    const totalGiftsDisplay = document.getElementById("totalGiftsDisplay");
+let fullParticipants = [];
+let fullGifts = [];
+let participants = [];
+let gifts = giftsHardcoded; // For display/preview
+let giftsForDraw = [];      // For drawing (loaded from localStorage)
+let results = [];
+let index = 0;
+let currentDepartment = ""; // SIMPLIFIED: No complex tracking sets
 
-    // NEW: Carousel functions - MOVED OUTSIDE EVENT LISTENERS
-    function loadCarousel(giftsArray) {
-        const carouselGroup = document.getElementById('carouselGroup');
-        carouselGroup.innerHTML = '';
-        
-        if (!giftsArray || giftsArray.length === 0) {
-            carouselGroup.innerHTML = '<div style="color:#ddd;padding:20px;width:100%;text-align:center;">No gifts available for this department.</div>';
-            return;
-        }
+// DOM elements
+const resultBody = document.querySelector("#resultTable tbody");
+const winnerCard = document.getElementById("winnerCard");
+const winnerNameEl = document.getElementById("winnerName");
+const divisionNameEl = document.getElementById("divisionName");
+const giftNameEl = document.getElementById("giftName");
+const idNumberEl = document.getElementById("idNumber");
+const loader = document.getElementById("loader");
+const giftImageEl = document.getElementById("giftImage");
+const resultTable = document.getElementById("resultTable");
+const gallery = document.getElementById("gallery");
+const departmentSelect = document.getElementById("departmentSelect");
+const maxDrawsInput = document.getElementById("maxDrawsInput");
+const totalGiftsDisplay = document.getElementById("totalGiftsDisplay");
 
-        // Duplicate the gifts to create seamless infinite scroll
-        const duplicatedGifts = [...giftsArray, ...giftsArray];
-        
-        duplicatedGifts.forEach(g => {
-            const carouselCard = document.createElement('div');
-            carouselCard.className = 'carousel-card';
-            carouselCard.title = g.name;
-            carouselCard.addEventListener('click', () => {
-                previewGift(g);
-            });
-
-            const img = document.createElement('img');
-            img.className = 'carousel-image';
-            img.alt = g.name || "gift";
-            
-            if (g.image && g.image.trim()) {
-                img.src = g.image;
-            } else {
-                img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="120"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="#004aad" textLength="180" lengthAdjust="spacingAndGlyphs">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
-            }
-
-            const text = document.createElement('div');
-            text.className = 'carousel-text';
-            text.textContent = g.name || 'Gift';
-
-            carouselCard.appendChild(img);
-            carouselCard.appendChild(text);
-            carouselGroup.appendChild(carouselCard);
-        });
-    }
-
-    function pauseCarousel() {
-        const carouselGroup = document.getElementById('carouselGroup');
-        carouselGroup.style.animationPlayState = 'paused';
-    }
-
-    function playCarousel() {
-        const carouselGroup = document.getElementById('carouselGroup');
-        carouselGroup.style.animationPlayState = 'running';
-    }
-
-    // ALL YOUR EXISTING FUNCTIONS REMAIN EXACTLY THE SAME
-    function populateDepartmentSelector() {
-        const select = document.getElementById("departmentSelect");
-        select.innerHTML = '<option value="">Select Department (All)</option>';
-        
-        const hardcodedDepts = [...new Set(giftsHardcoded.map(g => g.department))];
-        const participantDepts = [...new Set(fullParticipants.map(p => p.department))];
-        const giftDepts = [...new Set(fullGifts.map(g => g.department))];
-        
-        const allDepartments = [...new Set([...hardcodedDepts, ...participantDepts, ...giftDepts])].filter(dept => dept && dept.trim() !== "");
-        
-        allDepartments.sort().forEach(dep => {
-            const option = document.createElement("option");
-            option.value = dep;
-            option.textContent = dep;
-            select.appendChild(option);
-        });
-    }
-
-    function loadGallery(giftsArray) {
-        gallery.innerHTML = "";
-        
-        if (!giftsArray || giftsArray.length === 0) {
-            gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts available for this department.</div>';
-            return;
-        }
-
-        giftsArray.forEach(g => {
-            const img = document.createElement("img");
-            img.className = "gallery-thumb";
-            img.alt = g.name || "gift";
-            
-            if (g.image && g.image.trim()) {
-                img.src = g.image;
-            } else {
-                img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
-            }
-            
-            img.title = g.name;
-            img.addEventListener('click', () => {
-                previewGift(g);
-            });
-
-            gallery.appendChild(img);
-        });
-    }
-
-    function filterAllByDepartment(dept) {
-        if (!dept || dept.trim() === "") {
-            return {
-                participants: fullParticipants,
-                giftsForDraw: fullGifts,
-                hardcodedGifts: giftsHardcoded
-            };
-        }
-
-        const deptLower = dept.trim().toLowerCase();
-        
-        const filteredParticipants = fullParticipants.filter(p => {
-            const participantDept = String(p.department || "").toLowerCase().trim();
-            return participantDept === deptLower;
-        });
-        
-        const filteredGiftsForDraw = fullGifts.filter(g => {
-            const giftDept = String(g.department || "").toLowerCase().trim();
-            return giftDept === deptLower;
-        });
-        
-        const filteredHardcodedGifts = giftsHardcoded.filter(g => {
-            const hardcodedDept = String(g.department || "").toLowerCase().trim();
-            return hardcodedDept === deptLower;
-        });
-
-        return {
-            participants: filteredParticipants,
-            giftsForDraw: filteredGiftsForDraw,
-            hardcodedGifts: filteredHardcodedGifts
-        };
-    }
-
-    function normalizeParticipantData(participant) {
-        let department = participant.department || participant.Department || 
-                        participant.division || participant.Division || "General";
-        department = department.toString().trim();
-        
-        return {
-            name: participant.name || participant.Name || participant.Participant || "Unnamed",
-            division: participant.division || participant.Division || department || "—",
-            idCard: participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
-            department: department
-        };
-    }
-
-    function normalizeGiftData(gift) {
-        let department = gift.department || gift.Department || 
-                        gift.division || gift.Division || "General";
-        department = department.toString().trim();
-        
-        return {
-            name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
-            department: department,
-            image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
-        };
-    }
-
-    function updateRemainingGiftsDisplay() {
-        let remainingGiftsContainer = document.getElementById('remainingGiftsList');
-        if (!remainingGiftsContainer) {
-            remainingGiftsContainer = document.createElement('div');
-            remainingGiftsContainer.id = 'remainingGiftsList';
-            remainingGiftsContainer.style.marginTop = '10px';
-            remainingGiftsContainer.style.padding = '10px';
-            remainingGiftsContainer.style.background = 'rgba(255,255,255,0.1)';
-            remainingGiftsContainer.style.borderRadius = '8px';
-            remainingGiftsContainer.style.maxHeight = '200px';
-            remainingGiftsContainer.style.overflowY = 'auto';
-            document.querySelector('.left').appendChild(remainingGiftsContainer);
-        }
-        
-        if (giftsForDraw.length === 0) {
-            remainingGiftsContainer.innerHTML = '<div style="color:#ff6b6b;font-weight:bold;">🎉 All gifts have been drawn for this department!</div>';
-        } else {
-            remainingGiftsContainer.innerHTML = `<div style="color:#00ff80;margin-bottom:8px;font-weight:bold;">Remaining Gifts (${giftsForDraw.length}):</div>
-                <div style="text-align:left;font-size:0.9rem;">${giftsForDraw.map((g, i) => 
-                    `${i + 1}. ${g.name}`
-                ).join('<br>')}</div>`;
-        }
-    }
-    // Initialize the page
-    window.addEventListener("DOMContentLoaded", () => {
-        const savedParticipants = localStorage.getItem("participantsData");
-        const savedGifts = localStorage.getItem("giftsData");
-
-        // Load participants
-        if (savedParticipants) {
-            const parsedParticipants = JSON.parse(savedParticipants);
-            fullParticipants = parsedParticipants.map(normalizeParticipantData);
-        } else {
-            alert("⚠️ Please upload participants on the admin page first.");
-        }
-
-        // Load gifts for draw
-        if (savedGifts) {
-            const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(normalizeGiftData);
-        } else {
-            alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
-        }
-
-        // Initialize UI - USING CAROUSEL NOW
-        populateDepartmentSelector();
-        loadCarousel(giftsHardcoded);
-        
-        // Set initial department to "All"
-        departmentSelect.dispatchEvent(new Event('change'));
+// Function to populate department selector with ALL available departments
+function populateDepartmentSelector() {
+    const select = document.getElementById("departmentSelect");
+    select.innerHTML = '<option value="">Select Department (All)</option>';
+    
+    // Get unique departments from ALL sources
+    const hardcodedDepts = [...new Set(giftsHardcoded.map(g => g.department))];
+    const participantDepts = [...new Set(fullParticipants.map(p => p.department))];
+    const giftDepts = [...new Set(fullGifts.map(g => g.department))];
+    
+    // Combine all departments and remove duplicates
+    const allDepartments = [...new Set([...hardcodedDepts, ...participantDepts, ...giftDepts])].filter(dept => dept && dept.trim() !== "");
+    
+    allDepartments.sort().forEach(dep => {
+        const option = document.createElement("option");
+        option.value = dep;
+        option.textContent = dep;
+        select.appendChild(option);
     });
 
-    // Department filter - UPDATED TO USE CAROUSEL
-    departmentSelect.addEventListener("change", function() {
-        const dept = this.value;
-        currentDepartment = dept;
-        
-        // Get filtered data
-        const filtered = filterAllByDepartment(dept);
-        
-        // Update arrays
-        participants = [...filtered.participants];
-        giftsForDraw = [...filtered.giftsForDraw];
-        gifts = [...filtered.hardcodedGifts];
+    console.log("Available departments:", allDepartments);
+}
 
-        // Update UI - USING CAROUSEL NOW
-        loadCarousel(gifts);
-        totalGiftsDisplay.textContent = giftsForDraw.length;
-        maxDrawsInput.max = giftsForDraw.length;
-        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+// Function to load gallery
+function loadGallery(giftsArray) {
+    gallery.innerHTML = "";
+    
+    if (!giftsArray || giftsArray.length === 0) {
+        gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts available for this department.</div>';
+        return;
+    }
+
+    giftsArray.forEach(g => {
+        const img = document.createElement("img");
+        img.className = "gallery-thumb";
+        img.alt = g.name || "gift";
         
-        updateRemainingGiftsDisplay();
+        if (g.image && g.image.trim()) {
+            img.src = g.image;
+        } else {
+            img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
+        }
+        
+        img.title = g.name;
+        img.addEventListener('click', () => {
+            previewGift(g);
+        });
+
+        gallery.appendChild(img);
+    });
+}
+
+// Function to filter all data by department - STRICT FILTERING
+function filterAllByDepartment(dept) {
+    if (!dept || dept.trim() === "") {
+        console.log("Showing ALL departments");
+        return {
+            participants: fullParticipants,
+            giftsForDraw: fullGifts,
+            hardcodedGifts: giftsHardcoded
+        };
+    }
+
+    const deptLower = dept.trim().toLowerCase();
+    
+    console.log(`🔍 STRICT FILTERING for department: "${dept}"`);
+    
+    // STRICT filtering - exact department match only
+    const filteredParticipants = fullParticipants.filter(p => {
+        const participantDept = String(p.department || "").toLowerCase().trim();
+        return participantDept === deptLower;
+    });
+    
+    const filteredGiftsForDraw = fullGifts.filter(g => {
+        const giftDept = String(g.department || "").toLowerCase().trim();
+        return giftDept === deptLower;
+    });
+    
+    const filteredHardcodedGifts = giftsHardcoded.filter(g => {
+        const hardcodedDept = String(g.department || "").toLowerCase().trim();
+        return hardcodedDept === deptLower;
     });
 
-    // ALL YOUR EXISTING DRAWING FUNCTIONS REMAIN EXACTLY THE SAME
-    async function previewGift(giftObj) {
-        winnerCard.style.display = "block";
-        winnerNameEl.textContent = "🎁 Gift Preview";
-        idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
-        divisionNameEl.textContent = "Click 'Start Draw' to begin!";
-        giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+    console.log(`📊 Filtered results for "${dept}":`);
+    console.log(`   👥 Participants: ${filteredParticipants.length}`);
+    console.log(`   🎁 Gifts for draw: ${filteredGiftsForDraw.length}`);
+    console.log(`   🖼️  Hardcoded gifts: ${filteredHardcodedGifts.length}`);
 
-        const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
-            ? giftObj.image 
-            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
-        
-        if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
+    return {
+        participants: filteredParticipants,
+        giftsForDraw: filteredGiftsForDraw,
+        hardcodedGifts: filteredHardcodedGifts
+    };
+}
+
+// Improved data normalization function
+function normalizeParticipantData(participant) {
+    // Clean up department name
+    let department = participant.department || participant.Department || 
+                    participant.division || participant.Division || "General";
+    department = department.toString().trim();
+    
+    return {
+        name: participant.name || participant.Name || participant.Participant || "Unnamed",
+        division: participant.division || participant.Division || department || "—",
+        idCard: participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
+        department: department
+    };
+}
+
+function normalizeGiftData(gift) {
+    // Clean up department name
+    let department = gift.department || gift.Department || 
+                    gift.division || gift.Division || "General";
+    department = department.toString().trim();
+    
+    return {
+        name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
+        department: department,
+        image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
+    };
+}
+
+// NEW: Function to update remaining gifts display
+function updateRemainingGiftsDisplay() {
+    let remainingGiftsContainer = document.getElementById('remainingGiftsList');
+    if (!remainingGiftsContainer) {
+        // Create the container if it doesn't exist
+        remainingGiftsContainer = document.createElement('div');
+        remainingGiftsContainer.id = 'remainingGiftsList';
+        remainingGiftsContainer.style.marginTop = '10px';
+        remainingGiftsContainer.style.padding = '10px';
+        remainingGiftsContainer.style.background = 'rgba(255,255,255,0.1)';
+        remainingGiftsContainer.style.borderRadius = '8px';
+        remainingGiftsContainer.style.maxHeight = '200px';
+        remainingGiftsContainer.style.overflowY = 'auto';
+        document.querySelector('.left').appendChild(remainingGiftsContainer);
+    }
+    
+    if (giftsForDraw.length === 0) {
+        remainingGiftsContainer.innerHTML = '<div style="color:#ff6b6b;font-weight:bold;">🎉 All gifts have been drawn for this department!</div>';
+    } else {
+        remainingGiftsContainer.innerHTML = `<div style="color:#00ff80;margin-bottom:8px;font-weight:bold;">Remaining Gifts (${giftsForDraw.length}):</div>
+            <div style="text-align:left;font-size:0.9rem;">${giftsForDraw.map((g, i) => 
+                `${i + 1}. ${g.name}`
+            ).join('<br>')}</div>`;
+    }
+}
+
+// SIMPLIFIED: Initialize the page
+window.addEventListener("DOMContentLoaded", () => {
+    const savedParticipants = localStorage.getItem("participantsData");
+    const savedGifts = localStorage.getItem("giftsData");
+
+    console.log("🚀 INITIALIZING PAGE...");
+
+    // Load participants
+    if (savedParticipants) {
+        const parsedParticipants = JSON.parse(savedParticipants);
+        fullParticipants = parsedParticipants.map(normalizeParticipantData);
+        console.log("Loaded participants:", fullParticipants.length);
+    } else {
+        alert("⚠️ Please upload participants on the admin page first.");
+    }
+
+    // Load gifts for draw
+    if (savedGifts) {
+        const parsedGifts = JSON.parse(savedGifts);
+        fullGifts = parsedGifts.map(normalizeGiftData);
+        console.log("Loaded gifts for draw:", fullGifts.length);
+    } else {
+        alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
+    }
+
+    // Initialize UI
+    populateDepartmentSelector();
+    loadGallery(giftsHardcoded);
+    
+    // Set initial department to "All"
+    departmentSelect.dispatchEvent(new Event('change'));
+});
+
+// SIMPLIFIED department filter
+departmentSelect.addEventListener("change", function() {
+    const dept = this.value;
+    console.log(`🎯 Department selected: "${dept}"`);
+    currentDepartment = dept;
+    
+    // Get filtered data
+    const filtered = filterAllByDepartment(dept);
+    
+    // SIMPLIFIED: Just use the filtered data directly
+    participants = [...filtered.participants];
+    giftsForDraw = [...filtered.giftsForDraw];
+    gifts = [...filtered.hardcodedGifts];
+
+    console.log(`📊 Available for "${dept}":`);
+    console.log(`   👥 Participants: ${participants.length}`);
+    console.log(`   🎁 Gifts: ${giftsForDraw.length}`);
+
+    // Update UI
+    loadGallery(gifts);
+    totalGiftsDisplay.textContent = giftsForDraw.length;
+    maxDrawsInput.max = giftsForDraw.length;
+    maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+    
+    updateRemainingGiftsDisplay();
+});
+
+// Function to Preview a Gift
+async function previewGift(giftObj) {
+    winnerCard.style.display = "block";
+    winnerNameEl.textContent = "🎁 Gift Preview";
+    idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
+    divisionNameEl.textContent = "Click 'Start Draw' to begin!";
+    giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+
+    const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
+        ? giftObj.image 
+        : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
+    
+    // Animation handling
+    if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
+        giftImageEl.classList.remove("entering", "floating");
+        giftImageEl.classList.add("leaving");
+        await sleep(500);
+    } else if (giftImageEl.classList.contains("leaving")) {
+        await sleep(500);
+    }
+
+    giftImageEl.src = giftImageSrc;
+    giftImageEl.classList.remove("leaving");
+    void giftImageEl.offsetWidth;
+    giftImageEl.classList.add("entering");
+
+    setTimeout(() => {
+        giftImageEl.classList.remove("entering");
+        giftImageEl.classList.add("floating");
+    }, 700);
+}
+
+// ULTIMATE PROTECTION: Simplified drawing logic
+document.getElementById("startDraw").addEventListener("click", async () => {
+    if (!participants.length) {
+        alert("No participants available for the selected department.");
+        return;
+    }
+    
+    if (!giftsForDraw.length) {
+        alert("No gifts available for drawing in the selected department.");
+        return;
+    }
+
+    const desiredDraws = parseInt(maxDrawsInput.value, 10);
+    if (isNaN(desiredDraws) || desiredDraws < 1) {
+        alert("Please enter a valid number of draws (1 or more).");
+        return;
+    }
+
+    // CRITICAL: Never draw more than available gifts
+    const numDraws = Math.min(participants.length, giftsForDraw.length, desiredDraws);
+
+    if (numDraws === 0) {
+        alert("Cannot run draw. Check participant count and gift count.");
+        return;
+    }
+
+    console.log(`🎯 Drawing ${numDraws} from ${participants.length} participants with ${giftsForDraw.length} gifts`);
+
+    // ULTIMATE PROTECTION: One shuffle, take exactly what's available
+    const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
+    const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
+
+    results = [];
+    const giftsToRemove = [];
+    
+    for (let i = 0; i < numDraws; i++) {
+        results.push({
+            name: shuffledParticipants[i].name,
+            division: shuffledParticipants[i].division,
+            idCard: shuffledParticipants[i].idCard,
+            gift: shuffledGifts[i], 
+        });
+        giftsToRemove.push(shuffledGifts[i].name);
+    }
+
+    console.log("🎁 Draw results:", results);
+
+    // CRITICAL: REMOVE DRAWN GIFTS FROM ALL ARRAYS
+    giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
+    fullGifts = fullGifts.filter(gift => 
+        !(giftsToRemove.includes(gift.name) && gift.department === currentDepartment)
+    );
+
+    index = 0;
+    giftImageEl.classList.remove("floating"); 
+    await runDrawSequence();
+
+    // Update counters
+    totalGiftsDisplay.textContent = giftsForDraw.length;
+    maxDrawsInput.max = giftsForDraw.length;
+    maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+    updateRemainingGiftsDisplay();
+
+    console.log(`✅ Draw completed. Remaining: ${giftsForDraw.length} gifts`);
+    
+    if (giftsForDraw.length === 0) {
+        setTimeout(() => {
+            alert(`🎉 All gifts for ${currentDepartment} have been drawn!`);
+        }, 1000);
+    }
+});
+
+// SIMPLIFIED restart function
+document.getElementById("restartBtn").addEventListener("click", () => {
+    // Clear UI
+    results = [];
+    index = 0;
+    resultBody.innerHTML = "";
+    resultTable.style.display = "none";
+    winnerCard.style.display = "none";
+    
+    giftImageEl.src = "";
+    giftImageEl.classList.remove("entering", "leaving", "floating");
+
+    winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
+    idNumberEl.textContent = "🪪 ID Card Number";
+    divisionNameEl.textContent = "🏢 Division";
+    giftNameEl.textContent = "🎁 Gift Name";
+
+    // Reload original data from localStorage
+    const savedParticipants = localStorage.getItem("participantsData");
+    const savedGifts = localStorage.getItem("giftsData"); 
+    
+    if (savedParticipants) {
+        const parsedParticipants = JSON.parse(savedParticipants);
+        fullParticipants = parsedParticipants.map(normalizeParticipantData);
+    }
+    
+    if (savedGifts) {
+        const parsedGifts = JSON.parse(savedGifts);
+        fullGifts = parsedGifts.map(normalizeGiftData);
+    }
+    
+    // Reset department selector
+    departmentSelect.value = "";
+    currentDepartment = "";
+    
+    // Refresh UI
+    departmentSelect.dispatchEvent(new Event('change'));
+    
+    console.log("🔄 SYSTEM RESET - All data restored");
+});
+
+document.getElementById("homeBtn").addEventListener("click", () => {
+    window.location.href = "/index.html";
+});
+
+// UPDATED runDrawSequence function
+async function runDrawSequence() {
+    for (let i = 0; i < results.length; i++) {
+        if (i === 0) {
+            await startCountdown(10);
+        } else {
             giftImageEl.classList.remove("entering", "floating");
             giftImageEl.classList.add("leaving");
             await sleep(500);
-        } else if (giftImageEl.classList.contains("leaving")) {
-            await sleep(500);
+            winnerCard.style.display = "none";
         }
-
-        giftImageEl.src = giftImageSrc;
-        giftImageEl.classList.remove("leaving");
-        void giftImageEl.offsetWidth;
-        giftImageEl.classList.add("entering");
-
-        setTimeout(() => {
-            giftImageEl.classList.remove("entering");
-            giftImageEl.classList.add("floating");
-        }, 700);
+        await announceWinnerSequence();
     }
 
-    document.getElementById("startDraw").addEventListener("click", async () => {
-        if (!participants.length) {
-            alert("No participants available for the selected department.");
-            return;
-        }
-        
-        if (!giftsForDraw.length) {
-            alert("No gifts available for drawing in the selected department.");
-            return;
-        }
+    const doneMsg = document.getElementById("doneMessage");
+    doneMsg.style.display = "block";
 
-        const desiredDraws = parseInt(maxDrawsInput.value, 10);
-        if (isNaN(desiredDraws) || desiredDraws < 1) {
-            alert("Please enter a valid number of draws (1 or more).");
-            return;
-        }
+    if (typeof confetti === "function") {
+        confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
+    }
+}
 
-        const numDraws = Math.min(participants.length, giftsForDraw.length, desiredDraws);
+function startCountdown(seconds) {
+    return new Promise((resolve) => {
+        let count = seconds;
+        loader.textContent = count;
+        loader.style.display = "flex";
 
-        if (numDraws === 0) {
-            alert("Cannot run draw. Check participant count and gift count.");
-            return;
-        }
-
-        const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-        const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
-
-        results = [];
-        const giftsToRemove = [];
-        
-        for (let i = 0; i < numDraws; i++) {
-            results.push({
-                name: shuffledParticipants[i].name,
-                division: shuffledParticipants[i].division,
-                idCard: shuffledParticipants[i].idCard,
-                gift: shuffledGifts[i], 
-            });
-            giftsToRemove.push(shuffledGifts[i].name);
-        }
-
-        giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
-        fullGifts = fullGifts.filter(gift => 
-            !(giftsToRemove.includes(gift.name) && gift.department === currentDepartment)
-        );
-
-        index = 0;
-        giftImageEl.classList.remove("floating"); 
-        await runDrawSequence();
-
-        totalGiftsDisplay.textContent = giftsForDraw.length;
-        maxDrawsInput.max = giftsForDraw.length;
-        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-        updateRemainingGiftsDisplay();
-        
-        if (giftsForDraw.length === 0) {
-            setTimeout(() => {
-                alert(`🎉 All gifts for ${currentDepartment} have been drawn!`);
-            }, 1000);
-        }
-    });
-
-    // ALL OTHER EXISTING FUNCTIONS REMAIN EXACTLY THE SAME...
-    document.getElementById("restartBtn").addEventListener("click", () => {
-        results = [];
-        index = 0;
-        resultBody.innerHTML = "";
-        resultTable.style.display = "none";
-        winnerCard.style.display = "none";
-        
-        giftImageEl.src = "";
-        giftImageEl.classList.remove("entering", "leaving", "floating");
-
-        winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
-        idNumberEl.textContent = "🪪 ID Card Number";
-        divisionNameEl.textContent = "🏢 Division";
-        giftNameEl.textContent = "🎁 Gift Name";
-
-        const savedParticipants = localStorage.getItem("participantsData");
-        const savedGifts = localStorage.getItem("giftsData"); 
-        
-        if (savedParticipants) {
-            const parsedParticipants = JSON.parse(savedParticipants);
-            fullParticipants = parsedParticipants.map(normalizeParticipantData);
-        }
-        
-        if (savedGifts) {
-            const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(normalizeGiftData);
-        }
-        
-        departmentSelect.value = "";
-        currentDepartment = "";
-        
-        departmentSelect.dispatchEvent(new Event('change'));
-    });
-
-    document.getElementById("homeBtn").addEventListener("click", () => {
-        window.location.href = "/index.html";
-    });
-
-    async function runDrawSequence() {
-        for (let i = 0; i < results.length; i++) {
-            if (i === 0) {
-                await startCountdown(10);
+        const timer = setInterval(() => {
+            count--;
+            if (count > 0) {
+                loader.textContent = count;
             } else {
-                giftImageEl.classList.remove("entering", "floating");
-                giftImageEl.classList.add("leaving");
-                await sleep(500);
-                winnerCard.style.display = "none";
+                clearInterval(timer);
+                loader.style.display = "none";
+                resolve();
             }
-            await announceWinnerSequence();
-        }
+        }, 1000);
+    });
+}
 
-        const doneMsg = document.getElementById("doneMessage");
-        doneMsg.style.display = "block";
+function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-        if (typeof confetti === "function") {
-            confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
-        }
+async function announceWinnerSequence() {
+    const winner = results[index];
+    if (!winner) return;
+
+    const giftObj = winner.gift;
+    const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
+    
+    const displayGift = gifts.find(g => g.name === giftText);
+
+    winnerNameEl.textContent = `🏆 ${winner.name}`;
+    idNumberEl.textContent = `🪪 ${winner.idCard}`;
+    divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
+    giftNameEl.textContent = `🎁 ${giftText}`;
+
+    const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
+        ? displayGift.image 
+        : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
+    
+    giftImageEl.src = imageSource;
+    winnerCard.style.display = "block";
+    
+    giftImageEl.classList.remove("leaving", "floating");
+    void giftImageEl.offsetWidth;
+    giftImageEl.classList.add("entering");
+
+    if (typeof confetti === "function") {
+        confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
     }
 
-    function startCountdown(seconds) {
-        return new Promise((resolve) => {
-            let count = seconds;
-            loader.textContent = count;
-            loader.style.display = "flex";
-
-            const timer = setInterval(() => {
-                count--;
-                if (count > 0) {
-                    loader.textContent = count;
-                } else {
-                    clearInterval(timer);
-                    loader.style.display = "none";
-                    resolve();
-                }
-            }, 1000);
-        });
+    const currentRowCount = resultBody.querySelectorAll('tr').length;
+    const rowHtml = `<tr>
+        <td>${currentRowCount + 1}</td>
+        <td>${escapeHtml(winner.name)}</td>
+        <td>${escapeHtml(winner.idCard)}</td>
+        <td>${escapeHtml(winner.division || "—")}</td>
+        <td>${escapeHtml(giftText)}</td>
+    </tr>`;
+    resultBody.insertAdjacentHTML("beforeend", rowHtml);
+    
+    if (currentRowCount === 0) {
+        resultTable.style.display = "table";
     }
+    
+    index++;
+    await sleep(4000);
+}
 
-    function sleep(ms) {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-    }
-
-    async function announceWinnerSequence() {
-        const winner = results[index];
-        if (!winner) return;
-
-        const giftObj = winner.gift;
-        const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
-        
-        const displayGift = gifts.find(g => g.name === giftText);
-
-        winnerNameEl.textContent = `🏆 ${winner.name}`;
-        idNumberEl.textContent = `🪪 ${winner.idCard}`;
-        divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
-        giftNameEl.textContent = `🎁 ${giftText}`;
-
-        const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
-            ? displayGift.image 
-            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
-        
-        giftImageEl.src = imageSource;
-        winnerCard.style.display = "block";
-        
-        giftImageEl.classList.remove("leaving", "floating");
-        void giftImageEl.offsetWidth;
-        giftImageEl.classList.add("entering");
-
-        if (typeof confetti === "function") {
-            confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
-        }
-
-        const currentRowCount = resultBody.querySelectorAll('tr').length;
-        const rowHtml = `<tr>
-            <td>${currentRowCount + 1}</td>
-            <td>${escapeHtml(winner.name)}</td>
-            <td>${escapeHtml(winner.idCard)}</td>
-            <td>${escapeHtml(winner.division || "—")}</td>
-            <td>${escapeHtml(giftText)}</td>
-        </tr>`;
-        resultBody.insertAdjacentHTML("beforeend", rowHtml);
-        
-        if (currentRowCount === 0) {
-            resultTable.style.display = "table";
-        }
-        
-        index++;
-        await sleep(4000);
-    }
-
-    function escapeHtml(unsafe) {
-        if (typeof unsafe !== 'string') return unsafe;
-        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    }
+function escapeHtml(unsafe) {
+    if (typeof unsafe !== 'string') return unsafe;
+    return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
 </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
