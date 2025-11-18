@@ -96,9 +96,8 @@
         }
 
         .winner-card {
-            width: 50%;
-            max-width: 300px; 
-            max-height: 300px;
+            width: 90%;
+            max-width: 200px; 
             background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
             color: #000;
             border-radius: 16px;
@@ -135,7 +134,7 @@
 
         .gift-image-wrap {
             margin-top: 20px;
-            height: 500px; 
+            height: 800px; 
             display:flex;
             justify-content:center;
             align-items:center;
@@ -144,8 +143,8 @@
         }
 
         .gift-image {
-            max-height: 400px;
-            max-width: 400px;
+            max-height: 800px;
+            max-width: 800px;
             border-radius: 12px;
             box-shadow: 0 16px 40px rgba(0,0,0,0.35);
             transform-origin: center;
@@ -155,7 +154,7 @@
         @keyframes moveIn {
             0% { transform: translateY(40px) scale(0.9) rotate(-6deg) !important; opacity: 0; }
             60% { transform: translateY(-6px) scale(1.04) rotate(2deg) !important; opacity: 1; }
-            100% { transform: translateY(0) scale(1) rotate(0deg) !important; opacity: 1; }
+            100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
         }
 
         @keyframes moveOut {
@@ -388,9 +387,9 @@
         }
 
         @keyframes fadeOut {
-    0% { opacity: 1; }
-    100% { opacity: 0; display: none; }
-}
+            0% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
 
         .department-gallery {
             margin: 12px 0 8px;
@@ -416,7 +415,7 @@
             0% { transform: translateY(0) rotate(0deg); }
             50% { transform: translateY(-8px) rotate(1deg); }
             100% { transform: translateY(0) rotate(0deg); }
-        }}
+        }
     </style>
 </head>
 <body>
@@ -1039,15 +1038,6 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
 
 
 
