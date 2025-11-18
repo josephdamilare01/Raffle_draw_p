@@ -152,14 +152,14 @@
         }
 
         @keyframes moveIn {
-            0% { transform: translateY(40px) scale(0.9) rotate(-6deg); opacity: 0; }
-            60% { transform: translateY(-6px) scale(1.04) rotate(2deg); opacity: 1; }
+            0% { transform: translateY(40px) scale(0.9) rotate(-6deg) !important; opacity: 0; }
+            60% { transform: translateY(-6px) scale(1.04) rotate(2deg) !important; opacity: 1; }
             100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
         }
 
         @keyframes moveOut {
-            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-10px) scale(0.9) rotate(6deg); opacity: 0; }
+            0% { transform: translateY(0) scale(1) rotate(0deg) !important; opacity: 1; }
+            100% { transform: translateY(-10px) scale(0.9) rotate(6deg) !important; opacity: 0; }
         }
 
         @keyframes floatHorizontal {
@@ -454,7 +454,7 @@
         </div>
 
         <div class="left">
-            <h3>🎁 Department Gifts (Total Gifts Available: <span id="totalGiftsDisplay">0</span>)</h3>
+            <h3>🎁 Department Gifts </h3>
             
             <!-- NEW: Carousel Container -->
             <div class="carousel-container">
@@ -1039,6 +1039,7 @@
 </body>
 
 </html>
+
 
 
 
