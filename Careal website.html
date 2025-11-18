@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🎁 Animated Raffle Draw</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <style>
+        /* ALL YOUR EXISTING CSS REMAINS EXACTLY THE SAME */
+        :root {
+            --accent1: #00c6ff;
+            --accent2: #0072ff;
+            --accent3: #00ff80;
+            --dark: #071428;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            font-family: "Poppins", sans-serif;
+            background: radial-gradient(circle at 10% 20%, #081028, #071428 30%, #0b2a3a 60%, #071428 100%);
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 10px 0 16px;
+            font-size: 5rem;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--accent1), var(--accent3), #ffd166);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 100%;
+            animation: gradientMove 6s linear infinite;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 10px 0 60px;
+            align-items: stretch;
+        }
+
+        .top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-direction: column;
+        }
+
+        .left {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px;
+            border-radius: 10px;
+            backdrop-filter: blur(8px);
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 90px;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.98);
+            color: #000;
+            font-size: 2rem;
+            border-radius: 10px;
+            overflow: hidden;
+            table-layout: fixed;
+        }
+
+        th, td {
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+            word-break: break-word;
+        }
+
+        thead th {
+            background: linear-gradient(90deg, var(--accent2), #005bb5);
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .winner-card {
+            width: 50%;
+            max-width: 400px; 
+            background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));
+            color: #000;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+            position: relative;
+            overflow: visible;
+            display: none;
+            animation: popIn 700ms ease;
+            margin: 0 auto;
+        }
+
+        .winner-name {
+            font-size: 1.9rem;
+            font-weight: 700;
+            background: linear-gradient(90deg,var(--accent2), var(--accent3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .division-name, .id-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #004aad;
+            margin-bottom: 8px;
+        }
+
+        .gift-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #e63946;
+        }
+
+        .gift-image-wrap {
+            margin-top: 20px;
+            height: 200px; 
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            position: relative;
+            overflow: visible;
+        }
+
+        .gift-image {
+            max-height: 240px;
+            max-width: 800px;
+            border-radius: 12px;
+            box-shadow: 0 16px 40px rgba(0,0,0,0.35);
+            transform-origin: center;
+            opacity: 0;
+        }
+
+        @keyframes moveIn {
+            0% { transform: translateY(40px) scale(0.9) rotate(-6deg); opacity: 0; }
+            60% { transform: translateY(-6px) scale(1.04) rotate(2deg); opacity: 1; }
+            100% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        @keyframes moveOut {
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-10px) scale(0.9) rotate(6deg); opacity: 0; }
+        }
+
+        @keyframes floatHorizontal {
+            0% { transform: translateX(0px); }
+            50% { transform: translateX(8px); }
+            100% { transform: translateX(0px); }
+        }
+
+        .entering {
+            animation: moveIn 700ms ease forwards;
+        }
+        .leaving {
+            animation: moveOut 500ms ease forwards;
+        }
+        .floating {
+            animation: floatHorizontal 4s ease-in-out infinite;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            60% { transform: scale(1.02); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        .btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 6px;
+            align-items:center;
+        }
+
+        .btn {
+            background: linear-gradient(90deg,var(--accent2),var(--accent1));
+            border: none;
+            color: #00151f;
+            padding: 10px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: transform .14s ease, box-shadow .14s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.26);
+        }
+
+        #loader {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(7, 20, 40, 0.95);
+            backdrop-filter: blur(6px);
+            color: white;
+            font-size: 10rem;
+            font-weight: 700;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @media (max-width: 640px) {
+            .winner-card { max-width: 100%; padding: 18px; }
+            th, td { font-size: 0.95rem; padding: 10px 8px; }
+            #loader { font-size: 3rem; }
+        }
+
+        #doneMessage {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #00c6ff, #00ff80, #ffd166);
+            color: #00151f;
+            font-size: 3rem;
+            font-weight: 800;
+            padding: 25px 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            text-transform: uppercase;
+            animation: popUp 1s ease forwards, fadeOut 3s 4s forwards;
+            z-index: 2000;
+            letter-spacing: 2px;
+        }
+
+        /* NEW: Carousel Styles */
+        .carousel-container {
+            margin: 20px auto;
+            width: 95%;
+            max-width: 1200px;
+        }
+
+        .carousel {
+            width: 100%;
+            display: flex;
+            overflow-x: auto;
+            gap: 1em;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+        }
+
+        .carousel::-webkit-scrollbar{
+            display: none;
+        }
+
+        .carousel-group {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 1em;
+            animation: spin 30s infinite linear;
+            padding-right: 1em;
+        }
+
+        .carousel-card {
+            flex: 0 0 auto;
+            width: 400px;
+            height: 400px;
+            padding: 0.5em;
+            background: linear-gradient(135deg, var(--accent1), var(--accent2));
+            border-radius: 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .carousel-card:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.4);
+        }
+
+        .carousel-image {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .carousel-text {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 180px;
+        }
+
+        @keyframes spin {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); }
+        }
+
+        .carousel:hover .carousel-group {
+            animation-play-state: paused;
+        }
+
+        .carousel-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .carousel-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .carousel-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 80px;
+            width: auto;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .logo img:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 8px var(--nlng-yellow));
+        }
+
+        @keyframes popUp {
+            0% { transform: translate(-50%, -60%) scale(0.7); opacity: 0; }
+            60% { transform: translate(-50%, -50%) scale(1.05); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; display: none; }
+        }
+
+        .department-gallery {
+            margin: 12px 0 8px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            min-height: 90px;
+        }
+
+        .gallery-thumb {
+            width: 200px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+            transform-origin:center;
+            cursor: pointer;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="logo">
+    <img src="nlng-logo.png" alt="NLNG Logo">
+</div>
+    <h1>🎊 NLNG End of the Year Raffle Draw</h1>
+
+    <div class="content">
+        <div class="top">
+            <div class="right">
+                <div class="winner-card" id="winnerCard">
+                    <div class="winner-name" id="winnerName">🎁 Gift Preview / 🏆 Winner Name</div>
+                    <div class="id-name" id="idNumber">🪪 ID Card Number</div>
+                    <div class="division-name" id="divisionName">🏢 Division</div>
+                    <div class="gift-name" id="giftName">🎁 Gift Name</div>
+
+                    <div class="gift-image-wrap">
+                        <img id="giftImage" class="gift-image" src="" alt="Gift image">
+                    </div>
+                </div>
+
+                <div class="btns">
+                    <select id="departmentSelect" class="btn" style="background:white;color:black;border:1px solid #ccc;padding:10px;border-radius:10px;font-size:1.2rem;">
+                        <option value="">Select Department (All)</option>
+                    </select>
+
+                    <input type="number" id="maxDrawsInput" class="btn" value="1" min="1" placeholder="Max Draws" style="background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px; border-radius: 10px; font-size: 1.2rem; width: 150px; text-align: center;">
+
+                    <button class="btn" id="startDraw">Start Draw</button>
+                    <button class="btn" id="restartBtn">Restart</button>
+                    <button class="btn" id="homeBtn">🏠 Home</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="left">
+            <h3>🎁 Department Gifts (Total Gifts Available: <span id="totalGiftsDisplay">0</span>)</h3>
+            
+            <!-- NEW: Carousel Container -->
+            <div class="carousel-container">
+                <div class="carousel" id="giftCarousel">
+                    <div class="carousel-group" id="carouselGroup">
+                        <!-- Carousel items will be dynamically added here -->
+                    </div>
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" onclick="pauseCarousel()">⏸️ Pause</button>
+                    <button class="carousel-btn" onclick="playCarousel()">▶️ Play</button>
+                </div>
+            </div>
+
+            <!-- Keeping the original gallery hidden -->
+            <div id="gallery" class="department-gallery" aria-live="polite" style="display:none;"></div>
+
+            <h3 style="margin-top:18px;">🎁 Winners Table (Hidden for Focus)</h3>
+            <table id="resultTable" aria-live="polite" style="display:none;">
+                <thead>
+                    <tr>
+                        <th style="width:6%;">#</th>
+                        <th style="width:28%;">Participant Name</th>
+                        <th style="width:20%;">ID Card No.</th>
+                        <th style="width:26%;">Division</th>
+                        <th style="width:20%;">Gift</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="loader">10</div>
+
+<script>
+    // --- Start of Hardcoded Gift Data (USED ONLY FOR DISPLAY/PREVIEW SELECTOR) ---
+    const giftsHardcoded = [
+        // PD Department Gifts
+        { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "PM Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
+        { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "PM Partners", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
+        { name: "hp elitebook x360 touch intel core i5- 16gb ram 1tb ssd backlit keyboard fp reader wins 11 pro +bag61", department: "PM Partners", image: "hp_elitebook_keyboard_reader_wins_pro_bag61.jpg" },
+        { name: "samsung galaxy z fold 5 - 7.6 10mp 3x optical zoom telephoto, 50mp wide angle and 12mp ultrawide - 5g - android (12gb ram, 256gb rom) - 4400mah", department: "PM Partners", image: "samsung galaxy z fold 5 - 7.6 10mp 3x optical zoom telephoto, 50mp wide angle and 12mp ultrawide - 5g - android (12gb ram, 256gb rom) - 4400mah.jpg" },
+        
+        // PI Department Gifts
+        { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "PO Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
+        { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "PO Partners", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
+        { name: "xiaomi redmi note 14 pro+ 5g - 6.67 (512gb 12gb) dual sim, 200mp, 6200mah", department: "PO Partners", image: "xiaomi_redmi_6200mah.jpg" },
+
+        // PS Department Gifts
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "CPM Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
+        { name: "redmi pad pro 8 256 wifi", department: "CPM Partners", image: "redmi pad pro 8 256 wifi.jpg" },
+        { name: "hisense 1hp split unit copper inverter ac r410 gas-as09dk", department: "CPM Partners", image: "hisense 1hp split unit copper inverter ac r410 gas-as09dk.jpg" },
+
+        // PK Department Gifts
+        { name: "hisense 43-inch hisense smart led tv + netflix +youtube", department: "HSE Partners", image: "hisense_netflix_youtube.jpg" },
+        { name: "treadmill 2hp with massager mp3", department: "HSE Partners", image: "treadmill 2hp with massager mp3.jpg" },
+        
+        // PM Department Gifts
+        { name: "hisense front load washing machine, 6 kg, smart control, silver wm 6010", department: "TD Partners", image: "hisense front load washing machine, 6 kg, smart control, silver wm 6010.jpg" },
+        { name: "nexus 18 rechargeable standing fan + remote + led light +usb port", department: "TD Partners", image: "nexus_rechargeable_led_port.jpg" },
+
+        // PM Department Gifts
+        { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR", department: "CSS Partners", image: "Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
+        { name: "century digital torch screen dual window air fryer caf-8340-c 10l", department: "CSS Partners", image: "century digital torch screen dual window air fryer caf-8340-c 10l.jpg" },
+
+        // PM Department Gifts
+        { name: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts", department: "NST Partners", image: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts.jpg" },
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "NST Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
+
+        // PM Department Gifts
+        { name: "Hisense 1HP Split Copper Inverter AC", department: "CMO Partners", image: "Hisense 1HP Split Copper Inverter AC.png" },
+        { name: "rice", department: "CMO Partners", image: "rice.png" },
+
+        // PM Department Gifts
+        { name: "Hisense 1HP Split Copper Inverter AC", department: "PI, IMT, PS & PG Partners", image: "Hisense 1HP Split Copper Inverter AC.jpg" },
+        { name: "rice", department: "PI, IMT, PS & PG Partners", image: "rice.jpg" },
+
+        // PM Department Gifts
+        { name: "Microwave", department: "HR, RAIS & CLUB Partners", image: "microwave.jpg" },
+        { name: "rice", department: "HR, RAIS & CLUB Partners", image: "rice.jpg" },
+
+        // PM Department Gifts
+        { name: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100", department: "LSS Partners", image: "hisense 240w 2.1ch bluetooth audio sound bar, - hs 2100.jpg" },
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "LSS Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
+
+        // PM Department Gifts
+        { name: "One week all expense paid trip to Transcorp Hilton Abuja", department: "ESD & CFS Partners", image: "One week all expense paid trip to Transcorp Hilton Abuja.jpg" },
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "ESD & CFS Partners", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
+
+        // PM Department Gifts
+        { name: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87", department: "Train 7", image: "SAMSUNG GALAXY TAB A9 8128 WI-FI 87.jpg" },
+        { name: "hisense 20 litres microwave (h20mows14)", department: "Train 7", image: "hisense 20 litres microwave (h20mows14).jpg" },
+
+        // PM Department Gifts
+        { name: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan)", department: "General Draws", image: "kinelco 9pcs aluminium non stick cookware set(4 big pots,1 frying pan).jpg" },
+        { name: "hisense 20 litres microwave (h20mows14)", department: "General Draws", image: "hisense 20 litres microwave (h20mows14).jpg" },
+    ];
+
+    let fullParticipants = [];
+    let fullGifts = [];
+    let participants = [];
+    let gifts = giftsHardcoded;
+    let giftsForDraw = [];
+    let results = [];
+    let index = 0;
+    let currentDepartment = "";
+
+    // DOM elements
+    const resultBody = document.querySelector("#resultTable tbody");
+    const winnerCard = document.getElementById("winnerCard");
+    const winnerNameEl = document.getElementById("winnerName");
+    const divisionNameEl = document.getElementById("divisionName");
+    const giftNameEl = document.getElementById("giftName");
+    const idNumberEl = document.getElementById("idNumber");
+    const loader = document.getElementById("loader");
+    const giftImageEl = document.getElementById("giftImage");
+    const resultTable = document.getElementById("resultTable");
+    const gallery = document.getElementById("gallery");
+    const departmentSelect = document.getElementById("departmentSelect");
+    const maxDrawsInput = document.getElementById("maxDrawsInput");
+    const totalGiftsDisplay = document.getElementById("totalGiftsDisplay");
+
+    // NEW: Carousel functions - MOVED OUTSIDE EVENT LISTENERS
+    function loadCarousel(giftsArray) {
+        const carouselGroup = document.getElementById('carouselGroup');
+        carouselGroup.innerHTML = '';
+        
+        if (!giftsArray || giftsArray.length === 0) {
+            carouselGroup.innerHTML = '<div style="color:#ddd;padding:20px;width:100%;text-align:center;">No gifts available for this department.</div>';
+            return;
+        }
+
+        // Duplicate the gifts to create seamless infinite scroll
+        const duplicatedGifts = [...giftsArray, ...giftsArray];
+        
+        duplicatedGifts.forEach(g => {
+            const carouselCard = document.createElement('div');
+            carouselCard.className = 'carousel-card';
+            carouselCard.title = g.name;
+            carouselCard.addEventListener('click', () => {
+                previewGift(g);
+            });
+
+            const img = document.createElement('img');
+            img.className = 'carousel-image';
+            img.alt = g.name || "gift";
+            
+            if (g.image && g.image.trim()) {
+                img.src = g.image;
+            } else {
+                img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="200" height="120"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="12" fill="#004aad" textLength="180" lengthAdjust="spacingAndGlyphs">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
+            }
+
+            const text = document.createElement('div');
+            text.className = 'carousel-text';
+            text.textContent = g.name || 'Gift';
+
+            carouselCard.appendChild(img);
+            carouselCard.appendChild(text);
+            carouselGroup.appendChild(carouselCard);
+        });
+    }
+
+    function pauseCarousel() {
+        const carouselGroup = document.getElementById('carouselGroup');
+        carouselGroup.style.animationPlayState = 'paused';
+    }
+
+    function playCarousel() {
+        const carouselGroup = document.getElementById('carouselGroup');
+        carouselGroup.style.animationPlayState = 'running';
+    }
+
+    // ALL YOUR EXISTING FUNCTIONS REMAIN EXACTLY THE SAME
+    function populateDepartmentSelector() {
+        const select = document.getElementById("departmentSelect");
+        select.innerHTML = '<option value="">Select Department (All)</option>';
+        
+        const hardcodedDepts = [...new Set(giftsHardcoded.map(g => g.department))];
+        const participantDepts = [...new Set(fullParticipants.map(p => p.department))];
+        const giftDepts = [...new Set(fullGifts.map(g => g.department))];
+        
+        const allDepartments = [...new Set([...hardcodedDepts, ...participantDepts, ...giftDepts])].filter(dept => dept && dept.trim() !== "");
+        
+        allDepartments.sort().forEach(dep => {
+            const option = document.createElement("option");
+            option.value = dep;
+            option.textContent = dep;
+            select.appendChild(option);
+        });
+    }
+
+    function loadGallery(giftsArray) {
+        gallery.innerHTML = "";
+        
+        if (!giftsArray || giftsArray.length === 0) {
+            gallery.innerHTML = '<div style="opacity:0.8;color:#ddd;width:100%;text-align:center;padding:12px;">No gifts available for this department.</div>';
+            return;
+        }
+
+        giftsArray.forEach(g => {
+            const img = document.createElement("img");
+            img.className = "gallery-thumb";
+            img.alt = g.name || "gift";
+            
+            if (g.image && g.image.trim()) {
+                img.src = g.image;
+            } else {
+                img.src = `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="320" height="240"><rect width="100%" height="100%" fill="#e6f7ff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="18" fill="#004aad">${escapeHtml(g.name || 'Gift')}</text></svg>`)}`;
+            }
+            
+            img.title = g.name;
+            img.addEventListener('click', () => {
+                previewGift(g);
+            });
+
+            gallery.appendChild(img);
+        });
+    }
+
+    function filterAllByDepartment(dept) {
+        if (!dept || dept.trim() === "") {
+            return {
+                participants: fullParticipants,
+                giftsForDraw: fullGifts,
+                hardcodedGifts: giftsHardcoded
+            };
+        }
+
+        const deptLower = dept.trim().toLowerCase();
+        
+        const filteredParticipants = fullParticipants.filter(p => {
+            const participantDept = String(p.department || "").toLowerCase().trim();
+            return participantDept === deptLower;
+        });
+        
+        const filteredGiftsForDraw = fullGifts.filter(g => {
+            const giftDept = String(g.department || "").toLowerCase().trim();
+            return giftDept === deptLower;
+        });
+        
+        const filteredHardcodedGifts = giftsHardcoded.filter(g => {
+            const hardcodedDept = String(g.department || "").toLowerCase().trim();
+            return hardcodedDept === deptLower;
+        });
+
+        return {
+            participants: filteredParticipants,
+            giftsForDraw: filteredGiftsForDraw,
+            hardcodedGifts: filteredHardcodedGifts
+        };
+    }
+
+    function normalizeParticipantData(participant) {
+        let department = participant.department || participant.Department || 
+                        participant.division || participant.Division || "General";
+        department = department.toString().trim();
+        
+        return {
+            name: participant.name || participant.Name || participant.Participant || "Unnamed",
+            division: participant.division || participant.Division || department || "—",
+            idCard: participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
+            department: department
+        };
+    }
+
+    function normalizeGiftData(gift) {
+        let department = gift.department || gift.Department || 
+                        gift.division || gift.Division || "General";
+        department = department.toString().trim();
+        
+        return {
+            name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
+            department: department,
+            image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
+        };
+    }
+
+    function updateRemainingGiftsDisplay() {
+        let remainingGiftsContainer = document.getElementById('remainingGiftsList');
+        if (!remainingGiftsContainer) {
+            remainingGiftsContainer = document.createElement('div');
+            remainingGiftsContainer.id = 'remainingGiftsList';
+            remainingGiftsContainer.style.marginTop = '10px';
+            remainingGiftsContainer.style.padding = '10px';
+            remainingGiftsContainer.style.background = 'rgba(255,255,255,0.1)';
+            remainingGiftsContainer.style.borderRadius = '8px';
+            remainingGiftsContainer.style.maxHeight = '200px';
+            remainingGiftsContainer.style.overflowY = 'auto';
+            document.querySelector('.left').appendChild(remainingGiftsContainer);
+        }
+        
+        if (giftsForDraw.length === 0) {
+            remainingGiftsContainer.innerHTML = '<div style="color:#ff6b6b;font-weight:bold;">🎉 All gifts have been drawn for this department!</div>';
+        } else {
+            remainingGiftsContainer.innerHTML = `<div style="color:#00ff80;margin-bottom:8px;font-weight:bold;">Remaining Gifts (${giftsForDraw.length}):</div>
+                <div style="text-align:left;font-size:0.9rem;">${giftsForDraw.map((g, i) => 
+                    `${i + 1}. ${g.name}`
+                ).join('<br>')}</div>`;
+        }
+    }
+
+    // Initialize the page
+    window.addEventListener("DOMContentLoaded", () => {
+        const savedParticipants = localStorage.getItem("participantsData");
+        const savedGifts = localStorage.getItem("giftsData");
+
+        // Load participants
+        if (savedParticipants) {
+            const parsedParticipants = JSON.parse(savedParticipants);
+            fullParticipants = parsedParticipants.map(normalizeParticipantData);
+        } else {
+            alert("⚠️ Please upload participants on the admin page first.");
+        }
+
+        // Load gifts for draw
+        if (savedGifts) {
+            const parsedGifts = JSON.parse(savedGifts);
+            fullGifts = parsedGifts.map(normalizeGiftData);
+        } else {
+            alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
+        }
+
+        // Initialize UI - USING CAROUSEL NOW
+        populateDepartmentSelector();
+        loadCarousel(giftsHardcoded);
+        
+        // Set initial department to "All"
+        departmentSelect.dispatchEvent(new Event('change'));
+    });
+
+    // Department filter - UPDATED TO USE CAROUSEL
+    departmentSelect.addEventListener("change", function() {
+        const dept = this.value;
+        currentDepartment = dept;
+        
+        // Get filtered data
+        const filtered = filterAllByDepartment(dept);
+        
+        // Update arrays
+        participants = [...filtered.participants];
+        giftsForDraw = [...filtered.giftsForDraw];
+        gifts = [...filtered.hardcodedGifts];
+
+        // Update UI - USING CAROUSEL NOW
+        loadCarousel(gifts);
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        maxDrawsInput.max = giftsForDraw.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+        
+        updateRemainingGiftsDisplay();
+    });
+
+    // ALL YOUR EXISTING DRAWING FUNCTIONS REMAIN EXACTLY THE SAME
+    async function previewGift(giftObj) {
+        winnerCard.style.display = "block";
+        winnerNameEl.textContent = "🎁 Gift Preview";
+        idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
+        divisionNameEl.textContent = "Click 'Start Draw' to begin!";
+        giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+
+        const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
+            ? giftObj.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftObj.name || 'Gift')}</text></svg>`)}`;
+        
+        if (giftImageEl.classList.contains("entering") || giftImageEl.classList.contains("floating")) {
+            giftImageEl.classList.remove("entering", "floating");
+            giftImageEl.classList.add("leaving");
+            await sleep(500);
+        } else if (giftImageEl.classList.contains("leaving")) {
+            await sleep(500);
+        }
+
+        giftImageEl.src = giftImageSrc;
+        giftImageEl.classList.remove("leaving");
+        void giftImageEl.offsetWidth;
+        giftImageEl.classList.add("entering");
+
+        setTimeout(() => {
+            giftImageEl.classList.remove("entering");
+            giftImageEl.classList.add("floating");
+        }, 700);
+    }
+
+    document.getElementById("startDraw").addEventListener("click", async () => {
+        if (!participants.length) {
+            alert("No participants available for the selected department.");
+            return;
+        }
+        
+        if (!giftsForDraw.length) {
+            alert("No gifts available for drawing in the selected department.");
+            return;
+        }
+
+        const desiredDraws = parseInt(maxDrawsInput.value, 10);
+        if (isNaN(desiredDraws) || desiredDraws < 1) {
+            alert("Please enter a valid number of draws (1 or more).");
+            return;
+        }
+
+        const numDraws = Math.min(participants.length, giftsForDraw.length, desiredDraws);
+
+        if (numDraws === 0) {
+            alert("Cannot run draw. Check participant count and gift count.");
+            return;
+        }
+
+        const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
+        const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
+
+        results = [];
+        const giftsToRemove = [];
+        
+        for (let i = 0; i < numDraws; i++) {
+            results.push({
+                name: shuffledParticipants[i].name,
+                division: shuffledParticipants[i].division,
+                idCard: shuffledParticipants[i].idCard,
+                gift: shuffledGifts[i], 
+            });
+            giftsToRemove.push(shuffledGifts[i].name);
+        }
+
+        giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
+        fullGifts = fullGifts.filter(gift => 
+            !(giftsToRemove.includes(gift.name) && gift.department === currentDepartment)
+        );
+
+        index = 0;
+        giftImageEl.classList.remove("floating"); 
+        await runDrawSequence();
+
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        maxDrawsInput.max = giftsForDraw.length;
+        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+        updateRemainingGiftsDisplay();
+        
+        if (giftsForDraw.length === 0) {
+            setTimeout(() => {
+                alert(`🎉 All gifts for ${currentDepartment} have been drawn!`);
+            }, 1000);
+        }
+    });
+
+    // ALL OTHER EXISTING FUNCTIONS REMAIN EXACTLY THE SAME...
+    document.getElementById("restartBtn").addEventListener("click", () => {
+        results = [];
+        index = 0;
+        resultBody.innerHTML = "";
+        resultTable.style.display = "none";
+        winnerCard.style.display = "none";
+        
+        giftImageEl.src = "";
+        giftImageEl.classList.remove("entering", "leaving", "floating");
+
+        winnerNameEl.textContent = "🎁 Gift Preview / 🏆 Winner Name";
+        idNumberEl.textContent = "🪪 ID Card Number";
+        divisionNameEl.textContent = "🏢 Division";
+        giftNameEl.textContent = "🎁 Gift Name";
+
+        const savedParticipants = localStorage.getItem("participantsData");
+        const savedGifts = localStorage.getItem("giftsData"); 
+        
+        if (savedParticipants) {
+            const parsedParticipants = JSON.parse(savedParticipants);
+            fullParticipants = parsedParticipants.map(normalizeParticipantData);
+        }
+        
+        if (savedGifts) {
+            const parsedGifts = JSON.parse(savedGifts);
+            fullGifts = parsedGifts.map(normalizeGiftData);
+        }
+        
+        departmentSelect.value = "";
+        currentDepartment = "";
+        
+        departmentSelect.dispatchEvent(new Event('change'));
+    });
+
+    document.getElementById("homeBtn").addEventListener("click", () => {
+        window.location.href = "/index.html";
+    });
+
+    async function runDrawSequence() {
+        for (let i = 0; i < results.length; i++) {
+            if (i === 0) {
+                await startCountdown(10);
+            } else {
+                giftImageEl.classList.remove("entering", "floating");
+                giftImageEl.classList.add("leaving");
+                await sleep(500);
+                winnerCard.style.display = "none";
+            }
+            await announceWinnerSequence();
+        }
+
+        const doneMsg = document.getElementById("doneMessage");
+        doneMsg.style.display = "block";
+
+        if (typeof confetti === "function") {
+            confetti({ particleCount: 300, spread: 120, origin: { y: 0.6 } });
+        }
+    }
+
+    function startCountdown(seconds) {
+        return new Promise((resolve) => {
+            let count = seconds;
+            loader.textContent = count;
+            loader.style.display = "flex";
+
+            const timer = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    loader.textContent = count;
+                } else {
+                    clearInterval(timer);
+                    loader.style.display = "none";
+                    resolve();
+                }
+            }, 1000);
+        });
+    }
+
+    function sleep(ms) {
+        return new Promise((resolve) => setTimeout(resolve, ms));
+    }
+
+    async function announceWinnerSequence() {
+        const winner = results[index];
+        if (!winner) return;
+
+        const giftObj = winner.gift;
+        const giftText = (typeof giftObj === "object" && giftObj !== null) ? (giftObj.name || JSON.stringify(giftObj)) : String(giftObj);
+        
+        const displayGift = gifts.find(g => g.name === giftText);
+
+        winnerNameEl.textContent = `🏆 ${winner.name}`;
+        idNumberEl.textContent = `🪪 ${winner.idCard}`;
+        divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
+        giftNameEl.textContent = `🎁 ${giftText}`;
+
+        const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
+            ? displayGift.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#fff"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#004aad">${escapeHtml(giftText)}</text></svg>`)}`;
+        
+        giftImageEl.src = imageSource;
+        winnerCard.style.display = "block";
+        
+        giftImageEl.classList.remove("leaving", "floating");
+        void giftImageEl.offsetWidth;
+        giftImageEl.classList.add("entering");
+
+        if (typeof confetti === "function") {
+            confetti({ particleCount: 130, spread: 80, origin: { y: 0.55 } });
+        }
+
+        const currentRowCount = resultBody.querySelectorAll('tr').length;
+        const rowHtml = `<tr>
+            <td>${currentRowCount + 1}</td>
+            <td>${escapeHtml(winner.name)}</td>
+            <td>${escapeHtml(winner.idCard)}</td>
+            <td>${escapeHtml(winner.division || "—")}</td>
+            <td>${escapeHtml(giftText)}</td>
+        </tr>`;
+        resultBody.insertAdjacentHTML("beforeend", rowHtml);
+        
+        if (currentRowCount === 0) {
+            resultTable.style.display = "table";
+        }
+        
+        index++;
+        await sleep(4000);
+    }
+
+    function escapeHtml(unsafe) {
+        if (typeof unsafe !== 'string') return unsafe;
+        return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    }
+</script>
+</body>
+</html>
