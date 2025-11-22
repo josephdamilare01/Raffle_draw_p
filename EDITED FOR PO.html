@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>🏆 NLNG PO Dept Award Nomination Form 2025</title>
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --gradient-bg: linear-gradient(135deg, #003f5c, #2f4b7c, #665191, #a05195, #d45087);
+  --form-bg: rgba(255, 255, 255, 0.15);
+  --input-bg: rgba(255, 255, 255, 0.1);
+  --input-focus: #d45087;
+  --btn-gradient: linear-gradient(90deg, #00c6ff, #0072ff);
+  --accent1: #00ffcc;
+  --accent2: #ffcc00;
+  --white: #ffffff;
+}
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+html, body {
+  height: 100%;
+  min-height: 100vh;
+  background: var(--gradient-bg);
+  background-size: 400% 400%;
+  animation: bgShift 20s ease infinite;
+  color: var(--white);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Background Animation */
+@keyframes bgShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Floating orbs */
+.orb {
+  position: absolute;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #ffffff33, transparent);
+  animation: floaty 10s ease-in-out infinite;
+  z-index: 0;
+}
+.orb:nth-child(1){ top: 10%; left: 15%; animation-delay: 0s; }
+.orb:nth-child(2){ top: 60%; right: 10%; animation-delay: 2s; }
+.orb:nth-child(3){ bottom: 15%; left: 45%; animation-delay: 4s; }
+
+@keyframes floaty {
+  0%,100%{ transform: translateY(0); }
+  50%{ transform: translateY(-20px); }
+}
+
+/* Logo */
+.logo {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+.logo img {
+  height: 65px;
+  filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));
+  max-width: 100%;
+}
+
+/* Container */
+.container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 90%;
+  max-width: 1000px;
+  margin: 120px auto 50px auto;
+  padding: 30px;
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  overflow-y: auto;
+  max-height: none;
+}
+
+/* Headings */
+h1 {
+  text-align: center;
+  font-size: 2rem;
+  background: linear-gradient(90deg, #ffcc00, #00ffcc, #00c6ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 10px;
+}
+p.note {
+  text-align: center;
+  color: #f0f0f0;
+  margin-bottom: 20px;
+}
+
+/* Date Info Banner */
+.date-info {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+  backdrop-filter: blur(5px);
+}
+.date-info p {
+  margin: 5px 0;
+  font-size: 0.95rem;
+}
+.date-info .date-open {
+  color: #00ffcc;
+  font-weight: 600;
+}
+.date-info .date-close {
+  color: #ffcc00;
+  font-weight: 600;
+}
+.date-info .date-closed {
+  color: #ff6b6b;
+  font-weight: 600;
+  background: rgba(255, 107, 107, 0.2);
+  padding: 8px 15px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-top: 5px;
+}
+
+/* Form */
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--white);
+  font-size: 1rem;
+  transition: 0.3s;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 10px var(--input-focus);
+}
+textarea { resize: none; height: 80px; }
+
+.section-title {
+  margin-top: 25px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent1);
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+  padding-bottom: 5px;
+}
+
+.award-section {
+  margin-top: 20px;
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 8px rgba(255,255,255,0.1);
+}
+.award-section h3 {
+  color: var(--accent2);
+  margin-bottom: 10px;
+}
+
+/* Buttons */
+button {
+  display: block;
+  background: var(--btn-gradient);
+  color: #fff;
+  border: none;
+  border-radius: 35px;
+  padding: 15px 40px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 25px auto 0;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0,255,128,0.4);
+}
+button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* Message */
+.message {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 600;
+  min-height: 25px;
+}
+
+/* Footer */
+footer {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+  background: rgba(0,0,0,0.3);
+  color: #fff;
+  font-size: 0.9rem;
+  padding: 15px 0;
+  letter-spacing: 0.5px;
+  position: relative;
+}
+
+/* Required field indicator */
+.required::after {
+  content: " *";
+  color: #ff6b6b;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    margin: 90px auto 30px auto;
+    padding: 20px;
+    max-height: none;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+
+  input, select, textarea {
+    font-size: 0.95rem;
+    padding: 10px;
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    border-radius: 30px;
+  }
+
+  .logo img { height: 50px; }
+
+  footer {
+    font-size: 0.8rem;
+    padding: 10px 0;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="logo"><img src="nlng-logo.png" alt="NLNG Logo"></div>
+<div class="orb"></div><div class="orb"></div><div class="orb"></div>
+
+<div class="container">
+  <h1>🏆 NLNG PO Depart Award Nomination Form 2025</h1>
+  <p class="note">Each nominator can nominate one unique person per award. Please complete all fields carefully.</p>
+
+  <!-- Date Information Banner -->
+  <div class="date-info" id="dateInfo">
+    <p>Nomination Period: <span class="date-open" id="startDateDisplay">Loading...</span> to <span class="date-close" id="closeDateDisplay">Loading...</span></p>
+    <p id="nominationStatus"></p>
+  </div>
+
+  <form id="nominationForm">
+    <div class="section-title">Nominator Information</div>
+    <label class="required">First Name</label>
+    <input type="text" id="nominatorFirstName" required />
+    <label class="required">Last Name</label>
+    <input type="text" id="nominatorLastName" required />
+    <label class="required">Department</label>
+    <input type="text" id="nominatorDepart" required />
+    <label class="required">Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
+    <input type="email" id="nominatorEmail" placeholder="e.g. jane@nlng.com" required />
+
+    <label class="required">Employee Number (for Partner personnel without company email address)</label>
+    <input type="text" id="employeeNumber" placeholder="Enter employee number if no email" required />
+
+    <div class="section-title">Award Nominations</div>
+    <p class="note" style="text-align: left; margin-bottom: 15px;">All award fields are required. Please fill in nominee information for each award category.</p>
+    <div id="awardsContainer"></div>
+
+    <button type="submit" id="submitButton">Submit Nominations</button>
+    <div class="message" id="message"></div>
+  </form>
+</div>
+
+<footer>© 2025 NLNG | Nomination Portal — All Rights Reserved</footer>
+
+<!-- JS -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+import { getDatabase, ref, push, set, get, query, orderByChild, equalTo } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-database.js";
+
+// --- Firebase Config ---
+const firebaseConfig = {
+  apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
+  authDomain: "nlng-voting-system.firebaseapp.com",
+  databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
+  projectId: "nlng-voting-system",
+  storageBucket: "nlng-voting-system.firebasestorage.app",
+  messagingSenderId: "851277078103",
+  appId: "1:851277078103:web:6b9c5d7cd3a0da80470d12",
+  measurementId: "G-V6T773WLN7"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// --- Date Configuration ---
+const nominationDates = {
+  startDate: new Date('2025-11-21T00:00:00'), // Set your start date here
+  closeDate: new Date('2025-11-30T23:59:59')  // Set your close date here
+};
+
+// --- Date Display and Validation ---
+function updateDateDisplay() {
+  const startDateDisplay = document.getElementById('startDateDisplay');
+  const closeDateDisplay = document.getElementById('closeDateDisplay');
+  const nominationStatus = document.getElementById('nominationStatus');
+  const submitButton = document.getElementById('submitButton');
+  const form = document.getElementById('nominationForm');
+
+  // Format dates for display
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  startDateDisplay.textContent = nominationDates.startDate.toLocaleDateString('en-US', options);
+  closeDateDisplay.textContent = nominationDates.closeDate.toLocaleDateString('en-US', options);
+
+  const now = new Date();
+  
+  if (now < nominationDates.startDate) {
+    // Nominations haven't started yet
+    nominationStatus.innerHTML = `<span class="date-closed">Nominations open on ${nominationDates.startDate.toLocaleDateString('en-US', options)}</span>`;
+    submitButton.disabled = true;
+    form.style.opacity = '0.6';
+    form.style.pointerEvents = 'none';
+  } else if (now > nominationDates.closeDate) {
+    // Nominations have closed
+    nominationStatus.innerHTML = `<span class="date-closed">Nominations are now closed</span>`;
+    submitButton.disabled = true;
+    form.style.opacity = '0.6';
+    form.style.pointerEvents = 'none';
+  } else {
+    // Nominations are open
+    const daysLeft = Math.ceil((nominationDates.closeDate - now) / (1000 * 60 * 60 * 24));
+    nominationStatus.textContent = `Nominations are OPEN! ${daysLeft} days remaining`;
+    nominationStatus.style.color = '#00ffcc';
+    submitButton.disabled = false;
+    form.style.opacity = '1';
+    form.style.pointerEvents = 'auto';
+  }
+}
+
+// Initialize date display
+updateDateDisplay();
+
+// --- Award Descriptions ---
+  
+const awardDescriptions = {
+"PO leadership award": "A leader in operations department that exemplifies the kind of committed and collaborative leadership required to excel in the Operations environment. Their decisive actions in 2025 ensured the reliability of our plant and actively reiterate key values like Safety, Integrity, and Collaboration.",
+"PO Excellence Award (POA STAFF)": "A staff in the POA who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POB STAFF)": "A staff in the POB who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POC STAFF)": "A staff in the POC who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POD STAFF)": "A staff in the POD who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POL STAFF)": "A staff in the POL who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POS STAFF)": "A staff in the POS who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POA PARTNER)": "A partner staff in the POA who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POB PARTNER)": "A partner staff in the POB who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POC PARTNER)": "A partner staff in the POC who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POD PARTNER)": "A partner staff in the POD who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POL PARTNER)": "A partner staff in the POL who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (POS Partner)": "A partner staff in the POS department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Excellence Award (Vacuum truck drivers)": "A vacuum truck driver in the PO department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (CCR Cleaners)": "A CCR cleaner in PO department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (Plant Cleaners)": "A plant cleaner who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (CCR Security)": "A security/Spy police in CCR who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (CCR Canteen staff)": "A partner staff in the CCR canteen who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (Chemical Handlers)": "A chemical handler who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (Fire team)": "A staff/partner in the fire station who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (CMO)": "A staff/partner in the CMO department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (ESD)": "A staff/Partner in ESD department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (LSS)": "A staff/Partner in the LSS department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (IMT)": "A partner/staff in IMT department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (CPM)": "A staff/partner in CPM department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
+"PO Stakeholder of the Year (HR)": "A staff/partner in the HR department who has a high sense of accountability, delivers high quality work, and maintains a heathy relationship at work."
+};
+
+// --- Awards ---
+const awards = [
+"PO leadership award" , "PO Excellence Award (POA STAFF)", "PO Excellence Award (POB STAFF)", "PO Excellence Award (POC STAFF)", "PO Excellence Award (POD STAFF)", 
+"PO Excellence Award (POL STAFF)", "PO Excellence Award (POS STAFF)", "PO Excellence Award (POA PARTNER)" , "PO Excellence Award (POB PARTNER)", "PO Excellence Award (POC PARTNER)" , 
+"PO Excellence Award (POD PARTNER)" , "PO Excellence Award (POL PARTNER)", "PO Excellence Award (POS Partner)", "PO Excellence Award (Vacuum truck drivers)", "PO Stakeholder of the Year (CCR Cleaners)", 
+"PO Stakeholder of the Year (Plant Cleaners)", "PO Stakeholder of the Year (CCR Security)", "PO Stakeholder of the Year (CCR Canteen staff)", "PO Stakeholder of the Year (Chemical Handlers)", 
+"PO Stakeholder of the Year (Fire team)", "PO Stakeholder of the Year (CMO)", "PO Stakeholder of the Year (ESD)","PO Stakeholder of the Year (LSS)","PO Stakeholder of the Year (IMT)",
+"PO Stakeholder of the Year (CPM)" , "PO Stakeholder of the Year (HR)"
+];
+
+const container = document.getElementById("awardsContainer");
+
+// --- Render Awards ---
+awards.forEach((award, i) => {
+  const div = document.createElement("div");
+  div.classList.add("award-section");
+  
+  // For all awards, use manual input fields (no autofill)
+  const inputField = `
+    <label class="required">Nominee Full Name</label>
+    <input type="text" name="nomineeName_${i}" placeholder="Enter nominee's full name" required />
+    <label class="required">Department</label>
+    <input type="text" name="nomineeDept_${i}" placeholder="Enter nominee's department" required />
+    <label class="required">Company</label>
+    <input type="text" name="nomineeCompany_${i}" placeholder="Enter nominee's company" required />
+    <label class="required">Status (Staff/Partner)</label>
+    <input type="text" name="nomineestatus_${i}" placeholder="Enter Staff or Partner" required />
+  `;
+
+  div.innerHTML = `<h3>${i + 1}. ${award}</h3>
+    <p style="color:#ccc; font-size:0.9rem; margin-bottom:10px;">
+      ${awardDescriptions[award] || ""}
+    </p>${inputField}`;
+  container.appendChild(div);
+});
+
+// --- Form Validation ---
+function validateForm() {
+  const firstName = document.getElementById("nominatorFirstName").value.trim();
+  const lastName = document.getElementById("nominatorLastName").value.trim();
+  const department = document.getElementById("nominatorDepart").value.trim();
+  const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
+  const employeeNumber = document.getElementById("employeeNumber").value.trim();
+
+  // Check nominator information
+  if (!firstName || !lastName || !department) {
+    return "Please fill in all nominator information fields.";
+  }
+
+  // Check email or employee number
+  const validDomains = ["nlng.com", "nsml.com", "raisbny.com"];
+  const emailDomain = email.includes("@") ? email.split("@")[1] : "";
+  
+  if (!((email && validDomains.includes(emailDomain)) || employeeNumber)) {
+    return "Please enter a valid company email or your employee number.";
+  }
+
+  // Check all award fields
+  for (let i = 0; i < awards.length; i++) {
+    const nomineeName = document.querySelector(`[name='nomineeName_${i}']`).value.trim();
+    const nomineeDept = document.querySelector(`[name='nomineeDept_${i}']`).value.trim();
+    const nomineeCompany = document.querySelector(`[name='nomineeCompany_${i}']`).value.trim();
+    const nomineeStatus = document.querySelector(`[name='nomineestatus_${i}']`).value.trim();
+
+    if (!nomineeName || !nomineeDept || !nomineeCompany || !nomineeStatus) {
+      return `Please fill in all fields for award: ${awards[i]}`;
+    }
+  }
+
+  return null; // No errors
+}
+
+// --- Submit to Firebase ---
+document.getElementById("nominationForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // Check if nominations are open
+  const now = new Date();
+  if (now < nominationDates.startDate || now > nominationDates.closeDate) {
+    document.getElementById('message').textContent = "❌ Nominations are currently closed.";
+    document.getElementById('message').style.color = "red";
+    return;
+  }
+
+  const message = document.getElementById("message");
+  const submitBtn = e.target.querySelector("button[type='submit']");
+  
+  // Validate form
+  const validationError = validateForm();
+  if (validationError) {
+    message.textContent = `⚠️ ${validationError}`;
+    message.style.color = "yellow";
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = 0.5;
+
+  const firstName = document.getElementById("nominatorFirstName").value.trim();
+  const lastName = document.getElementById("nominatorLastName").value.trim();
+  const department = document.getElementById("nominatorDepart").value.trim();
+  const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
+  const employeeNumber = document.getElementById("employeeNumber").value.trim();
+
+  message.textContent = "⏳ Submitting nomination...";
+  message.style.color = "white";
+
+  const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${department.toLowerCase()}_${email || employeeNumber}`;
+
+  try {
+    // Check for existing submission
+    const q = query(ref(db, "nominations"), orderByChild("uniqueKey"), equalTo(uniqueKey));
+    const snap = await get(q);
+
+    if (snap.exists()) {
+      message.style.color = "#ff8080";
+      message.textContent = "⚠️ You have already submitted nominations.";
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = 1;
+      return;
+    }
+
+    // Prepare submission
+    const formData = {};
+    awards.forEach((award, i) => {
+      formData[`award_${i + 1}`] = {
+        award,
+        nomineeName: document.querySelector(`[name='nomineeName_${i}']`).value.trim(),
+        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`).value.trim(),
+        nomineeCompany: document.querySelector(`[name='nomineeCompany_${i}']`).value.trim(),
+        nomineestatus: document.querySelector(`[name='nomineestatus_${i}']`).value.trim()
+      };
+    });
+
+    // Push to Firebase
+    const newRef = push(ref(db, "nominations"));
+    await set(newRef, {
+      nominatorFirstName: firstName,
+      nominatorLastName: lastName,
+      nominatorDepart: department,
+      nominatorEmail: email || "",
+      employeeNumber: employeeNumber || "",
+      uniqueKey,
+      submissions: formData,
+      timestamp: new Date().toISOString()
+    });
+
+    message.style.color = "lime";
+    message.textContent = "✅ Nomination submitted successfully!";
+    setTimeout(() => window.location.href = "thankyou.html", 2000);
+
+  } catch (err) {
+    console.error(err);
+    message.style.color = "red";
+    message.textContent = "❌ Error submitting nominations.";
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = 1;
+  }
+});
+</script>
+</body>
+</html>
