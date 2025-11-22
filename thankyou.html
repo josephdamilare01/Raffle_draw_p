@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thank You</title>
+<title>Thank You - NLNG Awards 2025</title>
 <style>
   body {
     font-family: "Segoe UI", sans-serif;
@@ -18,12 +18,41 @@
     height: 100vh;
     text-align: center;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
   }
 
   @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
+  }
+
+  /* Floating celebration elements */
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: #ffcc00;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translateY(100vh) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  .floating-trophy {
+    position: absolute;
+    font-size: 2rem;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
   }
 
   .box {
@@ -33,18 +62,23 @@
     backdrop-filter: blur(5px);
     animation: fadeInUp 1.2s ease-out;
     box-shadow: 0 0 20px rgba(0,255,128,0.4);
+    position: relative;
+    z-index: 10;
+    max-width: 500px;
+    margin: 20px;
   }
 
-    /* ✅ NLNG logo top-left */
-    .nlng-logo {
-      position: absolute;
-      top: 25px;
-      left: 25px;
-      width: 90px;
-      height: auto;
-      z-index: 10;
-      animation: fadeIn 1.5s ease-in-out;
-    }
+  /* ✅ NLNG logo top-left */
+  .nlng-logo {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    width: 90px;
+    height: auto;
+    z-index: 10;
+    animation: fadeIn 1.5s ease-in-out;
+  }
+
   @keyframes fadeInUp {
     from {
       opacity: 0;
@@ -60,6 +94,7 @@
     color: #00ff80;
     font-size: 2.5rem;
     animation: glowText 2s ease-in-out infinite alternate;
+    margin-bottom: 20px;
   }
 
   @keyframes glowText {
@@ -71,29 +106,31 @@
     font-size: 1.2rem;
     opacity: 0;
     animation: fadeText 1.8s ease forwards 1s;
+    line-height: 1.6;
+    margin-bottom: 25px;
   }
 
   @keyframes fadeText {
     to { opacity: 1; }
   }
 
-  a {
-    color: #00ff80;
-    margin-top: 20px;
-    display: inline-block;
-    font-weight: bold;
-    text-decoration: none;
-    border: 1px solid #00ff80;
-    padding: 10px 20px;
-    border-radius: 8px;
-    transition: 0.3s;
+  .success-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: bounce 2s ease infinite;
   }
 
-  a:hover {
-    background: #00ff80;
-    color: #000;
-    transform: scale(1.1);
-    box-shadow: 0 0 15px #00ff80;
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-20px);}
+    60% {transform: translateY(-10px);}
+  }
+
+  .countdown {
+    font-size: 1rem;
+    color: #ffcc00;
+    margin-top: 15px;
+    font-weight: bold;
   }
 
   .close-btn {
@@ -102,10 +139,13 @@
     border: none;
     color: black;
     font-size: 1rem;
-    padding: 10px 25px;
+    padding: 12px 30px;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
   }
 
   .close-btn:hover {
@@ -113,16 +153,277 @@
     transform: scale(1.1);
     box-shadow: 0 0 15px #00ff80;
   }
+
+  .close-btn:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%);
+    transform-origin: 50% 50%;
+  }
+
+  .close-btn:focus:not(:active)::after {
+    animation: ripple 1s ease-out;
+  }
+
+  @keyframes ripple {
+    0% {
+      transform: scale(0, 0);
+      opacity: 0.5;
+    }
+    100% {
+      transform: scale(20, 20);
+      opacity: 0;
+    }
+  }
+
+  .social-share {
+    margin-top: 20px;
+    opacity: 0;
+    animation: fadeText 1.8s ease forwards 1.5s;
+  }
+
+  .social-share p {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+    color: #ccc;
+  }
+
+  .share-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .share-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+  }
+
+  .share-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+  }
+
+  /* Progress bar for auto-close */
+  .progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin-top: 20px;
+    overflow: hidden;
+  }
+
+  .progress {
+    width: 100%;
+    height: 100%;
+    background: #00ff80;
+    border-radius: 2px;
+    transform: scaleX(0);
+    transform-origin: left;
+    animation: progress 10s linear forwards;
+  }
+
+  @keyframes progress {
+    to { transform: scaleX(1); }
+  }
+
+  /* Particle background */
+  .particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .particle {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    animation: particle-float 20s infinite linear;
+  }
+
+  @keyframes particle-float {
+    0% { transform: translateY(100vh) rotate(0deg); }
+    100% { transform: translateY(-100px) rotate(360deg); }
+  }
 </style>
 </head>
 <body>
   <!-- ✅ NLNG Logo at Top Left -->
   <img src="nlng-logo.png" alt="NLNG Logo" class="nlng-logo">
+
+  <!-- Background particles -->
+  <div class="particles" id="particles"></div>
+
   <div class="box">
+    <div class="success-icon">🏆</div>
     <h1>🎉 Thank You!</h1>
-    <p>We have received your nomination.<br>Thank you for your time and participation!</p>
-    <button class="close-btn" onclick="window.close()">Close Page ✖️</button>
+    <p>We have successfully received your nomination for the NLNG Awards 2025.<br>Your participation helps us celebrate excellence across our organization!</p>
+    
+    <div class="countdown" id="countdown">This page will close automatically in <span id="timer">10</span> seconds</div>
+    
+    <button class="close-btn" id="closeBtn">Close Page ✖️</button>
+    
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+
+    <div class="social-share">
+      <p>Share the NLNG Awards spirit:</p>
+      <div class="share-buttons">
+        <button class="share-btn" onclick="shareMessage()">📢 Share</button>
+        <button class="share-btn" onclick="copyLink()">🔗 Copy Link</button>
+      </div>
+    </div>
   </div>
+
+  <script>
+    // Create confetti effect
+    function createConfetti() {
+      const colors = ['#ffcc00', '#00ff80', '#00ccff', '#ff0066', '#ff6600'];
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        confetti.style.width = (Math.random() * 10 + 5) + 'px';
+        confetti.style.height = (Math.random() * 10 + 5) + 'px';
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => {
+          confetti.remove();
+        }, 5000);
+      }
+    }
+
+    // Create floating trophies
+    function createFloatingTrophies() {
+      const trophies = ['🏆', '⭐', '🎯', '👑', '💫'];
+      for (let i = 0; i < 8; i++) {
+        const trophy = document.createElement('div');
+        trophy.className = 'floating-trophy';
+        trophy.textContent = trophies[Math.floor(Math.random() * trophies.length)];
+        trophy.style.left = Math.random() * 100 + 'vw';
+        trophy.style.top = Math.random() * 100 + 'vh';
+        trophy.style.animationDelay = (Math.random() * 5) + 's';
+        trophy.style.fontSize = (Math.random() * 2 + 1.5) + 'rem';
+        document.body.appendChild(trophy);
+      }
+    }
+
+    // Create background particles
+    function createParticles() {
+      const particlesContainer = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + 'vw';
+        particle.style.width = (Math.random() * 5 + 1) + 'px';
+        particle.style.height = particle.style.width;
+        particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+        particle.style.animationDelay = (Math.random() * 5) + 's';
+        particle.style.opacity = Math.random() * 0.5 + 0.2;
+        particlesContainer.appendChild(particle);
+      }
+    }
+
+    // Auto-close countdown
+    let countdown = 10;
+    const timerElement = document.getElementById('timer');
+    const countdownInterval = setInterval(() => {
+      countdown--;
+      timerElement.textContent = countdown;
+      
+      if (countdown <= 0) {
+        clearInterval(countdownInterval);
+        closePage();
+      }
+    }, 1000);
+
+    // Close page function
+    function closePage() {
+      // Try different methods to close the window
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.close();
+      }
+      
+      // Fallback: redirect to a blank page or previous page
+      setTimeout(() => {
+        window.location.href = 'about:blank';
+      }, 1000);
+    }
+
+    // Share message function
+    function shareMessage() {
+      const shareText = "I just nominated outstanding colleagues for the NLNG Awards 2025! 🏆 Join me in celebrating excellence at NLNG. #NlngAwards2025 #CelebratingExcellence";
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'NLNG Awards 2025',
+          text: shareText,
+          url: window.location.href
+        });
+      } else {
+        // Fallback for browsers that don't support Web Share API
+        navigator.clipboard.writeText(shareText).then(() => {
+          alert('Share message copied to clipboard! 📋');
+        });
+      }
+    }
+
+    // Copy link function
+    function copyLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        alert('Link copied to clipboard! 🔗');
+      });
+    }
+
+    // Stop auto-close if user interacts
+    document.getElementById('closeBtn').addEventListener('click', () => {
+      clearInterval(countdownInterval);
+      closePage();
+    });
+
+    // Stop auto-close on any user interaction
+    document.addEventListener('click', () => {
+      clearInterval(countdownInterval);
+      document.getElementById('countdown').textContent = 'Auto-close cancelled. Please use the close button above.';
+    });
+
+    document.addEventListener('keydown', () => {
+      clearInterval(countdownInterval);
+      document.getElementById('countdown').textContent = 'Auto-close cancelled. Please use the close button above.';
+    });
+
+    // Initialize effects
+    window.onload = function() {
+      createConfetti();
+      createFloatingTrophies();
+      createParticles();
+      
+      // Additional confetti bursts
+      setTimeout(createConfetti, 2000);
+      setTimeout(createConfetti, 4000);
+    };
+  </script>
 </body>
 </html>
-
