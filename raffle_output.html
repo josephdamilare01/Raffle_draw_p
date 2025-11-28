@@ -1140,10 +1140,14 @@
         }
 
         giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
-        fullGifts = fullGifts.filter(gift => 
-            !(giftsToRemove.includes(gift.name) && (gift.department === currentDepartment || gift.department === "ALL DEPARTMENTS"))
-        );
+fullGifts = fullGifts.filter(gift => 
+    !(giftsToRemove.includes(gift.name) && (gift.department === currentDepartment || gift.department === "ALL DEPARTMENTS"))
+);
 
+// Remove drawn participants from both current and full participant pools
+const participantsToRemove = results.map(result => result.name);
+participants = participants.filter(p => !participantsToRemove.includes(p.name));
+fullParticipants = fullParticipants.filter(p => !participantsToRemove.includes(p.name));
         index = 0;
         giftImageEl.classList.remove("floating"); 
         await runDrawSequence();
@@ -1308,6 +1312,7 @@
 </script>
 </body>
 </html>
+
 
 
 
