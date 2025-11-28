@@ -417,9 +417,60 @@
             50% { transform: translateY(-8px) rotate(1deg); }
             100% { transform: translateY(0) rotate(0deg); }
         }
+
+        /* NEW: Airplane Flying Animation */
+        .airplane {
+            position: fixed;
+            top: 20%;
+            right: -100px;
+            font-size: 3rem;
+            z-index: 1000;
+            animation: flyAcross 8s linear infinite;
+            display: none;
+        }
+
+        .airplane.flying {
+            display: block;
+        }
+
+        @keyframes flyAcross {
+            0% {
+                transform: translateX(0) translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            50% {
+                transform: translateX(-50vw) translateY(-20px) rotate(-5deg);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100vw) translateY(20px) rotate(5deg);
+                opacity: 0;
+            }
+        }
+
+        /* Special styling for star gift winner card */
+        .star-gift-winner {
+            background: linear-gradient(180deg, rgba(255,215,0,0.95), rgba(255,165,0,0.9)) !important;
+            border: 3px solid gold;
+            box-shadow: 0 0 30px gold !important;
+        }
+
+        .star-gift-text {
+            color: #8B0000 !important;
+            font-weight: 800 !important;
+            text-shadow: 1px 1px 2px white;
+        }
     </style>
 </head>
 <body>
+
+<!-- ADD AIRPLANE ELEMENT -->
+<div class="airplane" id="airplane">✈️</div>
 
 <div class="logo">
     <img src="nlng-logo.png" alt="NLNG Logo">
@@ -448,6 +499,8 @@
                     <input type="number" id="maxDrawsInput" class="btn" value="1" min="1" placeholder="Max Draws" style="background: rgba(255, 255, 255, 0.1); color: white; border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px; border-radius: 10px; font-size: 1.2rem; width: 150px; text-align: center;">
 
                     <button class="btn" id="startDraw">Start Draw</button>
+                    <!-- ADD STAR PRIZE BUTTON -->
+                    <button class="btn" id="starPrizeDraw" style="background: linear-gradient(90deg, #FFD700, #FFA500); color: #8B0000; font-weight: bold;">⭐ Star Prize Draw</button>
                     <button class="btn" id="restartBtn">Restart</button>
                     <button class="btn" id="homeBtn">🏠 Home</button>
                 </div>
@@ -529,6 +582,9 @@
         // PM Department Gifts
         { name: "Hisense 1HP Split Copper Inverter AC", department: "TD,TI,& NTB Partners", image: "Hisense 1HP Split Copper Inverter AC.png" },
         { name: "rice", department: "TD,TI,& NTB Partners", image: "rice.png" },
+
+        // STAR PRIZE - Available to ALL departments
+        { name: "TRAVEL TO AMERICA", department: "ALL DEPARTMENTS", image: "america-travel.jpg" },
     ];
 
     let fullParticipants = [];
@@ -606,6 +662,179 @@
         carouselGroup.style.animationPlayState = 'running';
     }
 
+    // NEW: Airplane control functions
+    function startAirplane() {
+        const airplane = document.getElementById('airplane');
+        airplane.classList.add('flying');
+        
+        // Restart animation
+        airplane.style.animation = 'none';
+        setTimeout(() => {
+            airplane.style.animation = 'flyAcross 8s linear infinite';
+        }, 10);
+    }
+
+    function stopAirplane() {
+        const airplane = document.getElementById('airplane');
+        airplane.classList.remove('flying');
+    }
+
+    // NEW: Star Prize Draw Function
+    document.getElementById("starPrizeDraw").addEventListener("click", async () => {
+        // Get ALL participants regardless of department
+        const allParticipants = [...fullParticipants];
+        
+        if (allParticipants.length === 0) {
+            alert("No participants available for the star prize draw.");
+            return;
+        }
+
+        // Check if star prize is still available
+        const starPrize = { name: "TRAVEL TO AMERICA", department: "ALL DEPARTMENTS", image: "america-travel.jpg" };
+        const starPrizeStillAvailable = !results.some(result => 
+            result.gift.name === "TRAVEL TO AMERICA"
+        );
+
+        if (!starPrizeStillAvailable) {
+            alert("⭐ The star prize (TRAVEL TO AMERICA) has already been won!");
+            return;
+        }
+
+        // Special confirmation for star prize
+        if (!confirm("🎉 This will draw the STAR PRIZE (TRAVEL TO AMERICA) from ALL departments!\n\nAre you ready to select the lucky winner?")) {
+            return;
+        }
+
+        // Run the star prize draw
+        const shuffledAllParticipants = [...allParticipants].sort(() => 0.5 - Math.random());
+        const winner = shuffledAllParticipants[0];
+
+        // Create result for star prize
+        const starPrizeResult = {
+            name: winner.name,
+            division: winner.division,
+            idCard: winner.idCard,
+            gift: starPrize,
+        };
+
+        // Add to results
+        results.push(starPrizeResult);
+
+        // Remove star prize from available gifts
+        giftsForDraw = giftsForDraw.filter(gift => gift.name !== "TRAVEL TO AMERICA");
+        fullGifts = fullGifts.filter(gift => gift.name !== "TRAVEL TO AMERICA");
+
+        // Display the winner with special effects
+        await displayStarPrizeWinner(starPrizeResult);
+        
+        // Update displays
+        totalGiftsDisplay.textContent = giftsForDraw.length;
+        updateRemainingGiftsDisplay();
+    });
+
+    // NEW: Special function to display star prize winner
+    async function displayStarPrizeWinner(winner) {
+        // Hide any current display
+        winnerCard.style.display = "none";
+        giftImageEl.classList.remove("floating");
+        
+        // Special countdown for star prize
+        await startCountdown(5);
+        
+        // Apply star prize styling
+        winnerCard.classList.add("star-gift-winner");
+        
+        // Update winner card
+        winnerNameEl.textContent = `🏆 ${winner.name}`;
+        idNumberEl.textContent = `🪪 ${winner.idCard}`;
+        divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
+        giftNameEl.innerHTML = `🎁 <span class="star-gift-text">${winner.gift.name}</span>`;
+        
+        // Set star prize image
+        const imageSource = winner.gift.image && winner.gift.image.trim() 
+            ? winner.gift.image 
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#FFD700"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#8B0000" font-weight="bold">⭐ TRAVEL TO AMERICA ⭐</text></svg>`)}`;
+        
+        giftImageEl.src = imageSource;
+        winnerCard.style.display = "block";
+        
+        // Animation
+        giftImageEl.classList.remove("leaving", "floating");
+        void giftImageEl.offsetWidth;
+        giftImageEl.classList.add("entering");
+
+        // Start airplane animation
+        startAirplane();
+        
+        // Mega confetti for star prize
+        if (typeof confetti === "function") {
+            confetti({ 
+                particleCount: 800, 
+                spread: 200, 
+                origin: { y: 0.6 },
+                colors: ['#FFD700', '#FFA500', '#FF0000', '#0000FF', '#FFFFFF'],
+                scalar: 1.5
+            });
+            
+            // Multiple confetti bursts
+            setTimeout(() => confetti({ 
+                particleCount: 500, 
+                spread: 150,
+                colors: ['#FFD700', '#FFA500']
+            }), 800);
+            
+            setTimeout(() => confetti({ 
+                particleCount: 400, 
+                spread: 120,
+                colors: ['#FF0000', '#0000FF', '#FFFFFF']
+            }), 1600);
+        }
+
+        // Add to results table
+        const currentRowCount = resultBody.querySelectorAll('tr').length;
+        const rowHtml = `<tr style="background: linear-gradient(90deg, #FFF8DC, #FFEBCD); font-weight: bold;">
+            <td>${currentRowCount + 1}</td>
+            <td>⭐ ${escapeHtml(winner.name)} ⭐</td>
+            <td>${escapeHtml(winner.idCard)}</td>
+            <td>${escapeHtml(winner.division || "—")}</td>
+            <td style="color: #8B0000; font-weight: bold;">⭐ ${escapeHtml(winner.gift.name)} ⭐</td>
+        </tr>`;
+        resultBody.insertAdjacentHTML("beforeend", rowHtml);
+        
+        if (currentRowCount === 0) {
+            resultTable.style.display = "table";
+        }
+
+        // Show celebration message
+        setTimeout(() => {
+            const celebrationMsg = document.createElement('div');
+            celebrationMsg.id = 'starPrizeCelebration';
+            celebrationMsg.innerHTML = '🎉 CONGRATULATIONS! STAR PRIZE WINNER! 🎉';
+            celebrationMsg.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: linear-gradient(135deg, #FFD700, #FFA500);
+                color: #8B0000;
+                font-size: 3rem;
+                font-weight: 800;
+                padding: 30px 50px;
+                border-radius: 20px;
+                box-shadow: 0 0 50px gold;
+                z-index: 2000;
+                text-align: center;
+                animation: popUp 1s ease forwards, fadeOut 5s 3s forwards;
+            `;
+            document.body.appendChild(celebrationMsg);
+        }, 2000);
+
+        await sleep(6000);
+        
+        // Stop airplane after animation
+        setTimeout(stopAirplane, 8000);
+    }
+
     // ALL YOUR EXISTING FUNCTIONS REMAIN EXACTLY THE SAME
     function populateDepartmentSelector() {
         const select = document.getElementById("departmentSelect");
@@ -653,6 +882,7 @@
         });
     }
 
+    // UPDATED: Filter function to include star prize
     function filterAllByDepartment(dept) {
         if (!dept || dept.trim() === "") {
             return {
@@ -671,12 +901,12 @@
         
         const filteredGiftsForDraw = fullGifts.filter(g => {
             const giftDept = String(g.department || "").toLowerCase().trim();
-            return giftDept === deptLower;
+            return giftDept === deptLower || giftDept === "all departments";
         });
         
         const filteredHardcodedGifts = giftsHardcoded.filter(g => {
             const hardcodedDept = String(g.department || "").toLowerCase().trim();
-            return hardcodedDept === deptLower;
+            return hardcodedDept === deptLower || hardcodedDept === "all departments";
         });
 
         return {
@@ -694,7 +924,7 @@
         return {
             name: participant.name || participant.Name || participant.Participant || "Unnamed",
             division: participant.division || participant.Division || department || "—",
-            idCard: participant.idCardNumber || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
+            idCard: participant.idCardNumber || participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
             department: department
         };
     }
@@ -734,6 +964,7 @@
                 ).join('<br>')}</div>`;
         }
     }
+
     // Initialize the page
     window.addEventListener("DOMContentLoaded", () => {
         const savedParticipants = localStorage.getItem("participantsData");
@@ -785,13 +1016,22 @@
         updateRemainingGiftsDisplay();
     });
 
-    // ALL YOUR EXISTING DRAWING FUNCTIONS REMAIN EXACTLY THE SAME
+    // UPDATED: previewGift function to handle star gifts
     async function previewGift(giftObj) {
         winnerCard.style.display = "block";
         winnerNameEl.textContent = "🎁 Gift Preview";
         idNumberEl.textContent = `Department: ${giftObj.department || "General"}`;
         divisionNameEl.textContent = "Click 'Start Draw' to begin!";
-        giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+        
+        // Check if it's a star gift for preview
+        const isStarGift = giftObj.name && giftObj.name.toUpperCase().includes('TRAVEL TO AMERICA');
+        if (isStarGift) {
+            winnerCard.classList.add('star-gift-winner');
+            giftNameEl.innerHTML = `🎁 <span class="star-gift-text">${giftObj.name}</span>`;
+        } else {
+            winnerCard.classList.remove('star-gift-winner');
+            giftNameEl.textContent = `Featured Gift: ${giftObj.name}`;
+        }
 
         const giftImageSrc = (giftObj.image && giftObj.image.trim()) 
             ? giftObj.image 
@@ -816,6 +1056,7 @@
         }, 700);
     }
 
+    // UPDATED: startDraw to handle star prize if it comes up randomly
     document.getElementById("startDraw").addEventListener("click", async () => {
         if (!participants.length) {
             alert("No participants available for the selected department.");
@@ -847,18 +1088,25 @@
         const giftsToRemove = [];
         
         for (let i = 0; i < numDraws; i++) {
+            const gift = shuffledGifts[i];
             results.push({
                 name: shuffledParticipants[i].name,
                 division: shuffledParticipants[i].division,
                 idCard: shuffledParticipants[i].idCard,
-                gift: shuffledGifts[i], 
+                gift: gift, 
             });
-            giftsToRemove.push(shuffledGifts[i].name);
+            giftsToRemove.push(gift.name);
+            
+            // Special handling if this is the star prize
+            if (gift.name === "TRAVEL TO AMERICA") {
+                // Remove star prize from ALL gift pools
+                fullGifts = fullGifts.filter(g => g.name !== "TRAVEL TO AMERICA");
+            }
         }
 
         giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
         fullGifts = fullGifts.filter(gift => 
-            !(giftsToRemove.includes(gift.name) && gift.department === currentDepartment)
+            !(giftsToRemove.includes(gift.name) && (gift.department === currentDepartment || gift.department === "ALL DEPARTMENTS"))
         );
 
         index = 0;
@@ -972,7 +1220,18 @@
         winnerNameEl.textContent = `🏆 ${winner.name}`;
         idNumberEl.textContent = `🪪 ${winner.idCard}`;
         divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
-        giftNameEl.textContent = `🎁 ${giftText}`;
+        
+        // Check if it's a star gift and apply special effects
+        const isStarGift = giftObj.name && giftObj.name.toUpperCase().includes('TRAVEL TO AMERICA');
+        if (isStarGift) {
+            winnerCard.classList.add('star-gift-winner');
+            giftNameEl.innerHTML = `🎁 <span class="star-gift-text">${giftText}</span>`;
+            startAirplane();
+            setTimeout(stopAirplane, 8000);
+        } else {
+            winnerCard.classList.remove('star-gift-winner');
+            giftNameEl.textContent = `🎁 ${giftText}`;
+        }
 
         const imageSource = (displayGift && displayGift.image && displayGift.image.trim()) 
             ? displayGift.image 
@@ -1014,25 +1273,3 @@
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
