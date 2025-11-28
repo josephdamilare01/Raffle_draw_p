@@ -694,7 +694,7 @@
         return {
             name: participant.name || participant.Name || participant.Participant || "Unnamed",
             division: participant.division || participant.Division || department || "—",
-            idCard: participant.idCard || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
+            idCard: participant.idCardNumber || participant["ID Card Number"] || participant["ID CARD NO"] || participant.ID || participant["ID"] || "—",
             department: department
         };
     }
@@ -1014,6 +1014,7 @@
 </script>
 </body>
 </html>
+
 
 
 
