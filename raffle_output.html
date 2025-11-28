@@ -691,18 +691,18 @@
         }
 
         // Check if star prize is still available
-        const starPrize = { name: "TRAVEL TO AMERICA", department: "ALL DEPARTMENTS", image: "america-travel.jpg" };
+        const starPrize = { name: "One week all expense paid trip to Transcorp Hilton Abuja", department: "ALL DEPARTMENTS", image: "america-travel.jpg" };
         const starPrizeStillAvailable = !results.some(result => 
-            result.gift.name === "TRAVEL TO AMERICA"
+            result.gift.name === "One week all expense paid trip to Transcorp Hilton Abuja"
         );
 
         if (!starPrizeStillAvailable) {
-            alert("⭐ The star prize (TRAVEL TO AMERICA) has already been won!");
+            alert("⭐ The star prize (One week all expense paid trip to Transcorp Hilton Abuja) has already been won!");
             return;
         }
 
         // Special confirmation for star prize
-        if (!confirm("🎉 This will draw the STAR PRIZE (TRAVEL TO AMERICA) from ALL departments!\n\nAre you ready to select the lucky winner?")) {
+        if (!confirm("🎉 This will draw the STAR PRIZE (-One week all expense paid trip to Transcorp Hilton Abuja) from ALL departments!\n\nAre you ready to select the lucky winner?")) {
             return;
         }
 
@@ -722,8 +722,8 @@
         results.push(starPrizeResult);
 
         // Remove star prize from available gifts
-        giftsForDraw = giftsForDraw.filter(gift => gift.name !== "TRAVEL TO AMERICA");
-        fullGifts = fullGifts.filter(gift => gift.name !== "TRAVEL TO AMERICA");
+        giftsForDraw = giftsForDraw.filter(gift => gift.name !== "One week all expense paid trip to Transcorp Hilton Abuja");
+        fullGifts = fullGifts.filter(gift => gift.name !== "One week all expense paid trip to Transcorp Hilton Abuja");
 
         // Display the winner with special effects
         await displayStarPrizeWinner(starPrizeResult);
@@ -754,7 +754,7 @@
         // Set star prize image
         const imageSource = winner.gift.image && winner.gift.image.trim() 
             ? winner.gift.image 
-            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#FFD700"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#8B0000" font-weight="bold">⭐ TRAVEL TO AMERICA ⭐</text></svg>`)}`;
+            : `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="100%" height="100%" fill="#FFD700"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#8B0000" font-weight="bold">⭐ One week all expense paid trip to Transcorp Hilton Abuja ⭐</text></svg>`)}`;
         
         giftImageEl.src = imageSource;
         winnerCard.style.display = "block";
@@ -1025,7 +1025,7 @@
         divisionNameEl.textContent = "Click 'Start Draw' to begin!";
         
         // Check if it's a star gift for preview
-        const isStarGift = giftObj.name && giftObj.name.toUpperCase().includes('TRAVEL TO AMERICA');
+        const isStarGift = giftObj.name && giftObj.name.toUpperCase().includes('One week all expense paid trip to Transcorp Hilton Abuja');
         if (isStarGift) {
             winnerCard.classList.add('star-gift-winner');
             giftNameEl.innerHTML = `🎁 <span class="star-gift-text">${giftObj.name}</span>`;
@@ -1099,9 +1099,9 @@
             giftsToRemove.push(gift.name);
             
             // Special handling if this is the star prize
-            if (gift.name === "TRAVEL TO AMERICA") {
+            if (gift.name === "One week all expense paid trip to Transcorp Hilton Abuja") {
                 // Remove star prize from ALL gift pools
-                fullGifts = fullGifts.filter(g => g.name !== "TRAVEL TO AMERICA");
+                fullGifts = fullGifts.filter(g => g.name !== "One week all expense paid trip to Transcorp Hilton Abuja");
             }
         }
 
@@ -1223,7 +1223,7 @@
         divisionNameEl.textContent = `🏢 ${winner.division || "—"}`;
         
         // Check if it's a star gift and apply special effects
-        const isStarGift = giftObj.name && giftObj.name.toUpperCase().includes('TRAVEL TO AMERICA');
+        const isStarGift = giftObj.name && giftObj.name.toUpperCase().includes('One week all expense paid trip to Transcorp Hilton Abuja');
         if (isStarGift) {
             winnerCard.classList.add('star-gift-winner');
             giftNameEl.innerHTML = `🎁 <span class="star-gift-text">${giftText}</span>`;
@@ -1274,4 +1274,5 @@
 </script>
 </body>
 </html>
+
 
