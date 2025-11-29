@@ -3,12 +3,27 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NLNG Voting Page</title>
-
+  <title>NLNG Employee Excellence Awards</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --nlng-green: #006b3f;
+      --nlng-light-green: #00a859;
+      --nlng-yellow: #ffd700;
+      --nlng-dark: #003300;
+      --text-light: #ffffff;
+      --text-dark: #333333;
+    }
+
     body {
       font-family: "Segoe UI", Arial, sans-serif;
-      color: #fff;
+      color: var(--text-light);
       text-align: center;
       margin: 0;
       display: flex;
@@ -16,7 +31,7 @@
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
-      background: #003300;
+      background: var(--nlng-dark);
       overflow-x: hidden;
       position: relative;
     }
@@ -26,67 +41,175 @@
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
-      background: url("images/nlng-bg.jpg") center/cover no-repeat;
-      filter: brightness(70%) blur(1px);
+      background: linear-gradient(135deg, #003300 0%, #006b3f 100%);
       z-index: -2;
-    }
-
-    body::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.4);
-      z-index: -1;
     }
 
     .container {
       background: rgba(255,255,255,0.08);
       padding: 30px;
       border-radius: 20px;
-      width: 90%;
-      max-width: 1200px;
+      width: 95%;
+      max-width: 1400px;
       backdrop-filter: blur(8px);
-      margin-top: 40px;
+      margin: 40px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
-      /* --- NLNG Logo Styling --- */
-.logo {
-  position: absolute;
-  top: 20px;
-  left: 30px;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-    
-.logo img {
-  height: 80px;
-  width: auto;
-  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
-  transition: transform 0.3s ease, filter 0.3s ease;
-}
+    /* Header Styling */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
 
-.logo img:hover {
-  transform: scale(1.05);
-  filter: drop-shadow(0 0 8px var(--nlng-yellow));
-}
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo img {
+      height: 80px;
+      width: auto;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.3));
+    }
+
+    .title-section {
+      flex-grow: 1;
+      text-align: center;
+    }
 
     h1 {
+      font-size: 2.2em;
       margin-bottom: 10px;
-      font-size: 1.8em;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
     h2 {
       font-weight: normal;
-      font-size: 1.2em;
-      margin-bottom: 40px;
+      font-size: 1.3em;
+      margin-bottom: 5px;
+      opacity: 0.9;
     }
 
-    #candidateList {
+    .instructions {
+      font-size: 0.9em;
+      opacity: 0.8;
+      margin-top: 10px;
+    }
+
+    /* Voter ID Section */
+    .voter-id-section {
+      background: rgba(0,107,63,0.2);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+
+    .voter-id-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .form-group label {
+      font-weight: bold;
+    }
+
+    .form-group input {
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.1);
+      color: white;
+      font-size: 16px;
+    }
+
+    .form-group input::placeholder {
+      color: rgba(255,255,255,0.6);
+    }
+
+    .id-display {
+      background: rgba(255,215,0,0.2);
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      text-align: center;
+      display: none;
+    }
+
+    .id-display.active {
+      display: block;
+    }
+
+    .voter-id {
+      font-family: monospace;
+      font-size: 1.2em;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin: 10px 0;
+      color: var(--nlng-yellow);
+    }
+
+    .save-id-btn {
+      background: var(--nlng-green);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: 0.3s;
+      margin-top: 10px;
+    }
+
+    .save-id-btn:hover {
+      background: var(--nlng-light-green);
+    }
+
+    /* Award Sections */
+    .awards-container {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .award-section {
+      background: rgba(0,107,63,0.15);
+      border-radius: 15px;
+      padding: 25px;
+      text-align: left;
+    }
+
+    .award-title {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--nlng-yellow);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .award-title i {
+      color: var(--nlng-yellow);
+    }
+
+    .candidates-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 25px;
       justify-items: center;
     }
@@ -95,92 +218,297 @@
       background: rgba(0,107,63,0.85);
       border-radius: 15px;
       padding: 15px;
-      cursor: pointer;
-      transition: 0.3s;
-      width: 180px;
+      width: 100%;
       text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      transition: 0.3s;
+      cursor: pointer;
     }
 
     .candidate:hover {
-      background: #00a859;
-      transform: scale(1.05);
+      background: var(--nlng-light-green);
+      transform: scale(1.03);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
     .candidate.selected {
-      background: gold;
-      color: #000;
+      background: var(--nlng-yellow);
+      color: var(--text-dark);
       font-weight: bold;
     }
 
+    .candidate.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     .candidate img {
-      width: 100px;
-      height: 100px;
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid white;
       margin-bottom: 10px;
     }
 
-    button {
+    .candidate-name {
+      font-size: 1.1em;
+      margin: 10px 0 5px;
+    }
+
+    .candidate-role {
+      font-size: 0.9em;
+      opacity: 0.8;
+    }
+
+    /* Radio Button Styling */
+    .radio-container {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+    }
+
+    .radio-input {
+      display: none;
+    }
+
+    .radio-custom {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid white;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .radio-custom::after {
+      content: "";
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      opacity: 0;
+      transition: 0.3s;
+    }
+
+    .radio-input:checked + .radio-custom {
+      background: var(--nlng-yellow);
+      border-color: var(--nlng-yellow);
+    }
+
+    .radio-input:checked + .radio-custom::after {
+      opacity: 1;
+    }
+
+    .radio-input:checked ~ .candidate-content {
+      color: var(--text-dark);
+    }
+
+    /* Voting Controls */
+    .voting-controls {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .selected-info {
+      background: rgba(255,215,0,0.2);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .selected-info.active {
+      display: block;
+    }
+
+    .vote-btn {
       padding: 15px 35px;
       border: none;
       border-radius: 8px;
-      background-color: #006b3f;
-      color: #fff;
+      background-color: var(--nlng-green);
+      color: var(--text-light);
       font-size: 18px;
       cursor: pointer;
       transition: 0.3s;
-      margin-top: 40px;
+      margin: 10px;
     }
 
-    button:hover {
-      background-color: #00a859;
+    .vote-btn:hover {
+      background-color: var(--nlng-light-green);
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
-    /* ✅ New Admin Button */
-    #adminBtn {
-      margin-top: 25px;
+    .vote-btn:disabled {
+      background-color: #777;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .admin-btn {
+      margin-top: 15px;
       background-color: #444;
     }
 
-    #adminBtn:hover {
-      background-color: #777;
+    .admin-btn:hover {
+      background-color: #666;
     }
-    /* ✅ NLNG logo top-left */
-    .nlng-logo {
-      position: absolute;
-      top: 25px;
-      left: 25px;
-      width: 90px;
-      height: auto;
-      z-index: 10;
-      animation: fadeIn 1.5s ease-in-out;
+
+    /* Footer */
+    .footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      font-size: 0.9em;
+      opacity: 0.7;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      border-radius: 10px;
+      margin: 20px 0;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--nlng-yellow);
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* Already Voted Message */
+    .already-voted {
+      background: rgba(255,0,0,0.2);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+      display: none;
+    }
+
+    .already-voted.active {
+      display: block;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .candidates-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      }
+      
+      .voter-id-form {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 
 <body>
-   <!-- NLNG Logo -->
-<div class="logo">
-  <img src="nlng-logo.png" alt="NLNG Logo">
-</div>
   <div class="container">
-    <h1>NLNG Employee Excellence Awards</h1>
-    <h2>Select your preferred nominee below</h2>
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <img src="https://i.imgur.com/3Q1qY7Z.png" alt="NLNG Logo">
+      </div>
+      <div class="title-section">
+        <h1>NLNG Employee Excellence Awards</h1>
+        <h2>Celebrating Outstanding Performance and Dedication</h2>
+        <p class="instructions">Select one nominee for each award category using the radio buttons</p>
+      </div>
+    </div>
 
-    <div id="candidateList"></div>
-    <button id="voteBtn">Submit Vote</button>
+    <!-- Already Voted Message -->
+    <div class="already-voted" id="alreadyVoted">
+      <h2><i class="fas fa-check-circle"></i> You Have Already Voted</h2>
+      <p>Our records show that you have already submitted your votes for the NLNG Employee Excellence Awards.</p>
+      <p>Thank you for participating!</p>
+    </div>
 
-    <!-- ✅ Admin Access Button -->
-    <button id="adminBtn">🔐 View Results (Admin)</button>
+    <!-- Voter ID Section -->
+    <div class="voter-id-section" id="voterIdSection">
+      <h3>Voter Identification</h3>
+      <p>Please provide your details to generate a unique voter ID. This ID will be used to ensure you can only vote once, even if you switch devices.</p>
+      
+      <div class="voter-id-form" id="voterIdForm">
+        <div class="form-group">
+          <label for="employeeId">Employee ID</label>
+          <input type="text" id="employeeId" placeholder="Enter your employee ID" required>
+        </div>
+        <div class="form-group">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" placeholder="Enter your full name" required>
+        </div>
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input type="text" id="department" placeholder="Enter your department" required>
+        </div>
+        <button type="button" id="generateIdBtn" class="vote-btn">Generate Voter ID</button>
+      </div>
+      
+      <div class="id-display" id="idDisplay">
+        <h3>Your Unique Voter ID</h3>
+        <div class="voter-id" id="voterIdDisplay"></div>
+        <p>Please save this ID. You will need it if you switch devices.</p>
+        <button class="save-id-btn" id="saveIdBtn">
+          <i class="fas fa-save"></i> Save Voter ID
+        </button>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Awards Container -->
+    <div class="awards-container" id="awardsContainer">
+      <!-- Award sections will be dynamically added here -->
+    </div>
+
+    <!-- Voting Controls -->
+    <div class="voting-controls">
+      <div class="selected-info" id="selectedInfo">
+        <h3>Your Selections:</h3>
+        <div id="selectionsList"></div>
+      </div>
+      <button class="vote-btn" id="voteBtn">Submit Your Votes</button>
+      <button class="vote-btn admin-btn" id="adminBtn">
+        <i class="fas fa-lock"></i> Admin Access
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>NLNG Employee Excellence Awards 2023 | All votes are confidential</p>
+    </div>
   </div>
 
-  <!-- ✅ Firebase v10 Modular SDK -->
+  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getDatabase, ref, get, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    // ✅ Firebase config
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
       authDomain: "nlng-voting-system.firebaseapp.com",
@@ -195,81 +523,430 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const candidates = [
-      { name: "John Okafor", img: "images/john.jpg" },
-      { name: "Amina Bello", img: "images/amina.jpg" },
-      { name: "Chinedu Nwosu", img: "images/chinedu.jpg" },
-      { name: "Grace Eze", img: "images/grace.jpg" },
-      { name: "Emeka Uche", img: "images/emeka.jpg" },
-      { name: "Ifeoma Okeke", img: "images/ifeoma.jpg" },
-      { name: "Umar Danladi", img: "images/umar.jpg" },
-      { name: "Ngozi Udo", img: "images/ngozi.jpg" }
+    // Sample data for awards and candidates
+    const awardsData = [
+      {
+        id: "leadership",
+        name: "Leadership Excellence Award",
+        icon: "fas fa-trophy",
+        candidates: [
+          { name: "John Okafor", role: "Senior Manager", img: "https://i.pravatar.cc/150?img=1" },
+          { name: "Amina Bello", role: "Department Head", img: "https://i.pravatar.cc/150?img=2" },
+          { name: "Chinedu Nwosu", role: "Team Lead", img: "https://i.pravatar.cc/150?img=3" },
+          { name: "Grace Eze", role: "Project Manager", img: "https://i.pravatar.cc/150?img=4" }
+        ]
+      },
+      {
+        id: "innovation",
+        name: "Innovation Award",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "teamwork",
+        name: "Teamwork Award",
+        icon: "fas fa-users",
+        candidates: [
+          { name: "Fatima Ahmed", role: "Team Coordinator", img: "https://i.pravatar.cc/150?img=9" },
+          { name: "Samuel Johnson", role: "Collaboration Lead", img: "https://i.pravatar.cc/150?img=10" },
+          { name: "Ruth Okon", role: "Project Coordinator", img: "https://i.pravatar.cc/150?img=11" },
+          { name: "David Musa", role: "Department Lead", img: "https://i.pravatar.cc/150?img=12" }
+        ]
+      },
+      {
+        id: "customer-service",
+        name: "Customer Service Excellence",
+        icon: "fas fa-headset",
+        candidates: [
+          { name: "Susan Adebayo", role: "Client Relations", img: "https://i.pravatar.cc/150?img=13" },
+          { name: "Michael Okoro", role: "Support Specialist", img: "https://i.pravatar.cc/150?img=14" },
+          { name: "Patience Eze", role: "Customer Success", img: "https://i.pravatar.cc/150?img=15" },
+          { name: "James Okafor", role: "Service Manager", img: "https://i.pravatar.cc/150?img=16" }
+        ]
+      },
+      {
+        id: "safety",
+        name: "Safety Excellence Award",
+        icon: "fas fa-shield-alt",
+        candidates: [
+          { name: "Bola Adekunle", role: "Safety Officer", img: "https://i.pravatar.cc/150?img=17" },
+          { name: "Tunde Lawal", role: "Compliance Manager", img: "https://i.pravatar.cc/150?img=18" },
+          { name: "Chioma Nwankwo", role: "Risk Analyst", img: "https://i.pravatar.cc/150?img=19" },
+          { name: "Peter Okon", role: "Safety Coordinator", img: "https://i.pravatar.cc/150?img=20" }
+        ]
+      }
     ];
 
-    const candidateList = document.getElementById("candidateList");
-    const voteBtn = document.getElementById("voteBtn");
-    const adminBtn = document.getElementById("adminBtn");
-    let selectedCandidate = null;
+    // DOM Elements
+    const voterIdSection = document.getElementById('voterIdSection');
+    const voterIdForm = document.getElementById('voterIdForm');
+    const idDisplay = document.getElementById('idDisplay');
+    const voterIdDisplay = document.getElementById('voterIdDisplay');
+    const generateIdBtn = document.getElementById('generateIdBtn');
+    const saveIdBtn = document.getElementById('saveIdBtn');
+    const alreadyVoted = document.getElementById('alreadyVoted');
+    const awardsContainer = document.getElementById('awardsContainer');
+    const selectedInfo = document.getElementById('selectedInfo');
+    const selectionsList = document.getElementById('selectionsList');
+    const voteBtn = document.getElementById('voteBtn');
+    const adminBtn = document.getElementById('adminBtn');
+    const progressBar = document.getElementById('progressBar');
 
-    // ✅ Render candidates
-    candidates.forEach(c => {
-      const div = document.createElement("div");
-      div.classList.add("candidate");
-      div.innerHTML = `
-        <h3>${c.name}</h3>
-        <img src="${c.img}" alt="${c.name}">
-      `;
-      div.addEventListener("click", () => selectCandidate(c.name, div));
-      candidateList.appendChild(div);
-    });
+    // State variables
+    let selections = {};
+    let voterId = null;
 
-    function selectCandidate(name, el) {
-      document.querySelectorAll(".candidate").forEach(c => c.classList.remove("selected"));
-      el.classList.add("selected");
-      selectedCandidate = name;
+    // Initialize the page
+    function initPage() {
+      // Check if user has already voted
+      checkVotingStatus();
+      
+      // Set up event listeners
+      setupEventListeners();
     }
 
-    // ✅ Prevent multiple votes
-    if (localStorage.getItem("votedFor")) {
-      voteBtn.disabled = true;
-      voteBtn.textContent = "Vote Already Submitted";
+    // Check if user has already voted using Firebase
+    async function checkVotingStatus() {
+      // Try to get voter ID from localStorage
+      voterId = localStorage.getItem('nlngVoterId');
+      
+      if (voterId) {
+        // Check if this voter ID has already voted in Firebase
+        try {
+          const voteRef = ref(db, `votes/${voterId}`);
+          const snapshot = await get(voteRef);
+          
+          if (snapshot.exists()) {
+            // User has already voted
+            showAlreadyVoted();
+          } else {
+            // User has an ID but hasn't voted yet
+            showVotingInterface();
+            renderAwards();
+            loadSelections();
+          }
+        } catch (error) {
+          console.error("Error checking voting status:", error);
+          // If there's an error, show voting interface anyway
+          showVotingInterface();
+          renderAwards();
+          loadSelections();
+        }
+      } else {
+        // New user, show ID generation form
+        showIdGenerationForm();
+      }
     }
 
-    // ✅ Handle voting
-    voteBtn.addEventListener("click", async () => {
-      if (localStorage.getItem("votedFor")) {
-        alert("You have already voted!");
+    // Show the voter ID generation form
+    function showIdGenerationForm() {
+      voterIdSection.style.display = 'block';
+      awardsContainer.style.display = 'none';
+      selectedInfo.style.display = 'none';
+      voteBtn.style.display = 'none';
+    }
+
+    // Show the voting interface
+    function showVotingInterface() {
+      voterIdSection.style.display = 'none';
+      awardsContainer.style.display = 'block';
+      selectedInfo.style.display = 'block';
+      voteBtn.style.display = 'inline-block';
+    }
+
+    // Show already voted message
+    function showAlreadyVoted() {
+      voterIdSection.style.display = 'none';
+      awardsContainer.style.display = 'none';
+      selectedInfo.style.display = 'none';
+      voteBtn.style.display = 'none';
+      alreadyVoted.classList.add('active');
+    }
+
+    // Generate a unique voter ID
+    function generateVoterId(employeeId, fullName, department) {
+      // Create a hash from the user's details
+      const data = `${employeeId}-${fullName}-${department}-${Date.now()}`;
+      let hash = 0;
+      
+      for (let i = 0; i < data.length; i++) {
+        const char = data.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32-bit integer
+      }
+      
+      return `NLNG-${Math.abs(hash).toString(36).toUpperCase().substring(0, 8)}`;
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      // Generate ID button
+      generateIdBtn.addEventListener('click', () => {
+        const employeeId = document.getElementById('employeeId').value;
+        const fullName = document.getElementById('fullName').value;
+        const department = document.getElementById('department').value;
+        
+        if (!employeeId || !fullName || !department) {
+          alert('Please fill in all fields');
+          return;
+        }
+        
+        // Generate voter ID
+        voterId = generateVoterId(employeeId, fullName, department);
+        voterIdDisplay.textContent = voterId;
+        
+        // Show ID display
+        idDisplay.classList.add('active');
+      });
+      
+      // Save ID button
+      saveIdBtn.addEventListener('click', () => {
+        if (voterId) {
+          // Save voter ID to localStorage
+          localStorage.setItem('nlngVoterId', voterId);
+          
+          // Show voting interface
+          showVotingInterface();
+          renderAwards();
+        }
+      });
+      
+      // Vote button
+      voteBtn.addEventListener('click', async () => {
+        const selectedCount = Object.keys(selections).length;
+        
+        if (selectedCount === 0) {
+          alert('Please select at least one candidate before voting.');
+          return;
+        }
+        
+        if (selectedCount < awardsData.length) {
+          if (!confirm(`You have selected candidates for ${selectedCount} out of ${awardsData.length} awards. Do you want to submit your votes anyway?`)) {
+            return;
+          }
+        }
+        
+        if (confirm('You are about to submit your votes. This action cannot be undone. Confirm your votes?')) {
+          await submitVotes();
+        }
+      });
+      
+      // Admin button
+      adminBtn.addEventListener('click', () => {
+        const password = prompt('Enter admin password:');
+        if (password === 'NLNG2025') {
+          window.location.href = 'results.html';
+        } else {
+          alert('Incorrect password. Access denied.');
+        }
+      });
+    }
+
+    // Render all award sections
+    function renderAwards() {
+      awardsContainer.innerHTML = '';
+      
+      awardsData.forEach(award => {
+        const awardSection = document.createElement('div');
+        awardSection.className = 'award-section';
+        awardSection.id = award.id;
+        
+        awardSection.innerHTML = `
+          <div class="award-title">
+            <i class="${award.icon}"></i>
+            <span>${award.name}</span>
+          </div>
+          <div class="candidates-grid" id="candidates-${award.id}">
+            <!-- Candidates will be added here -->
+          </div>
+        `;
+        
+        awardsContainer.appendChild(awardSection);
+        
+        // Render candidates for this award
+        const candidatesGrid = document.getElementById(`candidates-${award.id}`);
+        award.candidates.forEach((candidate, index) => {
+          const candidateElement = document.createElement('label');
+          candidateElement.className = 'candidate';
+          candidateElement.innerHTML = `
+            <input type="radio" name="${award.id}" value="${candidate.name}" class="radio-input" id="${award.id}-${index}">
+            <span class="radio-custom"></span>
+            <div class="candidate-content">
+              <img src="${candidate.img}" alt="${candidate.name}">
+              <div class="candidate-name">${candidate.name}</div>
+              <div class="candidate-role">${candidate.role}</div>
+            </div>
+          `;
+          
+          candidateElement.addEventListener('click', (e) => {
+            // Only handle clicks on the candidate, not the radio button directly
+            if (e.target.type !== 'radio') {
+              const radio = candidateElement.querySelector('.radio-input');
+              radio.checked = true;
+              handleSelection(award.id, candidate.name, candidateElement);
+            }
+          });
+          
+          candidatesGrid.appendChild(candidateElement);
+        });
+      });
+      
+      // Set up radio button change events
+      document.querySelectorAll('.radio-input').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          const awardId = e.target.name;
+          const candidateName = e.target.value;
+          const candidateElement = e.target.closest('.candidate');
+          
+          // Remove selected class from all candidates in this award
+          document.querySelectorAll(`.candidate input[name="${awardId}"]`).forEach(r => {
+            r.closest('.candidate').classList.remove('selected');
+          });
+          
+          // Add selected class to the chosen candidate
+          candidateElement.classList.add('selected');
+          
+          handleSelection(awardId, candidateName, candidateElement);
+        });
+      });
+    }
+
+    // Handle candidate selection
+    function handleSelection(awardId, candidateName, candidateElement) {
+      // Update selections object
+      selections[awardId] = candidateName;
+      
+      // Save to localStorage
+      saveSelections();
+      
+      // Update UI
+      updateSelectionsList();
+      updateProgress();
+      
+      // Show selection info if at least one selection is made
+      if (Object.keys(selections).length > 0) {
+        selectedInfo.classList.add('active');
+      }
+    }
+
+    // Update the selections list
+    function updateSelectionsList() {
+      selectionsList.innerHTML = '';
+      
+      Object.keys(selections).forEach(awardId => {
+        const award = awardsData.find(a => a.id === awardId);
+        const listItem = document.createElement('div');
+        listItem.innerHTML = `<strong>${award.name}:</strong> ${selections[awardId]}`;
+        selectionsList.appendChild(listItem);
+      });
+    }
+
+    // Update progress bar
+    function updateProgress() {
+      const totalAwards = awardsData.length;
+      const selectedAwards = Object.keys(selections).length;
+      const progress = (selectedAwards / totalAwards) * 100;
+      
+      progressBar.style.width = `${progress}%`;
+    }
+
+    // Save selections to localStorage
+    function saveSelections() {
+      if (voterId) {
+        localStorage.setItem(`nlngSelections_${voterId}`, JSON.stringify(selections));
+      }
+    }
+
+    // Load selections from localStorage
+    function loadSelections() {
+      if (voterId) {
+        const savedSelections = localStorage.getItem(`nlngSelections_${voterId}`);
+        if (savedSelections) {
+          selections = JSON.parse(savedSelections);
+          
+          // Update radio buttons based on saved selections
+          Object.keys(selections).forEach(awardId => {
+            const candidateName = selections[awardId];
+            const radio = document.querySelector(`input[name="${awardId}"][value="${candidateName}"]`);
+            if (radio) {
+              radio.checked = true;
+              const candidateElement = radio.closest('.candidate');
+              if (candidateElement) {
+                candidateElement.classList.add('selected');
+              }
+            }
+          });
+          
+          updateSelectionsList();
+          updateProgress();
+        }
+      }
+    }
+
+    // Submit votes to Firebase
+    async function submitVotes() {
+      if (!voterId) {
+        alert('Error: No voter ID found. Please generate a voter ID first.');
         return;
       }
-
-      if (!selectedCandidate) {
-        alert("Please select a nominee before voting!");
-        return;
+      
+      try {
+        // Prepare vote data
+        const voteData = {
+          voterId: voterId,
+          selections: selections,
+          timestamp: new Date().toISOString(),
+          employeeId: document.getElementById('employeeId')?.value || 'Unknown'
+        };
+        
+        // Save vote to Firebase
+        const voteRef = ref(db, `votes/${voterId}`);
+        await set(voteRef, voteData);
+        
+        // Update vote counts for each candidate
+        for (const [awardId, candidateName] of Object.entries(selections)) {
+          const voteCountRef = ref(db, `results/${awardId}/${candidateName}`);
+          const snapshot = await get(voteCountRef);
+          const currentCount = snapshot.exists() ? snapshot.val() : 0;
+          await set(voteCountRef, currentCount + 1);
+        }
+        
+        // Mark as voted in localStorage
+        localStorage.setItem(`nlngVoted_${voterId}`, 'true');
+        
+        // Disable voting interface
+        disableVoting();
+        
+        // Show confirmation
+        alert(`Thank you! Your votes have been recorded. Your voter ID is ${voterId}.`);
+      } catch (error) {
+        console.error("Error submitting votes:", error);
+        alert("There was an error submitting your votes. Please try again.");
       }
+    }
 
-      const voteRef = ref(db, "votes/" + selectedCandidate);
-      const snapshot = await get(voteRef);
-      const currentVotes = snapshot.exists() ? snapshot.val() : 0;
-      await set(voteRef, currentVotes + 1);
-
-      localStorage.setItem("votedFor", selectedCandidate);
-
-      alert(`✅ Your vote for ${selectedCandidate} has been recorded!`);
+    // Disable voting after user has voted
+    function disableVoting() {
       voteBtn.disabled = true;
-      voteBtn.textContent = "Vote Recorded";
-    });
+      voteBtn.textContent = 'Votes Submitted';
+      
+      document.querySelectorAll('.radio-input').forEach(radio => {
+        radio.disabled = true;
+      });
+      
+      document.querySelectorAll('.candidate').forEach(el => {
+        el.style.pointerEvents = 'none';
+        el.classList.add('disabled');
+      });
+    }
 
-    // ✅ Admin Access Logic
-    adminBtn.addEventListener("click", () => {
-      const password = prompt("🔒 Enter admin password:");
-      if (password === "NLNG2025") {
-        window.location.href = "results_page.html";
-      } else if (password) {
-        alert("❌ Incorrect password. Access denied.");
-      }
-    });
+    // Initialize the page when loaded
+    document.addEventListener('DOMContentLoaded', initPage);
   </script>
 </body>
 </html>
-
-
