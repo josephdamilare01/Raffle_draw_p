@@ -405,6 +405,31 @@
       display: block;
     }
 
+    /* Loading Spinner */
+    .loading {
+      display: none;
+      margin: 10px 0;
+    }
+
+    .loading.active {
+      display: block;
+    }
+
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top: 4px solid var(--nlng-yellow);
+      width: 30px;
+      height: 30px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     /* Responsive Design */
     @media (max-width: 768px) {
       .header {
@@ -491,6 +516,13 @@
         <h3>Your Selections:</h3>
         <div id="selectionsList"></div>
       </div>
+      
+      <!-- Loading Spinner -->
+      <div class="loading" id="loadingSpinner">
+        <div class="spinner"></div>
+        <p>Submitting your vote...</p>
+      </div>
+      
       <button class="vote-btn" id="voteBtn">Submit Your Votes</button>
       <button class="vote-btn admin-btn" id="adminBtn">
         <i class="fas fa-lock"></i> Admin Access
@@ -506,7 +538,7 @@
   <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, get, set, onValue, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+    import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
     // Firebase config
     const firebaseConfig = {
@@ -520,8 +552,16 @@
       measurementId: "G-D6MX1JL08C"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    // Initialize Firebase
+    let db;
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+      console.log("Firebase initialized successfully");
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+      alert("Error connecting to voting system. Please refresh the page and try again.");
+    }
 
     // Sample data for awards and candidates
     const awardsData = [
@@ -557,28 +597,6 @@
           { name: "Ruth Okon", role: "Project Coordinator", img: "https://i.pravatar.cc/150?img=11" },
           { name: "David Musa", role: "Department Lead", img: "https://i.pravatar.cc/150?img=12" }
         ]
-      },
-      {
-        id: "customer-service",
-        name: "Customer Service Excellence",
-        icon: "fas fa-headset",
-        candidates: [
-          { name: "Susan Adebayo", role: "Client Relations", img: "https://i.pravatar.cc/150?img=13" },
-          { name: "Michael Okoro", role: "Support Specialist", img: "https://i.pravatar.cc/150?img=14" },
-          { name: "Patience Eze", role: "Customer Success", img: "https://i.pravatar.cc/150?img=15" },
-          { name: "James Okafor", role: "Service Manager", img: "https://i.pravatar.cc/150?img=16" }
-        ]
-      },
-      {
-        id: "safety",
-        name: "Safety Excellence Award",
-        icon: "fas fa-shield-alt",
-        candidates: [
-          { name: "Bola Adekunle", role: "Safety Officer", img: "https://i.pravatar.cc/150?img=17" },
-          { name: "Tunde Lawal", role: "Compliance Manager", img: "https://i.pravatar.cc/150?img=18" },
-          { name: "Chioma Nwankwo", role: "Risk Analyst", img: "https://i.pravatar.cc/150?img=19" },
-          { name: "Peter Okon", role: "Safety Coordinator", img: "https://i.pravatar.cc/150?img=20" }
-        ]
       }
     ];
 
@@ -596,6 +614,7 @@
     const voteBtn = document.getElementById('voteBtn');
     const adminBtn = document.getElementById('adminBtn');
     const progressBar = document.getElementById('progressBar');
+    const loadingSpinner = document.getElementById('loadingSpinner');
 
     // State variables
     let selections = {};
@@ -618,6 +637,10 @@
       if (voterId) {
         // Check if this voter ID has already voted in Firebase
         try {
+          if (!db) {
+            throw new Error("Database not initialized");
+          }
+          
           const voteRef = ref(db, `votes/${voterId}`);
           const snapshot = await get(voteRef);
           
@@ -895,38 +918,91 @@
         return;
       }
       
+      // Show loading spinner
+      loadingSpinner.classList.add('active');
+      voteBtn.disabled = true;
+      
       try {
+        if (!db) {
+          throw new Error("Database not initialized. Please check your internet connection.");
+        }
+        
         // Prepare vote data
         const voteData = {
           voterId: voterId,
           selections: selections,
           timestamp: new Date().toISOString(),
-          employeeId: document.getElementById('employeeId')?.value || 'Unknown'
+          employeeId: document.getElementById('employeeId')?.value || 'Unknown',
+          employeeName: document.getElementById('fullName')?.value || 'Unknown',
+          department: document.getElementById('department')?.value || 'Unknown'
         };
+        
+        console.log("Submitting vote data:", voteData);
         
         // Save vote to Firebase
         const voteRef = ref(db, `votes/${voterId}`);
         await set(voteRef, voteData);
+        console.log("Vote saved successfully");
         
-        // Update vote counts for each candidate
+        // Update vote counts for each candidate using update() for better performance
+        const updates = {};
+        
         for (const [awardId, candidateName] of Object.entries(selections)) {
-          const voteCountRef = ref(db, `results/${awardId}/${candidateName}`);
+          const voteCountPath = `results/${awardId}/${candidateName}`;
+          
+          // Get current count
+          const voteCountRef = ref(db, voteCountPath);
           const snapshot = await get(voteCountRef);
           const currentCount = snapshot.exists() ? snapshot.val() : 0;
-          await set(voteCountRef, currentCount + 1);
+          
+          // Prepare update
+          updates[voteCountPath] = currentCount + 1;
+        }
+        
+        // Apply all updates at once
+        if (Object.keys(updates).length > 0) {
+          await update(ref(db), updates);
+          console.log("Vote counts updated successfully");
         }
         
         // Mark as voted in localStorage
         localStorage.setItem(`nlngVoted_${voterId}`, 'true');
         
+        // Hide loading spinner
+        loadingSpinner.classList.remove('active');
+        
         // Disable voting interface
         disableVoting();
         
         // Show confirmation
-        alert(`Thank you! Your votes have been recorded. Your voter ID is ${voterId}.`);
+        alert(`Thank you! Your votes have been recorded successfully. Your voter ID is ${voterId}.`);
+        
       } catch (error) {
         console.error("Error submitting votes:", error);
-        alert("There was an error submitting your votes. Please try again.");
+        
+        // Hide loading spinner
+        loadingSpinner.classList.remove('active');
+        voteBtn.disabled = false;
+        
+        // Show detailed error message
+        let errorMessage = "There was an error submitting your votes. ";
+        
+        if (error.code) {
+          switch (error.code) {
+            case 'PERMISSION_DENIED':
+              errorMessage += "Database permission denied. Please contact administrator.";
+              break;
+            case 'UNAVAILABLE':
+              errorMessage += "Network error. Please check your internet connection and try again.";
+              break;
+            default:
+              errorMessage += `Error code: ${error.code}. Please try again.`;
+          }
+        } else {
+          errorMessage += "Please check your internet connection and try again.";
+        }
+        
+        alert(errorMessage);
       }
     }
 
