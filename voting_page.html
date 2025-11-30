@@ -452,6 +452,22 @@
       animation: popIn 700ms ease;
     }
 
+    /* Voting Period Message */
+    .voting-period-message {
+      background: rgba(255,165,0,0.2);
+      border-radius: 15px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+      display: none;
+      border: 1px solid rgba(255,165,0,0.3);
+    }
+
+    .voting-period-message.active {
+      display: block;
+      animation: popIn 700ms ease;
+    }
+
     /* Loading Spinner */
     .loading {
       display: none;
@@ -549,6 +565,13 @@
       <p>Thank you for participating!</p>
     </div>
 
+    <!-- Voting Period Message -->
+    <div class="voting-period-message" id="votingPeriodMessage">
+      <h2><i class="fas fa-clock"></i> Voting is Currently Closed</h2>
+      <p id="votingPeriodText">Voting will open on <span id="startDateDisplay"></span> and close on <span id="endDateDisplay"></span>.</p>
+      <p>Please check back during the voting period to cast your vote.</p>
+    </div>
+
     <!-- Voter ID Section -->
     <div class="voter-id-section" id="voterIdSection">
       <h3>Voter Identification</h3>
@@ -642,6 +665,12 @@
       console.error("Firebase initialization error:", error);
       alert("Error connecting to voting system. Please refresh the page and try again.");
     }
+
+    // Voting period configuration
+    const votingPeriod = {
+      startDate: new Date("2025-01-01T00:00:00"), // Set your start date here
+      endDate: new Date("2025-12-31T23:59:59")    // Set your end date here
+    };
 
     // Sample data for awards and candidates
     const awardsData = [
@@ -960,6 +989,10 @@
     const generateIdBtn = document.getElementById('generateIdBtn');
     const saveIdBtn = document.getElementById('saveIdBtn');
     const alreadyVoted = document.getElementById('alreadyVoted');
+    const votingPeriodMessage = document.getElementById('votingPeriodMessage');
+    const votingPeriodText = document.getElementById('votingPeriodText');
+    const startDateDisplay = document.getElementById('startDateDisplay');
+    const endDateDisplay = document.getElementById('endDateDisplay');
     const awardsContainer = document.getElementById('awardsContainer');
     const selectedInfo = document.getElementById('selectedInfo');
     const selectionsList = document.getElementById('selectionsList');
@@ -974,11 +1007,40 @@
 
     // Initialize the page
     function initPage() {
+      // Check if voting is currently active
+      if (!isVotingActive()) {
+        showVotingPeriodMessage();
+        return;
+      }
+      
       // Check if user has already voted
       checkVotingStatus();
       
       // Set up event listeners
       setupEventListeners();
+    }
+
+    // Check if voting is currently active based on start and end dates
+    function isVotingActive() {
+      const now = new Date();
+      return now >= votingPeriod.startDate && now <= votingPeriod.endDate;
+    }
+
+    // Show voting period message when voting is not active
+    function showVotingPeriodMessage() {
+      // Format dates for display
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      startDateDisplay.textContent = votingPeriod.startDate.toLocaleDateString('en-US', options);
+      endDateDisplay.textContent = votingPeriod.endDate.toLocaleDateString('en-US', options);
+      
+      // Show the voting period message
+      votingPeriodMessage.classList.add('active');
+      
+      // Hide other sections
+      voterIdSection.style.display = 'none';
+      awardsContainer.style.display = 'none';
+      selectedInfo.style.display = 'none';
+      voteBtn.style.display = 'none';
     }
 
     // Check if user has already voted using Firebase
@@ -1378,9 +1440,3 @@
   </script>
 </body>
 </html>
-
-
-
-
-
-
