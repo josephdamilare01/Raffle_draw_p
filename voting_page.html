@@ -40,6 +40,20 @@
       flex-direction: column;
     }
 
+      body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text-light);
+      text-align: center;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+      background: var(--nlng-dark);
+      overflow-x: hidden;
+      position: relative;
+    }
     /* Background Animation */
     @keyframes bgShift {
       0% { background-position: 0% 50%; }
@@ -79,6 +93,14 @@
       max-width: 100%;
     }
 
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, #003300 0%, #006b3f 100%);
+      z-index: -2;
+    }
     /* Container */
     .container {
       flex-grow: 1;
@@ -86,16 +108,16 @@
       flex-direction: column;
       justify-content: flex-start;
       background: rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(8px);
       border: 1px solid rgba(255, 255, 255, 0.1);
-      width: 95%;
+      width: 100%;
       max-width: 1400px;
-      margin: 100px auto 30px auto;
+      margin: 40px 0;
       padding: 30px;
       box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-      border-radius: 12px;
+      border-radius: 20px;
       overflow-y: auto;
-      max-height: calc(100vh - 130px);
+      max-height: calc(90vh - 90px);
     }
 
     /* Headings */
@@ -452,22 +474,6 @@
       animation: popIn 700ms ease;
     }
 
-    /* Voting Period Message */
-    .voting-period-message {
-      background: rgba(255,165,0,0.2);
-      border-radius: 15px;
-      padding: 30px;
-      text-align: center;
-      margin-bottom: 30px;
-      display: none;
-      border: 1px solid rgba(255,165,0,0.3);
-    }
-
-    .voting-period-message.active {
-      display: block;
-      animation: popIn 700ms ease;
-    }
-
     /* Loading Spinner */
     .loading {
       display: none;
@@ -509,10 +515,9 @@
     /* Responsive */
     @media (max-width: 768px) {
       .container {
-        width: 98%;
-        margin: 80px auto 20px auto;
+        width: 95%;
+        margin: 90px auto 30px auto;
         padding: 20px;
-        max-height: calc(100vh - 100px);
       }
 
       h1 {
@@ -566,7 +571,7 @@
       <p>Thank you for participating!</p>
     </div>
 
-    <!-- Voting Period Message -->
+     <!-- Voting Period Message -->
     <div class="voting-period-message" id="votingPeriodMessage">
       <h2><i class="fas fa-clock"></i> Voting is Currently Closed</h2>
       <p id="votingPeriodText">Voting will open on <span id="startDateDisplay"></span> and close on <span id="endDateDisplay"></span>.</p>
@@ -639,7 +644,34 @@
     <p>NLNG Employee Excellence Awards 2023 | All votes are confidential</p>
   </footer>
 
-  <script>
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
+      authDomain: "nlng-voting-system.firebaseapp.com",
+      databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
+      projectId: "nlng-voting-system",
+      storageBucket: "nlng-voting-system.firebasestorage.app",
+      messagingSenderId: "851277078103",
+      appId: "1:851277078103:web:54066162daafda99470d12",
+      measurementId: "G-D6MX1JL08C"
+    };
+
+    // Initialize Firebase
+    let db;
+    try {
+      const app = initializeApp(firebaseConfig);
+      db = getDatabase(app);
+      console.log("Firebase initialized successfully");
+    } catch (error) {
+      console.error("Firebase initialization error:", error);
+      alert("Error connecting to voting system. Please refresh the page and try again.");
+    }
+
     // Voting period configuration
     const votingPeriod = {
       startDate: new Date("2025-01-01T00:00:00"), // Set your start date here
@@ -653,11 +685,11 @@
         name: "NOMINEE NAMES FOR CSS DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-trophy",
         candidates: [
-          { name: "SOTONYE DUKE", role: "Corporate Security Services", img: "https://i.pravatar.cc/150?img=1" },
-          { name: "MICHAEL ISHIEKWENE", role: "Security Coordinator. Guard Compliance", img: "https://i.pravatar.cc/150?img=2" },
+          { name: "SOTONYE DUKE", role: "Corporate Security Services", img: "SOTONYE_DUKE.jpg" },
+          { name: "MICHAEL ISHIEKWENE", role: "Security Coordinator. Guard Compliance", img: "Ishiekwene, Michael.jpg" },
           { name: "SOPHIA GREEN", role: "Team Lead", img: "https://i.pravatar.cc/150?img=3" },
-          { name: "FAVOUR UKPAI", role: "Corporate Security Services", img: "https://i.pravatar.cc/150?img=4" },
-          { name: "KAYODE ADENIAN", role: "Security Administrator", img: "https://i.pravatar.cc/150?img=5" }
+          { name: "FAVOUR UKPAI", role: "Corporate Security Services", img: "FAVOUR_UKPAI.jpg" },
+          { name: "KAYODE ADENIAN", role: "Security Administrator", img: "KAYODE ADENIAN.jpg" }
         ]
       },
       {
@@ -665,10 +697,10 @@
         name: "NOMINEE NAMES FOR CPM DEPARTMENT PARTNER OF THE YEAR AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "ANDREW OKOME", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "OBIJI-CHIGOZIE ADAKU", role: "Product Developer", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "VIVIENNE EBADAN", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=8" },
-          { name: "PEPPLE SAVIOUR", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=9" }
+          { name: "ANDREW OKOME", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "OBIJI-CHIGOZIE ADAKU", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "VIVIENNE EBADAN", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "PEPPLE SAVIOUR", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
         ]
       },
       {
@@ -676,11 +708,281 @@
         name: "NOMINEE NAMES FOR IMT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "IKEDUBA EMMANUEL", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=10" },
-          { name: "JOSEPH ABUBU", role: "Product Developer", img: "https://i.pravatar.cc/150?img=11" },
-          { name: "BOMA WILLIAM-JUMBO", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=12" },
-          { name: "BROWN DICKSON", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=13" },
-          { name: "EMMANUEL BENSTOWE", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=14" }
+          { name: "IKEDUBA EMMANUEL", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "JOSEPH ABUBU", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "BOMA WILLIAM-JUMBO", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "BROWN DICKSON", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "EMMANUEL BENSTOWE", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "Manager",
+        name: "NOMINEE DEPT FOR MANAGER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "ADEKWU OMOCHI", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "VICTOR OJABO", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "EMMANUEL NNABUIFE", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "AMAKIRI JONATHAN", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "HUSSAINI ABUBAKAR", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "HSE",
+        name: "NOMINEE NAMES FOR HSE DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "AMINU SANI", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "OBINNA NNAJI", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "JOHN TAIWO AKINBAYO", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "ROLLINGS DIMIEARI. ROGERS", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "EZINNE OKORE KALU", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "COLLABORATIVE DEPARTMENT",
+        name: "NOMINEES FOR MOST COLLABORATIVE DEPARTMENT OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "PM", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "PO", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "ESD", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "PT", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "PI", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "INTEGRITY",
+        name: "NOMINEE NAMES FOR INTEGRITY AWARD",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "URAMA BENEDICT", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "TUWONIMI ASUZU", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "KOLAWOLE PETER BABATUNDE", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "ANYACHOR CHIJIOKE", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "AFENGBAI BOSEDE USEOMO", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "I GOT YA BACK",
+        name: "NOMINEE NAMES FOR THE 'I GOT YA BACK' AWARD",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "OMOLE JOHN OLADAPO", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "KRUTKOV ANDREI", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "ONUORAH KINGSLEY CHUKWUDI", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "ADEOSUN SAMSON ADENIYI", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "KOLAWOLE EMMANUEL OLUWATOYIN", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "HR",
+        name: "NOMINEE NAMES FOR HR PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "OBETEN ETENG", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "ADEWUNMI KOMOLAFE", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "PAUL OVUCHE", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "RICHARD CHUKWU", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "JOHN COLLINS", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "innovation",
+        name: "NOMINEE FOR MOST INNOVATIVE AWARD",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "INSPIRATIONAL MENTOR",
+        name: "NOMINEE FOR MOST INSPIRATIONAL MENTOR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "ENTERPRISE",
+        name: "NOMINEE FOR ENTERPRISE FIRST AWARD",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "DEPARTMENT",
+        name: "NOMINEE FOR NT  DEPARTMENT PARTNER OF THE YEAR AWARD",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "PO",
+        name: "NOMINEE FOR OPERATIONS DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "PC",
+        name: "NOMINEE FOR PC DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "PI",
+        name: "NOMINEE FOR PI DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "LSS",
+        name: "NOMINEE FOR LSS DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "ESD",
+        name: "NOMINEE FOR ESD DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "PM",
+        name: "NOMINEE FOR PM DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "PS_PG",
+        name: "NOMINEE FOR PS/PG DEPARTMENTS PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "PT",
+        name: "NOMINEE FOR PT DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "SUSTAINABILITY",
+        name: "NOMINEE FOR SUSTAINABILITY AWARD",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "TE",
+        name: "NOMINEE FOR TE DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "TI_TF",
+        name: "NOMINEE FOR TI/TF DEPARTMENTS PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "TP",
+        name: "NOMINEE FOR TP DEPARTMENT PARTNER OF THE YEAR",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "CONTINUOUS IMPROVEMENT",
+        name: "NOMINEE FOR THE CONTINUOUS IMPROVEMENT TEAM AWARD",
+        icon: "fas fa-lightbulb",
+        candidates: [
+          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
+          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
+          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
+          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        ]
+      },
+      {
+        id: "CMO",
+        name: "NOMINEE FOR CMO DEPARTMENT PARTNER OF THE YEAR AWARD",
+        icon: "fas fa-users",
+        candidates: [
+          { name: "Fatima Ahmed", role: "Team Coordinator", img: "https://i.pravatar.cc/150?img=9" },
+          { name: "Samuel Johnson", role: "Collaboration Lead", img: "https://i.pravatar.cc/150?img=10" },
+          { name: "Ruth Okon", role: "Project Coordinator", img: "https://i.pravatar.cc/150?img=11" },
+          { name: "David Musa", role: "Department Lead", img: "https://i.pravatar.cc/150?img=12" }
         ]
       }
     ];
@@ -693,7 +995,7 @@
     const generateIdBtn = document.getElementById('generateIdBtn');
     const saveIdBtn = document.getElementById('saveIdBtn');
     const alreadyVoted = document.getElementById('alreadyVoted');
-    const votingPeriodMessage = document.getElementById('votingPeriodMessage');
+     const votingPeriodMessage = document.getElementById('votingPeriodMessage');
     const votingPeriodText = document.getElementById('votingPeriodText');
     const startDateDisplay = document.getElementById('startDateDisplay');
     const endDateDisplay = document.getElementById('endDateDisplay');
@@ -711,12 +1013,6 @@
 
     // Initialize the page
     function initPage() {
-      // Check if voting is currently active
-      if (!isVotingActive()) {
-        showVotingPeriodMessage();
-        return;
-      }
-      
       // Check if user has already voted
       checkVotingStatus();
       
@@ -747,20 +1043,33 @@
       voteBtn.style.display = 'none';
     }
 
-    // Check if user has already voted using localStorage
-    function checkVotingStatus() {
+    // Check if user has already voted using Firebase
+    async function checkVotingStatus() {
       // Try to get voter ID from localStorage
       voterId = localStorage.getItem('nlngVoterId');
       
       if (voterId) {
-        // Check if this voter ID has already voted
-        const hasVoted = localStorage.getItem(`nlngVoted_${voterId}`);
-        
-        if (hasVoted) {
-          // User has already voted
-          showAlreadyVoted();
-        } else {
-          // User has an ID but hasn't voted yet
+        // Check if this voter ID has already voted in Firebase
+        try {
+          if (!db) {
+            throw new Error("Database not initialized");
+          }
+          
+          const voteRef = ref(db, `votes/${voterId}`);
+          const snapshot = await get(voteRef);
+          
+          if (snapshot.exists()) {
+            // User has already voted
+            showAlreadyVoted();
+          } else {
+            // User has an ID but hasn't voted yet
+            showVotingInterface();
+            renderAwards();
+            loadSelections();
+          }
+        } catch (error) {
+          console.error("Error checking voting status:", error);
+          // If there's an error, show voting interface anyway
           showVotingInterface();
           renderAwards();
           loadSelections();
@@ -868,7 +1177,7 @@
       adminBtn.addEventListener('click', () => {
         const password = prompt('Enter admin password:');
         if (password === 'NLNG2025') {
-          alert('Admin access granted! In a real implementation, this would redirect to the admin panel.');
+          window.location.href = 'results_page.html';
         } else {
           alert('Incorrect password. Access denied.');
         }
@@ -1016,7 +1325,7 @@
       }
     }
 
-    // Submit votes to localStorage (simulating Firebase)
+    // Submit votes to Firebase
     async function submitVotes() {
       if (!voterId) {
         alert('Error: No voter ID found. Please generate a voter ID first.');
@@ -1028,8 +1337,47 @@
       voteBtn.disabled = true;
       
       try {
-        // Simulate API call delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        if (!db) {
+          throw new Error("Database not initialized. Please check your internet connection.");
+        }
+        
+        // Prepare vote data
+        const voteData = {
+          voterId: voterId,
+          selections: selections,
+          timestamp: new Date().toISOString(),
+          employeeId: document.getElementById('employeeId')?.value || 'Unknown',
+          employeeName: document.getElementById('fullName')?.value || 'Unknown',
+          department: document.getElementById('department')?.value || 'Unknown'
+        };
+        
+        console.log("Submitting vote data:", voteData);
+        
+        // Save vote to Firebase
+        const voteRef = ref(db, `votes/${voterId}`);
+        await set(voteRef, voteData);
+        console.log("Vote saved successfully");
+        
+        // Update vote counts for each candidate using update() for better performance
+        const updates = {};
+        
+        for (const [awardId, candidateName] of Object.entries(selections)) {
+          const voteCountPath = `results/${awardId}/${candidateName}`;
+          
+          // Get current count
+          const voteCountRef = ref(db, voteCountPath);
+          const snapshot = await get(voteCountRef);
+          const currentCount = snapshot.exists() ? snapshot.val() : 0;
+          
+          // Prepare update
+          updates[voteCountPath] = currentCount + 1;
+        }
+        
+        // Apply all updates at once
+        if (Object.keys(updates).length > 0) {
+          await update(ref(db), updates);
+          console.log("Vote counts updated successfully");
+        }
         
         // Mark as voted in localStorage
         localStorage.setItem(`nlngVoted_${voterId}`, 'true');
@@ -1050,7 +1398,25 @@
         loadingSpinner.classList.remove('active');
         voteBtn.disabled = false;
         
-        alert("There was an error submitting your votes. Please try again.");
+        // Show detailed error message
+        let errorMessage = "There was an error submitting your votes. ";
+        
+        if (error.code) {
+          switch (error.code) {
+            case 'PERMISSION_DENIED':
+              errorMessage += "Database permission denied. Please contact administrator.";
+              break;
+            case 'UNAVAILABLE':
+              errorMessage += "Network error. Please check your internet connection and try again.";
+              break;
+            default:
+              errorMessage += `Error code: ${error.code}. Please try again.`;
+          }
+        } else {
+          errorMessage += "Please check your internet connection and try again.";
+        }
+        
+        alert(errorMessage);
       }
     }
 
