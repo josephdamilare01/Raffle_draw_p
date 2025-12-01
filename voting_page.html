@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html> 
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -706,21 +706,22 @@
   </footer>
 
   <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+<script type="module">
+  // Import Firebase modules
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+  import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
-      authDomain: "nlng-voting-system.firebaseapp.com",
-      databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
-      projectId: "nlng-voting-system",
-      storageBucket: "nlng-voting-system.firebasestorage.app",
-      messagingSenderId: "851277078103",
-      appId: "1:851277078103:web:54066162daafda99470d12",
-      measurementId: "G-D6MX1JL08C"
-    };
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyArHR52Et7ubm6e6zlkCl7H0IBVz0oLL_8",
+    authDomain: "voting-c9843.firebaseapp.com",
+    databaseURL: "https://voting-c9843-default-rtdb.firebaseio.com",
+    projectId: "voting-c9843",
+    storageBucket: "voting-c9843.firebasestorage.app",
+    messagingSenderId: "971007666758",
+    appId: "1:971007666758:web:85092253a61041662e7847",
+    measurementId: "G-D1KS1NY1S5"
+  };
 
     // Initialize Firebase
     let db;
@@ -1640,6 +1641,7 @@ async function submitVotes() {
   </script>
 </body>
 </html>
+
 
 
 
