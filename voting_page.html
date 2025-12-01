@@ -298,11 +298,13 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       position: relative;
       transition: all 0.3s ease;
       cursor: pointer;
       border: 1px solid rgba(255,255,255,0.1);
       animation: float 6s ease-in-out infinite;
+      min-height: 120px;
     }
 
     @keyframes float {
@@ -331,30 +333,13 @@
       animation: none;
     }
 
-    .candidate img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid rgba(255,255,255,0.8);
-      margin-bottom: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .candidate:hover img {
-      border-color: var(--accent1);
-      transform: scale(1.1);
-    }
-
     .candidate-name {
       font-size: 1.1em;
       margin: 10px 0 5px;
       font-weight: 600;
-    }
-
-    .candidate-role {
-      font-size: 0.9em;
-      opacity: 0.8;
+      text-align: center;
+      width: 100%;
+      padding: 0 10px;
     }
 
     /* Radio Button Styling */
@@ -379,6 +364,9 @@
       justify-content: center;
       cursor: pointer;
       transition: 0.3s;
+      position: absolute;
+      top: 15px;
+      right: 15px;
     }
 
     .radio-custom::after {
@@ -747,11 +735,11 @@
         name: "NOMINEE NAMES FOR CSS DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-trophy",
         candidates: [
-          { name: "SOTONYE DUKE", role: "Corporate Security Services", img: "SOTONYE_DUKE.jpg" },
-          { name: "MICHAEL ISHIEKWENE", role: "Security Coordinator. Guard Compliance", img: "Ishiekwene, Michael.jpg" },
-          { name: "SOPHIA GREEN", role: "Team Lead", img: "https://i.pravatar.cc/150?img=3" },
-          { name: "FAVOUR UKPAI", role: "Corporate Security Services", img: "FAVOUR_UKPAI.jpg" },
-          { name: "KAYODE ADENIAN", role: "Security Administrator", img: "KAYODE ADENIAN.jpg" }
+          { name: "SOTONYE DUKE" },
+          { name: "MICHAEL ISHIEKWENE" },
+          { name: "SOPHIA GREEN" },
+          { name: "FAVOUR UKPAI" },
+          { name: "KAYODE ADENIAN" }
         ]
       },
       {
@@ -759,11 +747,11 @@
         name: "NOMINEE NAMES FOR CPM DEPARTMENT PARTNER OF THE YEAR AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "ANDREW OKOME", role: "R&D Specialist", img: "ANDREW OKOME.jpg" },
-          { name: "OBIJI-CHIGOZIE ADAKU", role: "Product Developer", img: "OBIJI-CHIGOZIE ADAKU.jpg" },
-          { name: "VIVIENNE EBADAN", role: "Tech Lead", img: "VIVIENNE EBADAN.jpg" },
-          { name: "EZEKIEL-HART JENNIFER KUROTAMUNOYE", role: "Tech Lead", img: "EZEKIEL-HART JENNIFER KUROTAMUNOYE.jpg" },
-          { name: "PEPPLE SAVIOUR", role: "Innovation Manager", img: "PEPPLE SAVIOUR.jpg" }
+          { name: "ANDREW OKOME" },
+          { name: "OBIJI-CHIGOZIE ADAKU" },
+          { name: "VIVIENNE EBADAN" },
+          { name: "EZEKIEL-HART JENNIFER KUROTAMUNOYE" },
+          { name: "PEPPLE SAVIOUR" }
         ]
       },
       {
@@ -771,11 +759,11 @@
         name: "NOMINEE NAMES FOR IMT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "IKEDUBA EMMANUEL", role: "R&D Specialist", img: "IKEDUBA EMMANUEL.jpg" },
-          { name: "JOSEPH ABUBU", role: "Product Developer", img: "JOSEPH ABUBU.jpg" },
-          { name: "BOMA WILLIAM-JUMBO", role: "Tech Lead", img: "BOMA WILLIAM-JUMBO.jpg" },
-          { name: "BROWN DICKSON", role: "Tech Lead", img: "BROWN DICKSON.jpg" },
-          { name: "EMMANUEL BENSTOWE", role: "Innovation Manager", img: "EMMANUEL BENSTOWE.jpg" }
+          { name: "IKEDUBA EMMANUEL" },
+          { name: "JOSEPH ABUBU" },
+          { name: "BOMA WILLIAM-JUMBO" },
+          { name: "BROWN DICKSON" },
+          { name: "EMMANUEL BENSTOWE" }
         ]
       },
       {
@@ -783,11 +771,11 @@
         name: "NOMINEE FOR MANAGER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "ADEKWU OMOCHI", role: "R&D Specialist", img: "ADEKWU OMOCHI.jpg" },
-          { name: "VICTOR OJABO", role: "Product Developer", img: "VICTOR OJABO.jpg" },
-          { name: "EMMANUEL NNABUIFE", role: "Tech Lead", img: "EMMANUEL NNABUIFE.jpg" },
-          { name: "AMAKIRI JONATHAN", role: "Tech Lead", img: "AMAKIRI JONATHAN.jpg" },
-          { name: "HUSSAINI ABUBAKAR", role: "Innovation Manager", img: "HUSSAINI ABUBAKAR.jpg" }
+          { name: "ADEKWU OMOCHI" },
+          { name: "VICTOR OJABO" },
+          { name: "EMMANUEL NNABUIFE" },
+          { name: "AMAKIRI JONATHAN" },
+          { name: "HUSSAINI ABUBAKAR" }
         ]
       },
       {
@@ -795,11 +783,11 @@
         name: "NOMINEE NAMES FOR HSE DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "AMINU SANI", role: "R&D Specialist", img: "AMINU SANI.jpg" },
-          { name: "OBINNA NNAJI", role: "Product Developer", img: "OBINNA NNAJI.jpg" },
-          { name: "JOHN TAIWO AKINBAYO", role: "Tech Lead", img: "JOHN TAIWO AKINBAYO.jpg" },
-          { name: "ROLLINGS DIMIEARI. ROGERS", role: "Tech Lead", img: "ROLLINGS DIMIEARI_ROGERS.jpg" },
-          { name: "EZINNE OKORE KALU", role: "Innovation Manager", img: "EZINNE OKORE KALU.jpg" }
+          { name: "AMINU SANI" },
+          { name: "OBINNA NNAJI" },
+          { name: "JOHN TAIWO AKINBAYO" },
+          { name: "ROLLINGS DIMIEARI. ROGERS" },
+          { name: "EZINNE OKORE KALU" }
         ]
       },
       {
@@ -807,11 +795,11 @@
         name: "NOMINEES FOR MOST COLLABORATIVE DEPARTMENT OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "PM", role: "R&D Specialist", img: "PM.jpg" },
-          { name: "PO", role: "Product Developer", img: "PO.jpg" },
-          { name: "ESD", role: "Tech Lead", img: "ESD.jpg" },
-          { name: "PT", role: "Tech Lead", img: "PT.jpg" },
-          { name: "PI", role: "Innovation Manager", img: "PI.jpg" }
+          { name: "PM" },
+          { name: "PO" },
+          { name: "ESD" },
+          { name: "PT" },
+          { name: "PI" }
         ]
       },
       {
@@ -819,11 +807,11 @@
         name: "NOMINEE NAMES FOR INTEGRITY AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "URAMA BENEDICT", role: "R&D Specialist", img: "URAMA BENEDICT.jpg" },
-          { name: "TUWONIMI ASUZU", role: "Product Developer", img: "TUWONIMI ASUZU.jpg" },
-          { name: "KOLAWOLE PETER BABATUNDE", role: "Tech Lead", img: "KOLAWOLE PETER BABATUNDE.jpg" },
-          { name: "ANYACHOR CHIJIOKE", role: "Tech Lead", img: "ANYACHOR CHIJIOKE.jpg" },
-          { name: "AFENGBAI BOSEDE USEOMO", role: "Innovation Manager", img: "AFENGBAI BOSEDE USEOMO.jpg" }
+          { name: "URAMA BENEDICT" },
+          { name: "TUWONIMI ASUZU" },
+          { name: "KOLAWOLE PETER BABATUNDE" },
+          { name: "ANYACHOR CHIJIOKE" },
+          { name: "AFENGBAI BOSEDE USEOMO" }
         ]
       },
       {
@@ -831,11 +819,11 @@
         name: "NOMINEE NAMES FOR THE 'I GOT YA BACK' AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "OMOLE JOHN OLADAPO", role: "R&D Specialist", img: "OMOLE JOHN OLADAPO.jpg" },
-          { name: "KRUTKOV ANDREI", role: "Product Developer", img: "KRUTKOV ANDREI.jpg" },
-          { name: "ONUORAH KINGSLEY CHUKWUDI", role: "Tech Lead", img: "ONUORAH KINGSLEY CHUKWUDI.jpg" },
-          { name: "ADEOSUN SAMSON ADENIYI", role: "Tech Lead", img: "ADEOSUN SAMSON ADENIYI.jpg" },
-          { name: "KOLAWOLE EMMANUEL OLUWATOYIN", role: "Innovation Manager", img: "KOLAWOLE EMMANUEL OLUWATOYIN.jpg" }
+          { name: "OMOLE JOHN OLADAPO" },
+          { name: "KRUTKOV ANDREI" },
+          { name: "ONUORAH KINGSLEY CHUKWUDI" },
+          { name: "ADEOSUN SAMSON ADENIYI" },
+          { name: "KOLAWOLE EMMANUEL OLUWATOYIN" }
         ]
       },
       {
@@ -843,11 +831,11 @@
         name: "NOMINEE NAMES FOR HR PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "OBETEN ETENG", role: "R&D Specialist", img: "OBETEN ETENG.jpg" },
-          { name: "ADEWUNMI KOMOLAFE", role: "Product Developer", img: "ADEWUNMI KOMOLAFE.jpg" },
-          { name: "PAUL OVUCHE", role: "Tech Lead", img: "PAUL OVUCHE.jpg" },
-          { name: "RICHARD CHUKWU", role: "Tech Lead", img: "RICHARD CHUKWU.jpg" },
-          { name: "JOHN COLLINS", role: "Innovation Manager", img: "JOHN COLLINS.jpg" }
+          { name: "OBETEN ETENG" },
+          { name: "ADEWUNMI KOMOLAFE" },
+          { name: "PAUL OVUCHE" },
+          { name: "RICHARD CHUKWU" },
+          { name: "JOHN COLLINS" }
         ]
       },
       {
@@ -855,11 +843,11 @@
         name: "NOMINEE FOR MOST INNOVATIVE AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "BUGH ADUDU", role: "R&D Specialist", img: "BUGH ADUDU.jpg" },
-          { name: "BAKARE OLUSEGUN RASAKI", role: "Product Developer", img: "BAKARE OLUSEGUN RASAKI.jpg" },
-          { name: "EDAFE PATRICK OMOKO", role: "Tech Lead", img: "EDAFE PATRICK OMOKO.jpg" },
-          { name: "AMBROSE ODIAKA", role: "Tech Lead", img: "AMBROSE ODIAKA.jpg" },
-          { name: "ESSEN EMMANUEL RAPHAEL", role: "Innovation Manager", img: "ESSEN EMMANUEL RAPHAEL.jpg" }
+          { name: "BUGH ADUDU" },
+          { name: "BAKARE OLUSEGUN RASAKI" },
+          { name: "EDAFE PATRICK OMOKO" },
+          { name: "AMBROSE ODIAKA" },
+          { name: "ESSEN EMMANUEL RAPHAEL" }
         ]
       },
       {
@@ -867,11 +855,11 @@
         name: "NOMINEE FOR MOST INSPIRATIONAL MENTOR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "MBONG EMEM AFAHA", role: "R&D Specialist", img: "MBONG EMEM AFAHA.jpg" },
-          { name: "OKWEYE JACOB CHUKWUNWEIKE", role: "Product Developer", img: "OKWEYE JACOB CHUKWUNWEIKE.jpg" },
-          { name: "OMOLE JOHN OLADAPO", role: "Tech Lead", img: "OMOLE JOHN OLADAPO.jpg" },
-           { name: "ADEOSUN SAMSON ADENIYI", role: "Tech Lead", img: "ADEOSUN SAMSON ADENIYI.jpg" },
-          { name: "BAKARE OLUSEGUN", role: "Innovation Manager", img: "BAKARE OLUSEGUN.jpg" }
+          { name: "MBONG EMEM AFAHA" },
+          { name: "OKWEYE JACOB CHUKWUNWEIKE" },
+          { name: "OMOLE JOHN OLADAPO" },
+           { name: "ADEOSUN SAMSON ADENIYI" },
+          { name: "BAKARE OLUSEGUN" }
         ]
       },
       {
@@ -879,11 +867,11 @@
         name: "NOMINEE FOR ENTERPRISE FIRST AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "DAGOGO DINNEY", role: "R&D Specialist", img: "DAGOGO DINNEY.jpg" },
-          { name: "DAVID ONORIODE MUEMUIFO", role: "Product Developer", img: "DAVID ONORIODE MUEMUIFO.jpg" },
-          { name: "KOLAWOLE EMMANUEL OLUWATOYIN", role: "Product Developer", img: "KOLAWOLE EMMANUEL OLUWATOYIN.jpg" },
-          { name: "EDAFE PATRICK OMOKO", role: "Tech Lead", img: "EDAFE PATRICK OMOKO.jpg" },
-          { name: "GUOBADIA OSAGIE", role: "Innovation Manager", img: "GUOBADIA OSAGIE.jpg" }
+          { name: "DAGOGO DINNEY" },
+          { name: "DAVID ONORIODE MUEMUIFO" },
+          { name: "KOLAWOLE EMMANUEL OLUWATOYIN" },
+          { name: "EDAFE PATRICK OMOKO" },
+          { name: "GUOBADIA OSAGIE" }
         ]
       },
       {
@@ -891,11 +879,11 @@
         name: "NOMINEE FOR NT  DEPARTMENT PARTNER OF THE YEAR AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "ACHOMUBA ISIOMA", role: "R&D Specialist", img: "ACHOMUBA ISIOMA.jpg" },
-          { name: "BENSTOWE GEORGE URIAH", role: "Product Developer", img: "BENSTOWE GEORGE URIAH.jpg" },
-          { name: "SOALA PEPPLE", role: "Tech Lead", img: "SOALA PEPPLE.jpg" },
-          { name: "OGBONNA PRINCE", role: "Tech Lead", img: "OGBONNA PRINCE.jpg" },
-          { name: "AKINOLA KEHINDE AKINTAYO", role: "Innovation Manager", img: "AKINOLA KEHINDE AKINTAYO.jpg" }
+          { name: "ACHOMUBA ISIOMA" },
+          { name: "BENSTOWE GEORGE URIAH" },
+          { name: "SOALA PEPPLE" },
+          { name: "OGBONNA PRINCE" },
+          { name: "AKINOLA KEHINDE AKINTAYO" }
         ]
       },
       {
@@ -903,11 +891,11 @@
         name: "NOMINEE FOR OPERATIONS DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "MBAEBIE PIUS", role: "R&D Specialist", img: "MBAEBIE PIUS.jpg" },
-          { name: "WADA MICHAEL", role: "Product Developer", img: "WADA MICHAEL.jpg" },
-          { name: "LANCELOT ALLISON", role: "Tech Lead", img: "LANCELOT ALLISON.jpg" },
-          { name: "AKODU SHAMSUDEEN ALABI", role: "Tech Lead", img: "AKODU SHAMSUDEEN ALABI.jpg" },
-          { name: "CLARKSON BIEBUMA BANIGO", role: "Innovation Manager", img: "CLARKSON BIEBUMA BANIGO.jpg" }
+          { name: "MBAEBIE PIUS" },
+          { name: "WADA MICHAEL" },
+          { name: "LANCELOT ALLISON" },
+          { name: "AKODU SHAMSUDEEN ALABI" },
+          { name: "CLARKSON BIEBUMA BANIGO" }
         ]
       },
       {
@@ -915,11 +903,11 @@
         name: "NOMINEE FOR PC DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "MUKAILA OLAYIWOLA ABDULRAHEEM", role: "R&D Specialist", img: "MUKAILA OLAYIWOLA ABDULRAHEEM.jpg" },
-          { name: "ADEYEMI AYOMIDE PETER", role: "Product Developer", img: "ADEYEMI AYOMIDE PETER.jpg" },
-          { name: "GRAHAM SOLOMON PEPPLE", role: "Tech Lead", img: "GRAHAM SOLOMON PEPPLE.jpg" },
-          { name: "SOTONYE CHRISTIAN EZEKIEL-HART", role: "Tech Lead", img: "SOTONYE CHRISTIAN EZEKIEL-HART.jpg" },
-          { name: "PATRICK EZEH", role: "Innovation Manager", img: "PATRICK EZEH.jpg" }
+          { name: "MUKAILA OLAYIWOLA ABDULRAHEEM" },
+          { name: "ADEYEMI AYOMIDE PETER" },
+          { name: "GRAHAM SOLOMON PEPPLE" },
+          { name: "SOTONYE CHRISTIAN EZEKIEL-HART" },
+          { name: "PATRICK EZEH" }
         ]
       },
       {
@@ -927,11 +915,11 @@
         name: "NOMINEE FOR PI DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "KENNETH ANYANWU", role: "R&D Specialist", img: "KENNETH ANYANWU.jpg" },
-          { name: "ISAIAH AJIBOYE", role: "Product Developer", img: "ISAIAH AJIBOYE.jpg" },
-          { name: "EJIRO COLLINS ADU", role: "Tech Lead", img: "EJIRO COLLINS ADU.jpg" },
-          { name: "SHIMEA CHINU ODOGWU", role: "Tech Lead", img: "SHIMEA CHINU ODOGWU.jpg" },
-          { name: "EGESI INNOCENT OKORAFOR", role: "Innovation Manager", img: "EGESI INNOCENT OKORAFOR.jpg" }
+          { name: "KENNETH ANYANWU" },
+          { name: "ISAIAH AJIBOYE" },
+          { name: "EJIRO COLLINS ADU" },
+          { name: "SHIMEA CHINU ODOGWU" },
+          { name: "EGESI INNOCENT OKORAFOR" }
         ]
       },
       {
@@ -939,11 +927,11 @@
         name: "NOMINEE FOR LSS DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "BELEMA WILCOX", role: "R&D Specialist", img: "BELEMA WILCOX.jpg" },
-          { name: "ENO FOSTER-ABAM", role: "Product Developer", img: "ENO FOSTER-ABAM.jpg" },
-          { name: "KINGSLEY IGWE", role: "Tech Lead", img: "KINGSLEY IGWE.jpg" },
-          { name: "VICTOR BANIGO", role: "Tech Lead", img: "ICTOR BANIGO.jpg" },
-          { name: "DANIEL HART", role: "Innovation Manager", img: "DANIEL HART.jpg" }
+          { name: "BELEMA WILCOX" },
+          { name: "ENO FOSTER-ABAM" },
+          { name: "KINGSLEY IGWE" },
+          { name: "VICTOR BANIGO" },
+          { name: "DANIEL HART" }
         ]
       },
       {
@@ -951,11 +939,11 @@
         name: "NOMINEE FOR ESD DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "EFEREBO LYSTER", role: "R&D Specialist", img: "EFEREBO LYSTER.jpg" },
-          { name: "IBIORIBO PRINCELY MCDONALD", role: "Product Developer", img: "IBIORIBO PRINCELY MCDONALD.jpg" },
-          { name: "PEPPLE PRETTY", role: "Tech Lead", img: "PEPPLE PRETTY.jpg" },
-          { name: "ALEX OGBONNA", role: "Tech Lead", img: "ALEX OGBONNA.jpg" },
-          { name: "PATIENCE AGU", role: "Innovation Manager", img: "PATIENCE AGU.jpg" }
+          { name: "EFEREBO LYSTER" },
+          { name: "IBIORIBO PRINCELY MCDONALD" },
+          { name: "PEPPLE PRETTY" },
+          { name: "ALEX OGBONNA" },
+          { name: "PATIENCE AGU" }
         ]
       },
       {
@@ -963,13 +951,13 @@
         name: "NOMINEE FOR PM DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "DAVID ONORIODE MUEMUIFO", role: "R&D Specialist", img: "DAVID ONORIODE MUEMUIFO.jpg" },
-          { name: "JOSEPHINE BENSTOWE", role: "Product Developer", img: "JOSEPHINE BENSTOWE.jpg" },
-          { name: "SIMEON CHINEDUM AJAERO", role: "Tech Lead", img: "SIMEON CHINEDUM AJAERO.jpg" },
-            { name: "OLUBUNMI EHIMITAN", role: "Tech Lead", img: "OLUBUNMI EHIMITAN.jpg" },
-            { name: "EDAFE PATRICK OMOKO", role: "Tech Lead", img: "EDAFE PATRICK OMOKO.jpg" },
-          { name: "FESTA ATTONI", role: "Tech Lead", img: "FESTA ATTONI.jpg" },
-          { name: "EBERE WABARA", role: "Innovation Manager", img: "EBERE WABARA.jpg" }
+          { name: "DAVID ONORIODE MUEMUIFO" },
+          { name: "JOSEPHINE BENSTOWE" },
+          { name: "SIMEON CHINEDUM AJAERO" },
+            { name: "OLUBUNMI EHIMITAN" },
+            { name: "EDAFE PATRICK OMOKO" },
+          { name: "FESTA ATTONI" },
+          { name: "EBERE WABARA" }
         ]
       },
       {
@@ -977,12 +965,12 @@
         name: "NOMINEE FOR PS/PG DEPARTMENTS PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "JANET ORIEJI ODOGWU", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
-          { name: "CHINEDU KENNETH EGEONU", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "NNAMDI AMADIEGWU", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-           { name: "PHILIP ABOLARIN", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "PHILIP ABOLARIN", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "FESTUS ODIASE", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+          { name: "JANET ORIEJI ODOGWU" },
+          { name: "CHINEDU KENNETH EGEONU" },
+          { name: "NNAMDI AMADIEGWU" },
+           { name: "PHILIP ABOLARIN" },
+          { name: "PHILIP ABOLARIN" },
+          { name: "FESTUS ODIASE" }
         ]
       },
       {
@@ -990,11 +978,11 @@
         name: "NOMINEE FOR PT DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "DHANUNJAYA PALUGULLA", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
-          { name: "SEGUN ADEBOLA OLADUNJOYE", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "HELEN CHINYERE EZEMA", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "KINGSLEY BAA", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "JAMES EMMANUEL ABAKPA", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+          { name: "DHANUNJAYA PALUGULLA" },
+          { name: "SEGUN ADEBOLA OLADUNJOYE" },
+          { name: "HELEN CHINYERE EZEMA" },
+          { name: "KINGSLEY BAA" },
+          { name: "JAMES EMMANUEL ABAKPA" }
         ]
       },
       {
@@ -1002,11 +990,11 @@
         name: "NOMINEE FOR SUSTAINABILITY AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "HUSSAINI ABUBAKAR AHMAD", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
-          { name: "OKWEYE JACOB CHUKWUNWEIKE", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "HENRY VICTOR SEGUN", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "EDIDIONG WILLIE", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "EDAFE PATRICK OMOKO", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+          { name: "HUSSAINI ABUBAKAR AHMAD" },
+          { name: "OKWEYE JACOB CHUKWUNWEIKE" },
+          { name: "HENRY VICTOR SEGUN" },
+          { name: "EDIDIONG WILLIE" },
+          { name: "EDAFE PATRICK OMOKO" }
         ]
       },
       {
@@ -1014,11 +1002,11 @@
         name: "NOMINEE FOR TE DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "EZEH PRINCE KELVIN", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
-          { name: "EZEKIEL-HART DAGOGO", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "IJEH AMARACHI", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "GREEN CORDELIA", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "ILODIBE, OSITA", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+          { name: "EZEH PRINCE KELVIN" },
+          { name: "EZEKIEL-HART DAGOGO" },
+          { name: "IJEH AMARACHI" },
+          { name: "GREEN CORDELIA" },
+          { name: "ILODIBE, OSITA" }
         ]
       },
       {
@@ -1026,11 +1014,11 @@
         name: "NOMINEE FOR TI/TF DEPARTMENTS PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "AMBROSE ODIAKA", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
-          { name: "DAMIAN ANGWEH", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "CHUKWU NGOZI", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "FREDRICK MADUKAKU KANU", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "ANIEDI UMOREN", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+          { name: "AMBROSE ODIAKA" },
+          { name: "DAMIAN ANGWEH" },
+          { name: "CHUKWU NGOZI" },
+          { name: "FREDRICK MADUKAKU KANU" },
+          { name: "ANIEDI UMOREN" }
         ]
       },
       {
@@ -1038,11 +1026,11 @@
         name: "NOMINEE FOR TP DEPARTMENT PARTNER OF THE YEAR",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "FAYOMI TOM", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
-          { name: "SOTONYE ORIYE", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "RAYMOND ERIVO", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "WILCOX ROSANNA", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "JOSEPH ADELEKE", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+          { name: "FAYOMI TOM" },
+          { name: "SOTONYE ORIYE" },
+          { name: "RAYMOND ERIVO" },
+          { name: "WILCOX ROSANNA" },
+          { name: "JOSEPH ADELEKE" }
         ]
       },
       {
@@ -1050,11 +1038,11 @@
         name: "NOMINEE FOR THE CONTINUOUS IMPROVEMENT TEAM AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-          { name: "PMT", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
-          { name: "PMS", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "IMT", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "SHIFT A", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "TI", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+          { name: "PMT" },
+          { name: "PMS" },
+          { name: "IMT" },
+          { name: "SHIFT A" },
+          { name: "TI" }
         ]
       },
       {
@@ -1062,11 +1050,11 @@
         name: "NOMINEE FOR CMO DEPARTMENT PARTNER OF THE YEAR AWARD",
         icon: "fas fa-users",
         candidates: [
-          { name: "DUROJAYE OLUTOSIN", role: "Team Coordinator", img: "https://i.pravatar.cc/150?img=9" },
-          { name: "IGBARA ECHI", role: "Collaboration Lead", img: "https://i.pravatar.cc/150?img=10" },
-          { name: "IWE EKPEREBUIKEM", role: "Project Coordinator", img: "https://i.pravatar.cc/150?img=11" },
-           { name: "CLARK NUVIE", role: "Project Coordinator", img: "https://i.pravatar.cc/150?img=11" },
-          { name: "AFANGIDE IDONGESIT NDIKPONGKE", role: "Department Lead", img: "https://i.pravatar.cc/150?img=12" }
+          { name: "DUROJAYE OLUTOSIN" },
+          { name: "IGBARA ECHI" },
+          { name: "IWE EKPEREBUIKEM" },
+           { name: "CLARK NUVIE" },
+          { name: "AFANGIDE IDONGESIT NDIKPONGKE" }
         ]
       }
     ];
@@ -1328,9 +1316,7 @@ generateIdBtn.addEventListener('click', () => {
             <input type="radio" name="${award.id}" value="${candidate.name}" class="radio-input" id="${award.id}-${index}">
             <span class="radio-custom"></span>
             <div class="candidate-content">
-              <img src="${candidate.img}" alt="${candidate.name}">
               <div class="candidate-name">${candidate.name}</div>
-              <div class="candidate-role">${candidate.role}</div>
             </div>
           `;
           
@@ -1641,16 +1627,3 @@ async function submitVotes() {
   </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
