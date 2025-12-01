@@ -608,7 +608,7 @@
     </div>
 <!-- Date Information Banner -->
   <div class="date-info" id="dateInfo">
-    <p>Voting Period: <span class="date-open" id="startDateDisplay"></span> to <span class="date-close" id="closeDateDisplay"></span></p>
+    <p>Voting Period: <span class="date-open" id="nominationStartDate"></span> to <span class="date-close" id="closeDateDisplay"></span></p>
     <p id="nominationStatus"></p>
   </div>
     <!-- Already Voted Message -->
@@ -1122,7 +1122,6 @@ function showVotingPeriodMessage() {
   startDateDisplay.textContent = votingPeriod.startDate.toLocaleDateString('en-US', options);
   endDateDisplay.textContent = votingPeriod.endDate.toLocaleDateString('en-US', options);
 
-  / Also update the date-info banner
   const closeDateDisplay = document.getElementById('closeDateDisplay');
   const nominationStartDate = document.getElementById('nominationStartDate');
   if (closeDateDisplay) {
@@ -1233,6 +1232,17 @@ generateIdBtn.addEventListener('click', () => {
     return;
   }
   
+  // Validate email domain if provided
+  if (email) {
+    const validDomains = ['@nlng.com', '@Nsml.com', '@raisbny.com'];
+    const isValidDomain = validDomains.some(domain => email.toLowerCase().endsWith(domain.toLowerCase()));
+    
+    if (!isValidDomain) {
+      alert('Please use a valid company email address (@nlng.com, @Nsml.com, or @raisbny.com)');
+      return;
+    }
+  }
+  
   // Generate voter ID using available information
   const fullName = `${firstName} ${lastName}`;
   const identifier = email || employeeId;
@@ -1242,6 +1252,7 @@ generateIdBtn.addEventListener('click', () => {
   // Show ID display
   idDisplay.classList.add('active');
 });
+
       
       // Save ID button
       saveIdBtn.addEventListener('click', () => {
@@ -1543,6 +1554,7 @@ generateIdBtn.addEventListener('click', () => {
   </script>
 </body>
 </html>
+
 
 
 
