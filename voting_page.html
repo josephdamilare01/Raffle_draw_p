@@ -80,6 +80,26 @@
       50%{ transform: translateY(-20px); }
     }
 
+    /* Date Information Banner */
+.date-info {
+  background: rgba(0, 100, 200, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin: 20px auto;
+  text-align: center;
+  border: 1px solid rgba(0, 150, 255, 0.3);
+  max-width: 800px;
+}
+
+.date-open {
+  color: #00ff00;
+  font-weight: bold;
+}
+
+.date-close {
+  color: #ff4444;
+  font-weight: bold;
+}
     /* Logo */
     .logo {
       position: fixed;
@@ -610,29 +630,28 @@
     <div class="voter-id-section" id="voterIdSection">
       <h3>Voter Identification</h3>
       <p>Please provide your details to generate a unique voter ID. This ID will be used to ensure you can only vote once, even if you switch devices.</p>
-      
-      <div class="voter-id-form" id="voterIdForm">
-        <div class="form-group">
-          <label>Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
-           <input type="email" id="Email" placeholder="e.g. jane@nlng.com" />
-          <label for="employeeId">Employee Number (for Partner personnel without company email address)</label>
-          <input type="text" id="employeeId" placeholder="Enter your employee number if no email" required>
-        </div>
-        <div class="form-group">
-          <label for="firstName">First Name </label>
-          <input type="text" id="firstName" placeholder="Enter your first name" required>
-        </div>
-        </div>
-        <div class="form-group">
-          <label for="lastName">Last Name</label>
-          <input type="text" id="lastName" placeholder="Enter your last name" required>
-        </div>
-        <div class="form-group">
-          <label for="department">Department</label>
-          <input type="text" id="department" placeholder="Enter your department" required>
-        </div>
-        <button type="button" id="generateIdBtn" class="vote-btn">Generate Voter ID</button>
       </div>
+     <div class="voter-id-form" id="voterIdForm">
+  <div class="form-group">
+    <label>Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
+    <input type="email" id="Email" placeholder="e.g. jane@nlng.com" />
+    <label for="employeeId">Employee Number (for Partner personnel without company email address)</label>
+    <input type="text" id="employeeId" placeholder="Enter your employee number if no email" required>
+  </div>
+  <div class="form-group">
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" placeholder="Enter your first name" required>
+  </div>
+  <div class="form-group">
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" placeholder="Enter your last name" required>
+  </div>
+  <div class="form-group">
+    <label for="department">Department</label>
+    <input type="text" id="department" placeholder="Enter your department" required>
+  </div>
+  <button type="button" id="generateIdBtn" class="vote-btn">Generate Voter ID</button>
+</div>
       
       <div class="id-display" id="idDisplay">
         <h3>Your Unique Voter ID</h3>
@@ -1197,24 +1216,29 @@ function showVotingPeriodMessage() {
 
     // Setup event listeners
     function setupEventListeners() {
-      // Generate ID button
-      generateIdBtn.addEventListener('click', () => {
-        const employeeId = document.getElementById('employeeId').value;
-        const fullName = document.getElementById('fullName').value;
-        const department = document.getElementById('department').value;
-        
-        if (!employeeId || !fullName || !department) {
-          alert('Please fill in all fields');
-          return;
-        }
-        
-        // Generate voter ID
-        voterId = generateVoterId(employeeId, fullName, department);
-        voterIdDisplay.textContent = voterId;
-        
-        // Show ID display
-        idDisplay.classList.add('active');
-      });
+      // In setupEventListeners function, update the generate ID button click handler:
+generateIdBtn.addEventListener('click', () => {
+  const employeeId = document.getElementById('employeeId').value;
+  const firstName = document.getElementById('firstName').value;
+  const lastName = document.getElementById('lastName').value;
+  const department = document.getElementById('department').value;
+  const email = document.getElementById('Email').value;
+  
+  // Check that either email OR employeeId is provided
+  if ((!email && !employeeId) || !firstName || !lastName || !department) {
+    alert('Please fill in all required fields');
+    return;
+  }
+  
+  // Generate voter ID using available information
+  const fullName = `${firstName} ${lastName}`;
+  const identifier = email || employeeId;
+  voterId = generateVoterId(identifier, fullName, department);
+  voterIdDisplay.textContent = voterId;
+  
+  // Show ID display
+  idDisplay.classList.add('active');
+});
       
       // Save ID button
       saveIdBtn.addEventListener('click', () => {
@@ -1421,9 +1445,9 @@ function showVotingPeriodMessage() {
           voterId: voterId,
           selections: selections,
           timestamp: new Date().toISOString(),
-          employeeId: document.getElementById('employeeId')?.value || 'Unknown',
-          employeeName: document.getElementById('fullName')?.value || 'Unknown',
-          department: document.getElementById('department')?.value || 'Unknown'
+          employeeId: document.getElementById('employeeId')?.value || 
+            document.getElementById('Email')?.value || 'Unknown',
+employeeName: `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim() || 'Unknown',
         };
         
         console.log("Submitting vote data:", voteData);
@@ -1515,6 +1539,7 @@ function showVotingPeriodMessage() {
   </script>
 </body>
 </html>
+
 
 
 
