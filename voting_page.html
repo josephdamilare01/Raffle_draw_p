@@ -577,9 +577,8 @@
   <div class="orb"></div>
 
   <!-- Logo -->
-  <div class="logo">
-    <img src="https://i.imgur.com/3Q1qY7Z.png" alt="NLNG Logo">
-  </div>
+  <div class="logo"><img src="nlng-logo.png" alt="NLNG Logo"></div>
+<div class="orb"></div><div class="orb"></div><div class="orb"></div>
 
   <div class="container">
     <!-- Header -->
@@ -588,7 +587,11 @@
       <h2>Celebrating Outstanding Performance and Dedication</h2>
       <p class="instructions">Select one nominee for each award category using the radio buttons</p>
     </div>
-
+<!-- Date Information Banner -->
+  <div class="date-info" id="dateInfo">
+    <p>Nomination Period: <span class="date-open" id="startDateDisplay">Loading...</span> to <span class="date-close" id="closeDateDisplay">Loading...</span></p>
+    <p id="nominationStatus"></p>
+  </div>
     <!-- Already Voted Message -->
     <div class="already-voted" id="alreadyVoted">
       <h2><i class="fas fa-check-circle"></i> You Have Already Voted</h2>
@@ -610,12 +613,19 @@
       
       <div class="voter-id-form" id="voterIdForm">
         <div class="form-group">
-          <label for="employeeId">Employee ID</label>
-          <input type="text" id="employeeId" placeholder="Enter your employee ID" required>
+          <label>Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
+           <input type="email" id="Email" placeholder="e.g. jane@nlng.com" />
+          <label for="employeeId">Employee Number (for Partner personnel without company email address)</label>
+          <input type="text" id="employeeId" placeholder="Enter your employee number if no email" required>
         </div>
         <div class="form-group">
-          <label for="fullName">Full Name</label>
-          <input type="text" id="fullName" placeholder="Enter your full name" required>
+          <label for="firstName">First Name </label>
+          <input type="text" id="firstName" placeholder="Enter your first name" required>
+        </div>
+        </div>
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input type="text" id="lastName" placeholder="Enter your last name" required>
         </div>
         <div class="form-group">
           <label for="department">Department</label>
@@ -634,6 +644,18 @@
       </div>
     </div>
 
+
+
+
+
+
+
+
+
+    
+
+
+  
     <!-- Progress Bar -->
     <div class="progress-container">
       <div class="progress-bar" id="progressBar"></div>
@@ -666,7 +688,7 @@
 
   <!-- Footer -->
   <footer>
-    <p>NLNG Employee Excellence Awards 2023 | All votes are confidential</p>
+    <p>NLNG Employee Excellence Awards 2025 | All votes are confidential</p>
   </footer>
 
   <!-- Firebase SDK -->
@@ -1493,6 +1515,7 @@ function showVotingPeriodMessage() {
   </script>
 </body>
 </html>
+
 
 
 
