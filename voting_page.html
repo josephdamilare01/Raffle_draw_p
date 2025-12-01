@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -1073,11 +1073,13 @@ function initPage() {
   setupEventListeners();
 }
 
+// Check if voting is currently active based on start and end dates
 function isVotingActive() {
   const now = new Date();
   return now >= votingPeriod.startDate && now <= votingPeriod.endDate;
 }
 
+// Show voting period message when voting is not active
 function showVotingPeriodMessage() {
   // Format dates for display
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -1087,6 +1089,7 @@ function showVotingPeriodMessage() {
   // Show the voting period message
   votingPeriodMessage.classList.add('active');
   
+  // Hide other sections
   voterIdSection.style.display = 'none';
   awardsContainer.style.display = 'none';
   selectedInfo.style.display = 'none';
@@ -1490,6 +1493,7 @@ function showVotingPeriodMessage() {
   </script>
 </body>
 </html>
+
 
 
 
