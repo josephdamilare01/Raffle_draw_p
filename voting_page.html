@@ -1439,101 +1439,187 @@ generateIdBtn.addEventListener('click', () => {
     }
 
     // Submit votes to Firebase
-    async function submitVotes() {
-      if (!voterId) {
-        alert('Error: No voter ID found. Please generate a voter ID first.');
-        return;
+    // Submit votes to Firebase
+async function submitVotes() {
+  if (!voterId) {
+    alert('Error: No voter ID found. Please generate a voter ID first.');
+    return;
+  }
+  
+  // Show loading spinner
+  loadingSpinner.classList.add('active');
+  voteBtn.disabled = true;
+  
+  try {
+    if (!db) {
+      throw new Error("Database not initialized. Please check your internet connection.");
+    }
+    
+    // Prepare vote data - FIXED: Ensure all fields are properly extracted
+    const email = document.getElementById('Email')?.value;
+    const employeeIdInput = document.getElementById('employeeId')?.value;
+    const firstName = document.getElementById('firstName')?.value;
+    const lastName = document.getElementById('lastName')?.value;
+    const department = document.getElementById('department')?.value;
+    
+    // Determine identifier (email or employeeId)
+    const identifier = email || employeeIdInput || 'Unknown';
+    
+    const voteData = {
+      voterId: voterId,
+      selections: selections,
+      timestamp: new Date().toISOString(),
+      email: email || 'Not provided',
+      employeeId: employeeIdInput || 'Not provided',
+      employeeName: `${firstName || ''} ${lastName || ''}`.trim() || 'Unknown',
+      department: department || 'Unknown',
+      totalSelections: Object.keys(selections).length
+    };
+    
+    console.log("📤 Submitting vote data:", voteData);
+    console.log("📊 Selections count:", Object.keys(selections).length);
+    
+    // TEST 1: Check if we can write to Firebase
+    console.log("🔍 Testing Firebase connection...");
+    try {
+      const testRef = ref(db, 'connectionTest');
+      await set(testRef, { test: Date.now(), timestamp: new Date().toISOString() });
+      console.log("✅ Firebase connection test successful");
+      // Clean up test data
+      await set(testRef, null);
+    } catch (testError) {
+      console.error("❌ Firebase connection test failed:", testError);
+      throw new Error(`Firebase connection failed: ${testError.message}`);
+    }
+    
+    // Save vote to Firebase
+    const voteRef = ref(db, `votes/${voterId}`);
+    console.log("💾 Saving vote to:", `votes/${voterId}`);
+    
+    // Check if vote already exists
+    const existingVote = await get(voteRef);
+    if (existingVote.exists()) {
+      throw new Error("You have already voted with this voter ID!");
+    }
+    
+    // Save the vote
+    await set(voteRef, voteData);
+    console.log("✅ Vote saved successfully");
+    
+    // Update vote counts for each candidate
+    console.log("📈 Updating vote counts...");
+    const updates = {};
+    let updateCount = 0;
+    
+    for (const [awardId, candidateName] of Object.entries(selections)) {
+      if (!awardId || !candidateName) {
+        console.warn(`⚠️ Skipping invalid selection: awardId=${awardId}, candidateName=${candidateName}`);
+        continue;
       }
       
-      // Show loading spinner
-      loadingSpinner.classList.add('active');
-      voteBtn.disabled = true;
+      // Clean candidate name (remove special characters that might cause Firebase path issues)
+      const cleanCandidateName = candidateName.replace(/[.#$/[\]]/g, '_');
+      const voteCountPath = `results/${awardId}/${cleanCandidateName}`;
       
       try {
-        if (!db) {
-          throw new Error("Database not initialized. Please check your internet connection.");
-        }
+        // Get current count
+        const voteCountRef = ref(db, voteCountPath);
+        const snapshot = await get(voteCountRef);
+        const currentCount = snapshot.exists() ? snapshot.val() : 0;
         
-        // Prepare vote data
-        const voteData = {
-  voterId: voterId,
-  selections: selections,
-  timestamp: new Date().toISOString(),
-  employeeId: document.getElementById('employeeId')?.value || 
-    document.getElementById('Email')?.value || 'Unknown',
-  employeeName: `${document.getElementById('firstName')?.value || ''} ${document.getElementById('lastName')?.value || ''}`.trim() || 'Unknown',
-  department: document.getElementById('department')?.value || 'Unknown' 
-};
+        // Prepare update
+        updates[voteCountPath] = currentCount + 1;
+        updateCount++;
         
-        console.log("Submitting vote data:", voteData);
-        
-        // Save vote to Firebase
-        const voteRef = ref(db, `votes/${voterId}`);
-        await set(voteRef, voteData);
-        console.log("Vote saved successfully");
-        
-        // Update vote counts for each candidate using update() for better performance
-        const updates = {};
-        
-        for (const [awardId, candidateName] of Object.entries(selections)) {
-          const voteCountPath = `results/${awardId}/${candidateName}`;
-          
-          // Get current count
-          const voteCountRef = ref(db, voteCountPath);
-          const snapshot = await get(voteCountRef);
-          const currentCount = snapshot.exists() ? snapshot.val() : 0;
-          
-          // Prepare update
-          updates[voteCountPath] = currentCount + 1;
-        }
-        
-        // Apply all updates at once
-        if (Object.keys(updates).length > 0) {
-          await update(ref(db), updates);
-          console.log("Vote counts updated successfully");
-        }
-        
-        // Mark as voted in localStorage
-        localStorage.setItem(`nlngVoted_${voterId}`, 'true');
-        
-        // Hide loading spinner
-        loadingSpinner.classList.remove('active');
-        
-        // Disable voting interface
-        disableVoting();
-        
-        // Show confirmation
-        alert(`Thank you! Your votes have been recorded successfully. Your voter ID is ${voterId}.`);
-        
-      } catch (error) {
-        console.error("Error submitting votes:", error);
-        
-        // Hide loading spinner
-        loadingSpinner.classList.remove('active');
-        voteBtn.disabled = false;
-        
-        // Show detailed error message
-        let errorMessage = "There was an error submitting your votes. ";
-        
-        if (error.code) {
-          switch (error.code) {
-            case 'PERMISSION_DENIED':
-              errorMessage += "Database permission denied. Please contact administrator.";
-              break;
-            case 'UNAVAILABLE':
-              errorMessage += "Network error. Please check your internet connection and try again.";
-              break;
-            default:
-              errorMessage += `Error code: ${error.code}. Please try again.`;
-          }
-        } else {
-          errorMessage += "Please check your internet connection and try again.";
-        }
-        
-        alert(errorMessage);
+        console.log(`   ➕ ${awardId}: ${candidateName} = ${currentCount + 1} votes`);
+      } catch (countError) {
+        console.error(`❌ Error getting count for ${awardId}/${candidateName}:`, countError);
       }
     }
-
+    
+    // Apply all updates at once
+    if (Object.keys(updates).length > 0) {
+      console.log(`📊 Applying ${updateCount} vote count updates...`);
+      await update(ref(db), updates);
+      console.log("✅ Vote counts updated successfully");
+    } else {
+      console.warn("⚠️ No vote counts to update (selections might be empty)");
+    }
+    
+    // Mark as voted in localStorage
+    localStorage.setItem(`nlngVoted_${voterId}`, 'true');
+    
+    // Hide loading spinner
+    loadingSpinner.classList.remove('active');
+    
+    // Disable voting interface
+    disableVoting();
+    
+    // Show confirmation with voter ID
+    alert(`✅ Thank you! Your votes have been recorded successfully.\n\nYour Voter ID: ${voterId}\nPlease save this ID for reference.`);
+    
+    // Optional: Show success message on page
+    alreadyVoted.innerHTML = `
+      <h2><i class="fas fa-check-circle"></i> Vote Submitted Successfully!</h2>
+      <p>Your votes for the NLNG Employee Excellence Awards have been recorded.</p>
+      <p><strong>Your Voter ID:</strong> <span class="voter-id">${voterId}</span></p>
+      <p>Thank you for participating!</p>
+    `;
+    alreadyVoted.classList.add('active');
+    
+  } catch (error) {
+    console.error("❌❌❌ SUBMIT VOTES ERROR:", error);
+    console.error("Error details:", {
+      name: error.name,
+      message: error.message,
+      code: error.code,
+      stack: error.stack
+    });
+    
+    // Hide loading spinner
+    loadingSpinner.classList.remove('active');
+    voteBtn.disabled = false;
+    
+    // Show detailed error message
+    let errorMessage = "There was an error submitting your votes.\n\n";
+    
+    if (error.message.includes("already voted")) {
+      errorMessage = "You have already voted with this voter ID!\n\nPlease use a different browser or clear cookies if you need to vote again.";
+      showAlreadyVoted();
+    } else if (error.code) {
+      switch (error.code) {
+        case 'PERMISSION_DENIED':
+          errorMessage += "❌ Firebase Permission Denied\n";
+          errorMessage += "Please check your Firebase Security Rules.\n";
+          errorMessage += "Current rules should allow writes to 'votes' and 'results' paths.";
+          break;
+        case 'UNAVAILABLE':
+          errorMessage += "🌐 Network Error\n";
+          errorMessage += "Please check your internet connection and try again.";
+          break;
+        default:
+          errorMessage += `Error: ${error.code}\n${error.message}`;
+      }
+    } else if (error.message.includes("Firebase connection failed")) {
+      errorMessage += "🔌 Firebase Connection Failed\n";
+      errorMessage += "Please check:\n";
+      errorMessage += "1. Your internet connection\n";
+      errorMessage += "2. Firebase project configuration\n";
+      errorMessage += "3. Browser console for detailed errors (F12 → Console)";
+    } else {
+      errorMessage += `Error: ${error.message}`;
+    }
+    
+    // Add debug instructions
+    errorMessage += "\n\n🔧 Debug Tips:\n";
+    errorMessage += "1. Open browser Developer Tools (F12)\n";
+    errorMessage += "2. Check Console tab for error details\n";
+    errorMessage += "3. Check Network tab for failed requests\n";
+    errorMessage += "4. Try refreshing the page";
+    
+    alert(errorMessage);
+  }
+}
     // Disable voting after user has voted
     function disableVoting() {
       voteBtn.disabled = true;
@@ -1554,6 +1640,7 @@ generateIdBtn.addEventListener('click', () => {
   </script>
 </body>
 </html>
+
 
 
 
