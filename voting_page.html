@@ -699,9 +699,9 @@
 
     // Voting period configuration
     const votingPeriod = {
-      startDate: new Date("2025-01-01T00:00:00"), // Set your start date here
-      endDate: new Date("2025-12-31T23:59:59")    // Set your end date here
-    };
+  startDate: new Date("2025-12-01T00:00:00"), // December 1, 2025 at midnight
+  endDate: new Date("2025-12-07T23:59:59")    // December 7, 2025 at 11:59:59 PM
+};
 
     // Sample data for awards and candidates
     const awardsData = [
@@ -722,7 +722,7 @@
         name: "NOMINEE NAMES FOR CPM DEPARTMENT PARTNER OF THE YEAR AWARD",
         icon: "fas fa-lightbulb",
         candidates: [
-       ]   { name: "ANDREW OKOME", role: "R&D Specialist", img: "ANDREW OKOME.jpg" },
+          { name: "ANDREW OKOME", role: "R&D Specialist", img: "ANDREW OKOME.jpg" },
           { name: "OBIJI-CHIGOZIE ADAKU", role: "Product Developer", img: "OBIJI-CHIGOZIE ADAKU.jpg" },
           { name: "VIVIENNE EBADAN", role: "Tech Lead", img: "VIVIENNE EBADAN.jpg" },
           { name: "EZEKIEL-HART JENNIFER KUROTAMUNOYE", role: "Tech Lead", img: "EZEKIEL-HART JENNIFER KUROTAMUNOYE.jpg" },
@@ -1490,6 +1490,7 @@ function showVotingPeriodMessage() {
   </script>
 </body>
 </html>
+
 
 
 
