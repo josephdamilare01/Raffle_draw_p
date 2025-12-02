@@ -166,6 +166,26 @@
       font-size: 0.95rem;
     }
 
+    /* Auto-close overlay styles */
+#closeOverlay {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, -40%); }
+  to { opacity: 1; transform: translate(-50%, -50%); }
+}
+
+#closeNowBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(0, 198, 255, 0.4);
+}
+
+#cancelCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #00ffcc;
+  color: #00ffcc;
+}
     /* Voter ID Section */
     .voter-id-section {
       background: var(--form-bg);
@@ -730,6 +750,38 @@
   endDate: new Date("2025-12-07T23:59:59")    // December 7, 2025 at 11:59:59 PM
 };
 
+  let firebaseApp = null;
+let db = null;
+
+// Initialize with cleanup option
+function initializeFirebase() {
+  if (firebaseApp) {
+    // Already initialized, reuse connection
+    return db;
+  }
+  
+  try {
+    firebaseApp = initializeApp(firebaseConfig);
+    db = getDatabase(firebaseApp);
+    console.log("Firebase initialized successfully");
+    return db;
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+    return null;
+  }
+}
+
+// Cleanup function
+function cleanupFirebase() {
+  if (firebaseApp) {
+    // In Firebase v9+, you might need to manually disconnect
+    // For Realtime Database:
+    const dbRef = ref(db);
+    // Set listeners to null or disconnect
+    firebaseApp = null;
+    db = null;
+  }
+}
     // Sample data for awards and candidates
     const awardsData = [
       {
@@ -1624,12 +1676,136 @@ async function submitVotes() {
         el.classList.add('disabled');
       });
     }
-
+  function startAutoCloseTimer() {
+  let secondsLeft = 60;
+  
+  // Create timer overlay
+  const overlay = document.createElement('div');
+  overlay.id = 'closeOverlay';
+  overlay.style.cssText = `
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    color: white;
+    padding: 30px;
+    border-radius: 20px;
+    z-index: 9999;
+    text-align: center;
+    border: 3px solid #00ffcc;
+    min-width: 300px;
+    box-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
+  `;
+  
+  overlay.innerHTML = `
+    <h3 style="color: #00ffcc; margin-bottom: 15px;">
+      <i class="fas fa-check-circle"></i> Vote Submitted Successfully!
+    </h3>
+    <p>Thank you for voting in the 2025 Bonny Location Medallion Awards.</p>
+    <p style="margin: 15px 0; font-size: 0.9em; color: #aaa;">
+      This page will automatically close in:
+    </p>
+    <div style="font-size: 2.5rem; font-weight: bold; color: #ffcc00; margin: 15px 0;" id="countdownDisplay">
+      60
+    </div>
+    <div style="background: #333; height: 10px; border-radius: 5px; margin: 20px 0; overflow: hidden;">
+      <div id="progressBar" style="background: linear-gradient(90deg, #00ffcc, #00c6ff); height: 100%; width: 100%; transition: width 1s linear;"></div>
+    </div>
+    <p style="margin-top: 20px; font-size: 0.9em; color: #aaa;">
+      <i class="fas fa-info-circle"></i> You can close this page now or wait for auto-close.
+    </p>
+    <button id="closeNowBtn" style="
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      color: white;
+      border: none;
+      padding: 10px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-weight: bold;
+    ">
+      <i class="fas fa-times"></i> Close Now
+    </button>
+    <button id="cancelCloseBtn" style="
+      background: transparent;
+      color: #aaa;
+      border: 1px solid #666;
+      padding: 10px 25px;
+      border-radius: 25px;
+      cursor: pointer;
+      margin-top: 10px;
+      margin-left: 10px;
+      font-weight: bold;
+    ">
+      <i class="fas fa-ban"></i> Cancel Auto-Close
+    </button>
+  `;
+  
+  document.body.appendChild(overlay);
+  
+  const countdownDisplay = document.getElementById('countdownDisplay');
+  const progressBar = document.getElementById('progressBar');
+  const closeNowBtn = document.getElementById('closeNowBtn');
+  const cancelCloseBtn = document.getElementById('cancelCloseBtn');
+  
+  const timerInterval = setInterval(() => {
+    secondsLeft--;
+    
+    // Update display
+    countdownDisplay.textContent = secondsLeft;
+    
+    // Update progress bar
+    const progressPercentage = (secondsLeft / 60) * 100;
+    progressBar.style.width = `${progressPercentage}%`;
+    
+    // Change color when time is running out
+    if (secondsLeft <= 10) {
+      countdownDisplay.style.color = '#ff4444';
+      progressBar.style.background = 'linear-gradient(90deg, #ff4444, #ff8800)';
+    }
+    
+    // Close when time is up
+    if (secondsLeft <= 0) {
+      clearInterval(timerInterval);
+      closePage();
+    }
+  }, 1000);
+  
+  // Close now button
+  closeNowBtn.addEventListener('click', () => {
+    clearInterval(timerInterval);
+    closePage();
+  });
+  
+  // Cancel button
+  cancelCloseBtn.addEventListener('click', () => {
+    clearInterval(timerInterval);
+    overlay.remove();
+    alert('Auto-close cancelled. You can close the page manually when ready.');
+  });
+  
+  // Close page function
+  function closePage() {
+    // Try to close the window
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      window.close();
+    }
+    
+    // Fallback - redirect to a thank you page or blank page
+    setTimeout(() => {
+      window.location.href = 'about:blank';
+    }, 1000);
+  }
+}
     // Initialize the page when loaded
     document.addEventListener('DOMContentLoaded', initPage);
   </script>
 </body>
 </html>
+
 
 
 
