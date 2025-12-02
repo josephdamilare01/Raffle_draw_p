@@ -733,55 +733,34 @@
     measurementId: "G-D1KS1NY1S5"
   };
 
-    // Initialize Firebase
-    let db;
-    try {
-      const app = initializeApp(firebaseConfig);
-      db = getDatabase(app);
-      console.log("Firebase initialized successfully");
-    } catch (error) {
-      console.error("Firebase initialization error:", error);
-      alert("Error connecting to voting system. Please refresh the page and try again.");
-    }
-
-    // Voting period configuration
-    const votingPeriod = {
-  startDate: new Date("2025-12-01T00:00:00"), // December 1, 2025 at midnight
-  endDate: new Date("2025-12-07T23:59:59")    // December 7, 2025 at 11:59:59 PM
-};
-
+  // Initialize Firebase
+  let db;
   let firebaseApp = null;
-let db = null;
-
-// Initialize with cleanup option
-function initializeFirebase() {
-  if (firebaseApp) {
-    // Already initialized, reuse connection
-    return db;
-  }
   
   try {
     firebaseApp = initializeApp(firebaseConfig);
     db = getDatabase(firebaseApp);
     console.log("Firebase initialized successfully");
-    return db;
   } catch (error) {
     console.error("Firebase initialization error:", error);
-    return null;
+    alert("Error connecting to voting system. Please refresh the page and try again.");
   }
-}
 
-// Cleanup function
-function cleanupFirebase() {
-  if (firebaseApp) {
-    // In Firebase v9+, you might need to manually disconnect
-    // For Realtime Database:
-    const dbRef = ref(db);
-    // Set listeners to null or disconnect
-    firebaseApp = null;
-    db = null;
+  // Voting period configuration
+  const votingPeriod = {
+    startDate: new Date("2025-12-01T00:00:00"), // December 1, 2025 at midnight
+    endDate: new Date("2025-12-07T23:59:59")    // December 7, 2025 at 11:59:59 PM
+  };
+
+  // Cleanup function (for connection management)
+  function cleanupFirebase() {
+    if (firebaseApp) {
+      // In Firebase v9+, you might need to manually disconnect
+      firebaseApp = null;
+      db = null;
+    }
   }
-}
+
     // Sample data for awards and candidates
     const awardsData = [
       {
@@ -1112,699 +1091,655 @@ function cleanupFirebase() {
       }
     ];
 
-    // DOM Elements
-    const voterIdSection = document.getElementById('voterIdSection');
-    const voterIdForm = document.getElementById('voterIdForm');
-    const idDisplay = document.getElementById('idDisplay');
-    const voterIdDisplay = document.getElementById('voterIdDisplay');
-    const generateIdBtn = document.getElementById('generateIdBtn');
-    const saveIdBtn = document.getElementById('saveIdBtn');
-    const alreadyVoted = document.getElementById('alreadyVoted');
-     const votingPeriodMessage = document.getElementById('votingPeriodMessage');
-    const votingPeriodText = document.getElementById('votingPeriodText');
-    const startDateDisplay = document.getElementById('startDateDisplay');
-    const endDateDisplay = document.getElementById('endDateDisplay');
-    const awardsContainer = document.getElementById('awardsContainer');
-    const selectedInfo = document.getElementById('selectedInfo');
-    const selectionsList = document.getElementById('selectionsList');
-    const voteBtn = document.getElementById('voteBtn');
-    const adminBtn = document.getElementById('adminBtn');
-    const progressBar = document.getElementById('progressBar');
-    const loadingSpinner = document.getElementById('loadingSpinner');
+   // DOM Elements (your existing DOM element declarations go here)
+  const voterIdSection = document.getElementById('voterIdSection');
+  const voterIdForm = document.getElementById('voterIdForm');
+  const idDisplay = document.getElementById('idDisplay');
+  const voterIdDisplay = document.getElementById('voterIdDisplay');
+  const generateIdBtn = document.getElementById('generateIdBtn');
+  const saveIdBtn = document.getElementById('saveIdBtn');
+  const alreadyVoted = document.getElementById('alreadyVoted');
+  const votingPeriodMessage = document.getElementById('votingPeriodMessage');
+  const votingPeriodText = document.getElementById('votingPeriodText');
+  const startDateDisplay = document.getElementById('startDateDisplay');
+  const endDateDisplay = document.getElementById('endDateDisplay');
+  const awardsContainer = document.getElementById('awardsContainer');
+  const selectedInfo = document.getElementById('selectedInfo');
+  const selectionsList = document.getElementById('selectionsList');
+  const voteBtn = document.getElementById('voteBtn');
+  const adminBtn = document.getElementById('adminBtn');
+  const progressBar = document.getElementById('progressBar');
+  const loadingSpinner = document.getElementById('loadingSpinner');
 
-    // State variables
-    let selections = {};
-    let voterId = null;
+  // State variables
+  let selections = {};
+  let voterId = null;
 
-// Initialize the page
-function initPage() {
-  // First check if voting is active
-  if (!isVotingActive()) {
-    showVotingPeriodMessage();
-    return;
-  }
-  
-  // If voting is active, check if user has already voted
-  checkVotingStatus();
-  
-  // Set up event listeners
-  setupEventListeners();
-}
-
-// Check if voting is currently active based on start and end dates
-function isVotingActive() {
-  const now = new Date();
-  return now >= votingPeriod.startDate && now <= votingPeriod.endDate;
-}
-
-// Show voting period message when voting is not active
-function showVotingPeriodMessage() {
-  // Format dates for display
-  const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  startDateDisplay.textContent = votingPeriod.startDate.toLocaleDateString('en-US', options);
-  endDateDisplay.textContent = votingPeriod.endDate.toLocaleDateString('en-US', options);
-
-  const closeDateDisplay = document.getElementById('closeDateDisplay');
-  const nominationStartDate = document.getElementById('nominationStartDate');
-  if (closeDateDisplay) {
-    closeDateDisplay.textContent = votingPeriod.endDate.toLocaleDateString('en-US', options);
-  }
-  if (nominationStartDate) {
-    nominationStartDate.textContent = votingPeriod.startDate.toLocaleDateString('en-US', options);
-  }
-  // Show the voting period message
-  votingPeriodMessage.classList.add('active');
-  // Hide other sections
-  voterIdSection.style.display = 'none';
-  awardsContainer.style.display = 'none';
-  selectedInfo.style.display = 'none';
-  voteBtn.style.display = 'none';
-}
+  // Initialize the page
+  function initPage() {
+    // First check if voting is active
+    if (!isVotingActive()) {
+      showVotingPeriodMessage();
+      return;
+    }
     
-    // Check if user has already voted using Firebase
-    async function checkVotingStatus() {
-      // Try to get voter ID from localStorage
-      voterId = localStorage.getItem('nlngVoterId');
+    // If voting is active, check if user has already voted
+    checkVotingStatus();
+    
+    // Set up event listeners
+    setupEventListeners();
+  }
+
+  // Check if voting is currently active based on start and end dates
+  function isVotingActive() {
+    const now = new Date();
+    return now >= votingPeriod.startDate && now <= votingPeriod.endDate;
+  }
+
+  // Show voting period message when voting is not active
+  function showVotingPeriodMessage() {
+    // Format dates for display
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    startDateDisplay.textContent = votingPeriod.startDate.toLocaleDateString('en-US', options);
+    endDateDisplay.textContent = votingPeriod.endDate.toLocaleDateString('en-US', options);
+
+    const closeDateDisplay = document.getElementById('closeDateDisplay');
+    const nominationStartDate = document.getElementById('nominationStartDate');
+    if (closeDateDisplay) {
+      closeDateDisplay.textContent = votingPeriod.endDate.toLocaleDateString('en-US', options);
+    }
+    if (nominationStartDate) {
+      nominationStartDate.textContent = votingPeriod.startDate.toLocaleDateString('en-US', options);
+    }
+    // Show the voting period message
+    votingPeriodMessage.classList.add('active');
+    // Hide other sections
+    voterIdSection.style.display = 'none';
+    awardsContainer.style.display = 'none';
+    selectedInfo.style.display = 'none';
+    voteBtn.style.display = 'none';
+  }
       
-      if (voterId) {
-        // Check if this voter ID has already voted in Firebase
-        try {
-          if (!db) {
-            throw new Error("Database not initialized");
-          }
-          
-          const voteRef = ref(db, `votes/${voterId}`);
-          const snapshot = await get(voteRef);
-          
-          if (snapshot.exists()) {
-            // User has already voted
-            showAlreadyVoted();
-          } else {
-            // User has an ID but hasn't voted yet
-            showVotingInterface();
-            renderAwards();
-            loadSelections();
-          }
-        } catch (error) {
-          console.error("Error checking voting status:", error);
-          // If there's an error, show voting interface anyway
+  // Check if user has already voted using Firebase
+  async function checkVotingStatus() {
+    // Try to get voter ID from localStorage
+    voterId = localStorage.getItem('nlngVoterId');
+    
+    if (voterId) {
+      // Check if this voter ID has already voted in Firebase
+      try {
+        if (!db) {
+          throw new Error("Database not initialized");
+        }
+        
+        const voteRef = ref(db, `votes/${voterId}`);
+        const snapshot = await get(voteRef);
+        
+        if (snapshot.exists()) {
+          // User has already voted
+          showAlreadyVoted();
+        } else {
+          // User has an ID but hasn't voted yet
           showVotingInterface();
           renderAwards();
           loadSelections();
         }
-      } else {
-        // New user, show ID generation form
-        showIdGenerationForm();
+      } catch (error) {
+        console.error("Error checking voting status:", error);
+        // If there's an error, show voting interface anyway
+        showVotingInterface();
+        renderAwards();
+        loadSelections();
       }
+    } else {
+      // New user, show ID generation form
+      showIdGenerationForm();
     }
-
-    // Show the voter ID generation form
-    function showIdGenerationForm() {
-      voterIdSection.style.display = 'block';
-      awardsContainer.style.display = 'none';
-      selectedInfo.style.display = 'none';
-      voteBtn.style.display = 'none';
-    }
-
-    // Show the voting interface
-    function showVotingInterface() {
-      voterIdSection.style.display = 'none';
-      awardsContainer.style.display = 'block';
-      selectedInfo.style.display = 'block';
-      voteBtn.style.display = 'inline-block';
-    }
-
-    // Show already voted message
-    function showAlreadyVoted() {
-      voterIdSection.style.display = 'none';
-      awardsContainer.style.display = 'none';
-      selectedInfo.style.display = 'none';
-      voteBtn.style.display = 'none';
-      alreadyVoted.classList.add('active');
-    }
-
-    // Generate a unique voter ID
-    function generateVoterId(employeeId, fullName, department) {
-      // Create a hash from the user's details
-      const data = `${employeeId}-${fullName}-${department}-${Date.now()}`;
-      let hash = 0;
-      
-      for (let i = 0; i < data.length; i++) {
-        const char = data.charCodeAt(i);
-        hash = ((hash << 5) - hash) + char;
-        hash = hash & hash; // Convert to 32-bit integer
-      }
-      
-      return `NLNG-${Math.abs(hash).toString(36).toUpperCase().substring(0, 8)}`;
-    }
-
-    // Setup event listeners
-    function setupEventListeners() {
-      // In setupEventListeners function, update the generate ID button click handler:
-generateIdBtn.addEventListener('click', () => {
-  const employeeId = document.getElementById('employeeId').value;
-  const firstName = document.getElementById('firstName').value;
-  const lastName = document.getElementById('lastName').value;
-  const department = document.getElementById('department').value;
-  const email = document.getElementById('Email').value;
-  
-  // Check that either email OR employeeId is provided
-  if ((!email && !employeeId) || !firstName || !lastName || !department) {
-    alert('Please fill in all required fields');
-    return;
   }
-  
-  // Validate email domain if provided
-  if (email) {
-    const validDomains = ['@nlng.com', '@Nsml.com', '@raisbny.com'];
-    const isValidDomain = validDomains.some(domain => email.toLowerCase().endsWith(domain.toLowerCase()));
+
+  // Show the voter ID generation form
+  function showIdGenerationForm() {
+    voterIdSection.style.display = 'block';
+    awardsContainer.style.display = 'none';
+    selectedInfo.style.display = 'none';
+    voteBtn.style.display = 'none';
+  }
+
+  // Show the voting interface
+  function showVotingInterface() {
+    voterIdSection.style.display = 'none';
+    awardsContainer.style.display = 'block';
+    selectedInfo.style.display = 'block';
+    voteBtn.style.display = 'inline-block';
+  }
+
+  // Show already voted message
+  function showAlreadyVoted() {
+    voterIdSection.style.display = 'none';
+    awardsContainer.style.display = 'none';
+    selectedInfo.style.display = 'none';
+    voteBtn.style.display = 'none';
+    alreadyVoted.classList.add('active');
+  }
+
+  // Generate a unique voter ID
+  function generateVoterId(employeeId, fullName, department) {
+    // Create a hash from the user's details
+    const data = `${employeeId}-${fullName}-${department}-${Date.now()}`;
+    let hash = 0;
     
-    if (!isValidDomain) {
-      alert('Please use a valid company email address (@nlng.com, @Nsml.com, or @raisbny.com)');
-      return;
+    for (let i = 0; i < data.length; i++) {
+      const char = data.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash; // Convert to 32-bit integer
     }
+    
+    return `NLNG-${Math.abs(hash).toString(36).toUpperCase().substring(0, 8)}`;
   }
-  
-  // Generate voter ID using available information
-  const fullName = `${firstName} ${lastName}`;
-  const identifier = email || employeeId;
-  voterId = generateVoterId(identifier, fullName, department);
-  voterIdDisplay.textContent = voterId;
-  
-  // Show ID display
-  idDisplay.classList.add('active');
-});
 
+  // Setup event listeners
+  function setupEventListeners() {
+    // Generate ID button
+    generateIdBtn.addEventListener('click', () => {
+      const employeeId = document.getElementById('employeeId').value;
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const department = document.getElementById('department').value;
+      const email = document.getElementById('Email').value;
       
-      // Save ID button
-      saveIdBtn.addEventListener('click', () => {
-        if (voterId) {
-          // Save voter ID to localStorage
-          localStorage.setItem('nlngVoterId', voterId);
-          
-          // Show voting interface
-          showVotingInterface();
-          renderAwards();
-        }
-      });
+      // Check that either email OR employeeId is provided
+      if ((!email && !employeeId) || !firstName || !lastName || !department) {
+        alert('Please fill in all required fields');
+        return;
+      }
       
-      // Vote button
-      voteBtn.addEventListener('click', async () => {
-        const selectedCount = Object.keys(selections).length;
+      // Validate email domain if provided
+      if (email) {
+        const validDomains = ['@nlng.com', '@Nsml.com', '@raisbny.com'];
+        const isValidDomain = validDomains.some(domain => email.toLowerCase().endsWith(domain.toLowerCase()));
         
-        if (selectedCount === 0) {
-          alert('Please select at least one candidate before voting.');
+        if (!isValidDomain) {
+          alert('Please use a valid company email address (@nlng.com, @Nsml.com, or @raisbny.com)');
           return;
         }
-        
-        if (selectedCount < awardsData.length) {
-          if (!confirm(`You have selected candidates for ${selectedCount} out of ${awardsData.length} awards. Do you want to submit your votes anyway?`)) {
-            return;
-          }
-        }
-        
-        if (confirm('You are about to submit your votes. This action cannot be undone. Confirm your votes?')) {
-          await submitVotes();
-        }
-      });
+      }
       
-      // Admin button
-      adminBtn.addEventListener('click', () => {
-        const password = prompt('Enter admin password:');
-        if (password === 'NLNG2025') {
-          window.location.href = 'results_page.html';
-        } else {
-          alert('Incorrect password. Access denied.');
-        }
-      });
-    }
+      // Generate voter ID using available information
+      const fullName = `${firstName} ${lastName}`;
+      const identifier = email || employeeId;
+      voterId = generateVoterId(identifier, fullName, department);
+      voterIdDisplay.textContent = voterId;
+      
+      // Show ID display
+      idDisplay.classList.add('active');
+    });
 
-    // Render all award sections
-    function renderAwards() {
-      awardsContainer.innerHTML = '';
-      
-      awardsData.forEach(award => {
-        const awardSection = document.createElement('div');
-        awardSection.className = 'award-section';
-        awardSection.id = award.id;
+    // Save ID button
+    saveIdBtn.addEventListener('click', () => {
+      if (voterId) {
+        // Save voter ID to localStorage
+        localStorage.setItem('nlngVoterId', voterId);
         
-        awardSection.innerHTML = `
-          <div class="award-title">
-            <i class="${award.icon}"></i>
-            <span>${award.name}</span>
-          </div>
-          <div class="candidates-grid" id="candidates-${award.id}">
-            <!-- Candidates will be added here -->
+        // Show voting interface
+        showVotingInterface();
+        renderAwards();
+      }
+    });
+    
+    // Vote button
+    voteBtn.addEventListener('click', async () => {
+      const selectedCount = Object.keys(selections).length;
+      
+      if (selectedCount === 0) {
+        alert('Please select at least one candidate before voting.');
+        return;
+      }
+      
+      if (selectedCount < awardsData.length) {
+        if (!confirm(`You have selected candidates for ${selectedCount} out of ${awardsData.length} awards. Do you want to submit your votes anyway?`)) {
+          return;
+        }
+      }
+      
+      if (confirm('You are about to submit your votes. This action cannot be undone. Confirm your votes?')) {
+        await submitVotes();
+      }
+    });
+    
+    // Admin button
+    adminBtn.addEventListener('click', () => {
+      const password = prompt('Enter admin password:');
+      if (password === 'NLNG2025') {
+        window.location.href = 'results_page.html';
+      } else {
+        alert('Incorrect password. Access denied.');
+      }
+    });
+  }
+
+  // Render all award sections
+  function renderAwards() {
+    awardsContainer.innerHTML = '';
+    
+    awardsData.forEach(award => {
+      const awardSection = document.createElement('div');
+      awardSection.className = 'award-section';
+      awardSection.id = award.id;
+      
+      awardSection.innerHTML = `
+        <div class="award-title">
+          <i class="${award.icon}"></i>
+          <span>${award.name}</span>
+        </div>
+        <div class="candidates-grid" id="candidates-${award.id}">
+          <!-- Candidates will be added here -->
+        </div>
+      `;
+      
+      awardsContainer.appendChild(awardSection);
+      
+      // Render candidates for this award
+      const candidatesGrid = document.getElementById(`candidates-${award.id}`);
+      award.candidates.forEach((candidate, index) => {
+        const candidateElement = document.createElement('label');
+        candidateElement.className = 'candidate';
+        candidateElement.innerHTML = `
+          <input type="radio" name="${award.id}" value="${candidate.name}" class="radio-input" id="${award.id}-${index}">
+          <span class="radio-custom"></span>
+          <div class="candidate-content">
+            <img src="${candidate.img}" alt="${candidate.name}">
+            <div class="candidate-name">${candidate.name}</div>
+            <div class="candidate-role">${candidate.role}</div>
           </div>
         `;
         
-        awardsContainer.appendChild(awardSection);
-        
-        // Render candidates for this award
-        const candidatesGrid = document.getElementById(`candidates-${award.id}`);
-        award.candidates.forEach((candidate, index) => {
-          const candidateElement = document.createElement('label');
-          candidateElement.className = 'candidate';
-          candidateElement.innerHTML = `
-            <input type="radio" name="${award.id}" value="${candidate.name}" class="radio-input" id="${award.id}-${index}">
-            <span class="radio-custom"></span>
-            <div class="candidate-content">
-              <img src="${candidate.img}" alt="${candidate.name}">
-              <div class="candidate-name">${candidate.name}</div>
-              <div class="candidate-role">${candidate.role}</div>
-            </div>
-          `;
-          
-          candidateElement.addEventListener('click', (e) => {
-            // Only handle clicks on the candidate, not the radio button directly
-            if (e.target.type !== 'radio') {
-              const radio = candidateElement.querySelector('.radio-input');
-              radio.checked = true;
-              handleSelection(award.id, candidate.name, candidateElement);
-            }
-          });
-          
-          candidatesGrid.appendChild(candidateElement);
+        candidateElement.addEventListener('click', (e) => {
+          // Only handle clicks on the candidate, not the radio button directly
+          if (e.target.type !== 'radio') {
+            const radio = candidateElement.querySelector('.radio-input');
+            radio.checked = true;
+            handleSelection(award.id, candidate.name, candidateElement);
+          }
         });
-      });
-      
-      // Set up radio button change events
-      document.querySelectorAll('.radio-input').forEach(radio => {
-        radio.addEventListener('change', (e) => {
-          const awardId = e.target.name;
-          const candidateName = e.target.value;
-          const candidateElement = e.target.closest('.candidate');
-          
-          // Remove selected class from all candidates in this award
-          document.querySelectorAll(`.candidate input[name="${awardId}"]`).forEach(r => {
-            r.closest('.candidate').classList.remove('selected');
-          });
-          
-          // The selected class to the chosen candidate
-          candidateElement.classList.add('selected');
-          
-          handleSelection(awardId, candidateName, candidateElement);
-        });
-      });
-    }
-
-    // Handle candidate selection
-    function handleSelection(awardId, candidateName, candidateElement) {
-      // Update selections object
-      selections[awardId] = candidateName;
-      
-      // Save to localStorage
-      saveSelections();
-      
-      // Update UI
-      updateSelectionsList();
-      updateProgress();
-      
-      // Show selection info if at least one selection is made
-      if (Object.keys(selections).length > 0) {
-        selectedInfo.classList.add('active');
-      }
-    }
-
-    // Update the selections list
-    function updateSelectionsList() {
-      selectionsList.innerHTML = '';
-      
-      Object.keys(selections).forEach(awardId => {
-        const award = awardsData.find(a => a.id === awardId);
-        const listItem = document.createElement('div');
-        listItem.innerHTML = `<strong>${award.name}:</strong> ${selections[awardId]}`;
-        selectionsList.appendChild(listItem);
-      });
-    }
-
-    // Update progress bar
-    function updateProgress() {
-      const totalAwards = awardsData.length;
-      const selectedAwards = Object.keys(selections).length;
-      const progress = (selectedAwards / totalAwards) * 100;
-      
-      progressBar.style.width = `${progress}%`;
-    }
-
-    // Save selections to localStorage
-    function saveSelections() {
-      if (voterId) {
-        localStorage.setItem(`nlngSelections_${voterId}`, JSON.stringify(selections));
-      }
-    }
-
-    // Load selections from localStorage
-    function loadSelections() {
-      if (voterId) {
-        const savedSelections = localStorage.getItem(`nlngSelections_${voterId}`);
-        if (savedSelections) {
-          selections = JSON.parse(savedSelections);
-          
-          // Update radio buttons based on saved selections
-          Object.keys(selections).forEach(awardId => {
-            const candidateName = selections[awardId];
-            const radio = document.querySelector(`input[name="${awardId}"][value="${candidateName}"]`);
-            if (radio) {
-              radio.checked = true;
-              const candidateElement = radio.closest('.candidate');
-              if (candidateElement) {
-                candidateElement.classList.add('selected');
-              }
-            }
-          });
-          
-          updateSelectionsList();
-          updateProgress();
-        }
-      }
-    }
-
-    // Submit votes to Firebase
-    // Submit votes to Firebase
-async function submitVotes() {
-  if (!voterId) {
-    alert('Error: No voter ID found. Please generate a voter ID first.');
-    return;
-  }
-  
-  // Show loading spinner
-  loadingSpinner.classList.add('active');
-  voteBtn.disabled = true;
-  
-  try {
-    if (!db) {
-      throw new Error("Database not initialized. Please check your internet connection.");
-    }
-    
-    // Prepare vote data - FIXED: Ensure all fields are properly extracted
-    const email = document.getElementById('Email')?.value;
-    const employeeIdInput = document.getElementById('employeeId')?.value;
-    const firstName = document.getElementById('firstName')?.value;
-    const lastName = document.getElementById('lastName')?.value;
-    const department = document.getElementById('department')?.value;
-    
-    // Determine identifier (email or employeeId)
-    const identifier = email || employeeIdInput || 'Unknown';
-    
-    const voteData = {
-      voterId: voterId,
-      selections: selections,
-      timestamp: new Date().toISOString(),
-      email: email || 'Not provided',
-      employeeId: employeeIdInput || 'Not provided',
-      employeeName: `${firstName || ''} ${lastName || ''}`.trim() || 'Unknown',
-      department: department || 'Unknown',
-      totalSelections: Object.keys(selections).length
-    };
-    
-    console.log("📤 Submitting vote data:", voteData);
-    console.log("📊 Selections count:", Object.keys(selections).length);
-    
-    // TEST 1: Check if we can write to Firebase
-    console.log("🔍 Testing Firebase connection...");
-    try {
-      const testRef = ref(db, 'connectionTest');
-      await set(testRef, { test: Date.now(), timestamp: new Date().toISOString() });
-      console.log("✅ Firebase connection test successful");
-      // Clean up test data
-      await set(testRef, null);
-    } catch (testError) {
-      console.error("❌ Firebase connection test failed:", testError);
-      throw new Error(`Firebase connection failed: ${testError.message}`);
-    }
-    
-    // Save vote to Firebase
-    const voteRef = ref(db, `votes/${voterId}`);
-    console.log("💾 Saving vote to:", `votes/${voterId}`);
-    
-    // Check if vote already exists
-    const existingVote = await get(voteRef);
-    if (existingVote.exists()) {
-      throw new Error("You have already voted with this voter ID!");
-    }
-    
-    // Save the vote
-    await set(voteRef, voteData);
-    console.log("✅ Vote saved successfully");
-    
-    // Update vote counts for each candidate
-    console.log("📈 Updating vote counts...");
-    const updates = {};
-    let updateCount = 0;
-    
-    for (const [awardId, candidateName] of Object.entries(selections)) {
-      if (!awardId || !candidateName) {
-        console.warn(`⚠️ Skipping invalid selection: awardId=${awardId}, candidateName=${candidateName}`);
-        continue;
-      }
-      
-      // Clean candidate name (remove special characters that might cause Firebase path issues)
-      const cleanCandidateName = candidateName.replace(/[.#$/[\]]/g, '_');
-      const voteCountPath = `results/${awardId}/${cleanCandidateName}`;
-      
-      try {
-        // Get current count
-        const voteCountRef = ref(db, voteCountPath);
-        const snapshot = await get(voteCountRef);
-        const currentCount = snapshot.exists() ? snapshot.val() : 0;
         
-        // Prepare update
-        updates[voteCountPath] = currentCount + 1;
-        updateCount++;
-        
-        console.log(`   ➕ ${awardId}: ${candidateName} = ${currentCount + 1} votes`);
-      } catch (countError) {
-        console.error(`❌ Error getting count for ${awardId}/${candidateName}:`, countError);
-      }
-    }
-    
-    // Apply all updates at once
-    if (Object.keys(updates).length > 0) {
-      console.log(`📊 Applying ${updateCount} vote count updates...`);
-      await update(ref(db), updates);
-      console.log("✅ Vote counts updated successfully");
-    } else {
-      console.warn("⚠️ No vote counts to update (selections might be empty)");
-    }
-    
-    // Mark as voted in localStorage
-    localStorage.setItem(`nlngVoted_${voterId}`, 'true');
-    
-    // Hide loading spinner
-    loadingSpinner.classList.remove('active');
-    
-    // Disable voting interface
-    disableVoting();
-    
-    // Show confirmation with voter ID
-    alert(`✅ Thank you! Your votes have been recorded successfully.\n\nYour Voter ID: ${voterId}\nPlease save this ID for reference.`);
-    
-    // Optional: Show success message on page
-    alreadyVoted.innerHTML = `
-      <h2><i class="fas fa-check-circle"></i> Vote Submitted Successfully!</h2>
-      <p>Your votes for the 2025 Bonny Location Medallion Awards have been recorded.</p>
-      <p><strong>Your Voter ID:</strong> <span class="voter-id">${voterId}</span></p>
-      <p>Thank you for participating!</p>
-    `;
-    alreadyVoted.classList.add('active');
-    
-  } catch (error) {
-    console.error("❌❌❌ SUBMIT VOTES ERROR:", error);
-    console.error("Error details:", {
-      name: error.name,
-      message: error.message,
-      code: error.code,
-      stack: error.stack
+        candidatesGrid.appendChild(candidateElement);
+      });
     });
     
-    // Hide loading spinner
-    loadingSpinner.classList.remove('active');
-    voteBtn.disabled = false;
-    
-    // Show detailed error message
-    let errorMessage = "There was an error submitting your votes.\n\n";
-    
-    if (error.message.includes("already voted")) {
-      errorMessage = "You have already voted with this voter ID!\n\nPlease use a different browser or clear cookies if you need to vote again.";
-      showAlreadyVoted();
-    } else if (error.code) {
-      switch (error.code) {
-        case 'PERMISSION_DENIED':
-          errorMessage += "❌ Firebase Permission Denied\n";
-          errorMessage += "Please check your Firebase Security Rules.\n";
-          errorMessage += "Current rules should allow writes to 'votes' and 'results' paths.";
-          break;
-        case 'UNAVAILABLE':
-          errorMessage += "🌐 Network Error\n";
-          errorMessage += "Please check your internet connection and try again.";
-          break;
-        default:
-          errorMessage += `Error: ${error.code}\n${error.message}`;
-      }
-    } else if (error.message.includes("Firebase connection failed")) {
-      errorMessage += "🔌 Firebase Connection Failed\n";
-      errorMessage += "Please check:\n";
-      errorMessage += "1. Your internet connection\n";
-      errorMessage += "2. Firebase project configuration\n";
-      errorMessage += "3. Browser console for detailed errors (F12 → Console)";
-    } else {
-      errorMessage += `Error: ${error.message}`;
-    }
-    
-    // Add debug instructions
-    errorMessage += "\n\n🔧 Debug Tips:\n";
-    errorMessage += "1. Open browser Developer Tools (F12)\n";
-    errorMessage += "2. Check Console tab for error details\n";
-    errorMessage += "3. Check Network tab for failed requests\n";
-    errorMessage += "4. Try refreshing the page";
-    
-    alert(errorMessage);
+    // Set up radio button change events
+    document.querySelectorAll('.radio-input').forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const awardId = e.target.name;
+        const candidateName = e.target.value;
+        const candidateElement = e.target.closest('.candidate');
+        
+        // Remove selected class from all candidates in this award
+        document.querySelectorAll(`.candidate input[name="${awardId}"]`).forEach(r => {
+          r.closest('.candidate').classList.remove('selected');
+        });
+        
+        // The selected class to the chosen candidate
+        candidateElement.classList.add('selected');
+        
+        handleSelection(awardId, candidateName, candidateElement);
+      });
+    });
   }
-}
-    // Disable voting after user has voted
-    function disableVoting() {
-      voteBtn.disabled = true;
-      voteBtn.textContent = 'Votes Submitted';
-      
-      document.querySelectorAll('.radio-input').forEach(radio => {
-        radio.disabled = true;
-      });
-      
-      document.querySelectorAll('.candidate').forEach(el => {
-        el.style.pointerEvents = 'none';
-        el.classList.add('disabled');
-      });
+
+  // Handle candidate selection
+  function handleSelection(awardId, candidateName, candidateElement) {
+    // Update selections object
+    selections[awardId] = candidateName;
+    
+    // Save to localStorage
+    saveSelections();
+    
+    // Update UI
+    updateSelectionsList();
+    updateProgress();
+    
+    // Show selection info if at least one selection is made
+    if (Object.keys(selections).length > 0) {
+      selectedInfo.classList.add('active');
     }
+  }
+
+  // Update the selections list
+  function updateSelectionsList() {
+    selectionsList.innerHTML = '';
+    
+    Object.keys(selections).forEach(awardId => {
+      const award = awardsData.find(a => a.id === awardId);
+      const listItem = document.createElement('div');
+      listItem.innerHTML = `<strong>${award.name}:</strong> ${selections[awardId]}`;
+      selectionsList.appendChild(listItem);
+    });
+  }
+
+  // Update progress bar
+  function updateProgress() {
+    const totalAwards = awardsData.length;
+    const selectedAwards = Object.keys(selections).length;
+    const progress = (selectedAwards / totalAwards) * 100;
+    
+    progressBar.style.width = `${progress}%`;
+  }
+
+  // Save selections to localStorage
+  function saveSelections() {
+    if (voterId) {
+      localStorage.setItem(`nlngSelections_${voterId}`, JSON.stringify(selections));
+    }
+  }
+
+  // Load selections from localStorage
+  function loadSelections() {
+    if (voterId) {
+      const savedSelections = localStorage.getItem(`nlngSelections_${voterId}`);
+      if (savedSelections) {
+        selections = JSON.parse(savedSelections);
+        
+        // Update radio buttons based on saved selections
+        Object.keys(selections).forEach(awardId => {
+          const candidateName = selections[awardId];
+          const radio = document.querySelector(`input[name="${awardId}"][value="${candidateName}"]`);
+          if (radio) {
+            radio.checked = true;
+            const candidateElement = radio.closest('.candidate');
+            if (candidateElement) {
+              candidateElement.classList.add('selected');
+            }
+          }
+        });
+        
+        updateSelectionsList();
+        updateProgress();
+      }
+    }
+  }
+
+  // Submit votes to Firebase
+  async function submitVotes() {
+    if (!voterId) {
+      alert('Error: No voter ID found. Please generate a voter ID first.');
+      return;
+    }
+    
+    // Show loading spinner
+    loadingSpinner.classList.add('active');
+    voteBtn.disabled = true;
+    
+    try {
+      if (!db) {
+        throw new Error("Database not initialized. Please check your internet connection.");
+      }
+      
+      // Prepare vote data
+      const email = document.getElementById('Email')?.value;
+      const employeeIdInput = document.getElementById('employeeId')?.value;
+      const firstName = document.getElementById('firstName')?.value;
+      const lastName = document.getElementById('lastName')?.value;
+      const department = document.getElementById('department')?.value;
+      
+      // Determine identifier (email or employeeId)
+      const identifier = email || employeeIdInput || 'Unknown';
+      
+      const voteData = {
+        voterId: voterId,
+        selections: selections,
+        timestamp: new Date().toISOString(),
+        email: email || 'Not provided',
+        employeeId: employeeIdInput || 'Not provided',
+        employeeName: `${firstName || ''} ${lastName || ''}`.trim() || 'Unknown',
+        department: department || 'Unknown',
+        totalSelections: Object.keys(selections).length
+      };
+      
+      console.log("📤 Submitting vote data:", voteData);
+      
+      // Save vote to Firebase
+      const voteRef = ref(db, `votes/${voterId}`);
+      
+      // Check if vote already exists
+      const existingVote = await get(voteRef);
+      if (existingVote.exists()) {
+        throw new Error("You have already voted with this voter ID!");
+      }
+      
+      // Save the vote
+      await set(voteRef, voteData);
+      console.log("✅ Vote saved successfully");
+      
+      // Update vote counts for each candidate
+      console.log("📈 Updating vote counts...");
+      const updates = {};
+      
+      for (const [awardId, candidateName] of Object.entries(selections)) {
+        if (!awardId || !candidateName) {
+          console.warn(`⚠️ Skipping invalid selection: awardId=${awardId}, candidateName=${candidateName}`);
+          continue;
+        }
+        
+        // Clean candidate name (remove special characters that might cause Firebase path issues)
+        const cleanCandidateName = candidateName.replace(/[.#$/[\]]/g, '_');
+        const voteCountPath = `results/${awardId}/${cleanCandidateName}`;
+        
+        try {
+          // Get current count
+          const voteCountRef = ref(db, voteCountPath);
+          const snapshot = await get(voteCountRef);
+          const currentCount = snapshot.exists() ? snapshot.val() : 0;
+          
+          // Prepare update
+          updates[voteCountPath] = currentCount + 1;
+          
+          console.log(`   ➕ ${awardId}: ${candidateName} = ${currentCount + 1} votes`);
+        } catch (countError) {
+          console.error(`❌ Error getting count for ${awardId}/${candidateName}:`, countError);
+        }
+      }
+      
+      // Apply all updates at once
+      if (Object.keys(updates).length > 0) {
+        console.log(`📊 Applying vote count updates...`);
+        await update(ref(db), updates);
+        console.log("✅ Vote counts updated successfully");
+      }
+      
+      // Mark as voted in localStorage
+      localStorage.setItem(`nlngVoted_${voterId}`, 'true');
+      
+      // Hide loading spinner
+      loadingSpinner.classList.remove('active');
+      
+      // Disable voting interface
+      disableVoting();
+      
+      // Show confirmation with voter ID
+      alert(`✅ Thank you! Your votes have been recorded successfully.\n\nYour Voter ID: ${voterId}\nPlease save this ID for reference.`);
+      
+      // Show success message on page
+      alreadyVoted.innerHTML = `
+        <h2><i class="fas fa-check-circle"></i> Vote Submitted Successfully!</h2>
+        <p>Your votes for the 2025 Bonny Location Medallion Awards have been recorded.</p>
+        <p><strong>Your Voter ID:</strong> <span class="voter-id">${voterId}</span></p>
+        <p>Thank you for participating!</p>
+      `;
+      alreadyVoted.classList.add('active');
+      
+      // Start auto-close timer
+      startAutoCloseTimer();
+      
+    } catch (error) {
+      console.error("❌❌❌ SUBMIT VOTES ERROR:", error);
+      
+      // Hide loading spinner
+      loadingSpinner.classList.remove('active');
+      voteBtn.disabled = false;
+      
+      // Show detailed error message
+      let errorMessage = "There was an error submitting your votes.\n\n";
+      
+      if (error.message.includes("already voted")) {
+        errorMessage = "You have already voted with this voter ID!\n\nPlease use a different browser or clear cookies if you need to vote again.";
+        showAlreadyVoted();
+      } else if (error.code) {
+        errorMessage += `Error: ${error.code}\n${error.message}`;
+      } else {
+        errorMessage += `Error: ${error.message}`;
+      }
+      
+      alert(errorMessage);
+    }
+  }
+
+  // Disable voting after user has voted
+  function disableVoting() {
+    voteBtn.disabled = true;
+    voteBtn.textContent = 'Votes Submitted';
+    
+    document.querySelectorAll('.radio-input').forEach(radio => {
+      radio.disabled = true;
+    });
+    
+    document.querySelectorAll('.candidate').forEach(el => {
+      el.style.pointerEvents = 'none';
+      el.classList.add('disabled');
+    });
+  }
+
+  // Auto-close timer function
   function startAutoCloseTimer() {
-  let secondsLeft = 60;
-  
-  // Create timer overlay
-  const overlay = document.createElement('div');
-  overlay.id = 'closeOverlay';
-  overlay.style.cssText = `
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0, 0, 0, 0.95);
-    color: white;
-    padding: 30px;
-    border-radius: 20px;
-    z-index: 9999;
-    text-align: center;
-    border: 3px solid #00ffcc;
-    min-width: 300px;
-    box-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
-  `;
-  
-  overlay.innerHTML = `
-    <h3 style="color: #00ffcc; margin-bottom: 15px;">
-      <i class="fas fa-check-circle"></i> Vote Submitted Successfully!
-    </h3>
-    <p>Thank you for voting in the 2025 Bonny Location Medallion Awards.</p>
-    <p style="margin: 15px 0; font-size: 0.9em; color: #aaa;">
-      This page will automatically close in:
-    </p>
-    <div style="font-size: 2.5rem; font-weight: bold; color: #ffcc00; margin: 15px 0;" id="countdownDisplay">
-      60
-    </div>
-    <div style="background: #333; height: 10px; border-radius: 5px; margin: 20px 0; overflow: hidden;">
-      <div id="progressBar" style="background: linear-gradient(90deg, #00ffcc, #00c6ff); height: 100%; width: 100%; transition: width 1s linear;"></div>
-    </div>
-    <p style="margin-top: 20px; font-size: 0.9em; color: #aaa;">
-      <i class="fas fa-info-circle"></i> You can close this page now or wait for auto-close.
-    </p>
-    <button id="closeNowBtn" style="
-      background: linear-gradient(90deg, #00c6ff, #0072ff);
+    let secondsLeft = 60;
+    
+    // Create timer overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'closeOverlay';
+    overlay.style.cssText = `
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.95);
       color: white;
-      border: none;
-      padding: 10px 25px;
-      border-radius: 25px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: bold;
-    ">
-      <i class="fas fa-times"></i> Close Now
-    </button>
-    <button id="cancelCloseBtn" style="
-      background: transparent;
-      color: #aaa;
-      border: 1px solid #666;
-      padding: 10px 25px;
-      border-radius: 25px;
-      cursor: pointer;
-      margin-top: 10px;
-      margin-left: 10px;
-      font-weight: bold;
-    ">
-      <i class="fas fa-ban"></i> Cancel Auto-Close
-    </button>
-  `;
-  
-  document.body.appendChild(overlay);
-  
-  const countdownDisplay = document.getElementById('countdownDisplay');
-  const progressBar = document.getElementById('progressBar');
-  const closeNowBtn = document.getElementById('closeNowBtn');
-  const cancelCloseBtn = document.getElementById('cancelCloseBtn');
-  
-  const timerInterval = setInterval(() => {
-    secondsLeft--;
+      padding: 30px;
+      border-radius: 20px;
+      z-index: 9999;
+      text-align: center;
+      border: 3px solid #00ffcc;
+      min-width: 300px;
+      box-shadow: 0 0 40px rgba(0, 255, 204, 0.3);
+    `;
     
-    // Update display
-    countdownDisplay.textContent = secondsLeft;
+    overlay.innerHTML = `
+      <h3 style="color: #00ffcc; margin-bottom: 15px;">
+        <i class="fas fa-check-circle"></i> Vote Submitted Successfully!
+      </h3>
+      <p>Thank you for voting in the 2025 Bonny Location Medallion Awards.</p>
+      <p style="margin: 15px 0; font-size: 0.9em; color: #aaa;">
+        This page will automatically close in:
+      </p>
+      <div style="font-size: 2.5rem; font-weight: bold; color: #ffcc00; margin: 15px 0;" id="countdownDisplay">
+        60
+      </div>
+      <div style="background: #333; height: 10px; border-radius: 5px; margin: 20px 0; overflow: hidden;">
+        <div id="progressBar" style="background: linear-gradient(90deg, #00ffcc, #00c6ff); height: 100%; width: 100%; transition: width 1s linear;"></div>
+      </div>
+      <p style="margin-top: 20px; font-size: 0.9em; color: #aaa;">
+        <i class="fas fa-info-circle"></i> You can close this page now or wait for auto-close.
+      </p>
+      <button id="closeNowBtn" style="
+        background: linear-gradient(90deg, #00c6ff, #0072ff);
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin-top: 10px;
+        font-weight: bold;
+      ">
+        <i class="fas fa-times"></i> Close Now
+      </button>
+      <button id="cancelCloseBtn" style="
+        background: transparent;
+        color: #aaa;
+        border: 1px solid #666;
+        padding: 10px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        margin-top: 10px;
+        margin-left: 10px;
+        font-weight: bold;
+      ">
+        <i class="fas fa-ban"></i> Cancel Auto-Close
+      </button>
+    `;
     
-    // Update progress bar
-    const progressPercentage = (secondsLeft / 60) * 100;
-    progressBar.style.width = `${progressPercentage}%`;
+    document.body.appendChild(overlay);
     
-    // Change color when time is running out
-    if (secondsLeft <= 10) {
-      countdownDisplay.style.color = '#ff4444';
-      progressBar.style.background = 'linear-gradient(90deg, #ff4444, #ff8800)';
-    }
+    const countdownDisplay = document.getElementById('countdownDisplay');
+    const progressBar = document.getElementById('progressBar');
+    const closeNowBtn = document.getElementById('closeNowBtn');
+    const cancelCloseBtn = document.getElementById('cancelCloseBtn');
     
-    // Close when time is up
-    if (secondsLeft <= 0) {
+    const timerInterval = setInterval(() => {
+      secondsLeft--;
+      
+      // Update display
+      countdownDisplay.textContent = secondsLeft;
+      
+      // Update progress bar
+      const progressPercentage = (secondsLeft / 60) * 100;
+      progressBar.style.width = `${progressPercentage}%`;
+      
+      // Change color when time is running out
+      if (secondsLeft <= 10) {
+        countdownDisplay.style.color = '#ff4444';
+        progressBar.style.background = 'linear-gradient(90deg, #ff4444, #ff8800)';
+      }
+      
+      // Close when time is up
+      if (secondsLeft <= 0) {
+        clearInterval(timerInterval);
+        closePage();
+      }
+    }, 1000);
+    
+    // Close now button
+    closeNowBtn.addEventListener('click', () => {
       clearInterval(timerInterval);
       closePage();
-    }
-  }, 1000);
-  
-  // Close now button
-  closeNowBtn.addEventListener('click', () => {
-    clearInterval(timerInterval);
-    closePage();
-  });
-  
-  // Cancel button
-  cancelCloseBtn.addEventListener('click', () => {
-    clearInterval(timerInterval);
-    overlay.remove();
-    alert('Auto-close cancelled. You can close the page manually when ready.');
-  });
-  
-  // Close page function
-  function closePage() {
-    // Try to close the window
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      window.close();
-    }
+    });
     
-    // Fallback - redirect to a thank you page or blank page
-    setTimeout(() => {
-      window.location.href = 'about:blank';
-    }, 1000);
+    // Cancel button
+    cancelCloseBtn.addEventListener('click', () => {
+      clearInterval(timerInterval);
+      overlay.remove();
+      alert('Auto-close cancelled. You can close the page manually when ready.');
+    });
+    
+    // Close page function
+    function closePage() {
+      // Try to close the window
+      if (window.history.length > 1) {
+        window.history.back();
+      } else {
+        window.close();
+      }
+      
+      // Fallback - redirect to a thank you page or blank page
+      setTimeout(() => {
+        window.location.href = 'about:blank';
+      }, 1000);
+    }
   }
-}
-    // Initialize the page when loaded
-    document.addEventListener('DOMContentLoaded', initPage);
-  </script>
+
+  // Initialize the page when loaded
+  document.addEventListener('DOMContentLoaded', initPage);
+</script>
 </body>
 </html>
+
 
 
 
