@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>🏆 NLNG PO Dept Award Nomination Form 2025</title>
+<title>🏆 NLNG Award Nomination Form 2025 - RAIS</title>
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -233,12 +233,6 @@ footer {
   position: relative;
 }
 
-/* Required field indicator */
-.required::after {
-  content: " *";
-  color: #ff6b6b;
-}
-
 /* Responsive */
 @media (max-width: 768px) {
   .container {
@@ -279,8 +273,8 @@ footer {
 <div class="orb"></div><div class="orb"></div><div class="orb"></div>
 
 <div class="container">
-  <h1>🏆 NLNG PO Depart Award Nomination Form 2025</h1>
-  <p class="note">Each nominator can nominate one unique person per award. Please complete all fields carefully.</p>
+  <h1>🏆 NLNG Award Nomination Form 2025 - RAIS</h1>
+  <p class="note">You can only vote for one unique person. Please complete all fields carefully..</p>
 
   <!-- Date Information Banner -->
   <div class="date-info" id="dateInfo">
@@ -290,20 +284,20 @@ footer {
 
   <form id="nominationForm">
     <div class="section-title">Nominator Information</div>
-    <label class="required">First Name</label>
+    <label>First Name</label>
     <input type="text" id="nominatorFirstName" required />
-    <label class="required">Last Name</label>
+    <label>Last Name</label>
     <input type="text" id="nominatorLastName" required />
-    <label class="required">Department</label>
+     <label>Department</label>
     <input type="text" id="nominatorDepart" required />
-    <label class="required">Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
-    <input type="email" id="nominatorEmail" placeholder="e.g. jane@nlng.com" required />
+    <label>Email Address (For company Email with @nlng, @Nsml.com, and @raisbny.com only)</label>
+    <input type="email" id="nominatorEmail" placeholder="e.g. jane@nlng.com" />
 
-    <label class="required">Employee Number (for Partner personnel without company email address)</label>
-    <input type="text" id="employeeNumber" placeholder="Enter employee number if no email" required />
+    <label>Employee Number (for Partner personnel without company email address)</label>
+    <input type="text" id="employeeNumber" placeholder="Enter employee number if no email" />
+
 
     <div class="section-title">Award Nominations</div>
-    <p class="note" style="text-align: left; margin-bottom: 15px;">All award fields are required. Please fill in nominee information for each award category.</p>
     <div id="awardsContainer"></div>
 
     <button type="submit" id="submitButton">Submit Nominations</button>
@@ -335,8 +329,8 @@ const db = getDatabase(app);
 
 // --- Date Configuration ---
 const nominationDates = {
-  startDate: new Date('2025-11-21T00:00:00'), // Set your start date here
-  closeDate: new Date('2025-11-30T23:59:59')  // Set your close date here
+  startDate: new Date('2025-11-11T00:00:00'), // Set your start date here
+  closeDate: new Date('2025-11-21T23:23:59')  // Set your close date here
 };
 
 // --- Date Display and Validation ---
@@ -383,62 +377,70 @@ updateDateDisplay();
 // --- Award Descriptions ---
   
 const awardDescriptions = {
-"PO leadership award": "A leader in operations department that exemplifies the kind of committed and collaborative leadership required to excel in the Operations environment. Their decisive actions in 2025 ensured the reliability of our plant and actively reiterate key values like Safety, Integrity, and Collaboration.",
-"PO Excellence Award (POA STAFF)": "A staff in the POA who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POB STAFF)": "A staff in the POB who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POC STAFF)": "A staff in the POC who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POD STAFF)": "A staff in the POD who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POL STAFF)": "A staff in the POL who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POS STAFF)": "A staff in the POS who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POA PARTNER)": "A partner staff in the POA who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POB PARTNER)": "A partner staff in the POB who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POC PARTNER)": "A partner staff in the POC who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POD PARTNER)": "A partner staff in the POD who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POL PARTNER)": "A partner staff in the POL who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (POS Partner)": "A partner staff in the POS department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Excellence Award (Vacuum truck drivers)": "A vacuum truck driver in the PO department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (CCR Cleaners)": "A CCR cleaner in PO department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (Plant Cleaners)": "A plant cleaner who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (CCR Security)": "A security/Spy police in CCR who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (CCR Canteen staff)": "A partner staff in the CCR canteen who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (Chemical Handlers)": "A chemical handler who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (Fire team)": "A staff/partner in the fire station who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (CMO)": "A staff/partner in the CMO department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (ESD)": "A staff/Partner in ESD department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (LSS)": "A staff/Partner in the LSS department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (IMT)": "A partner/staff in IMT department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (CPM)": "A staff/partner in CPM department who has been excellent in safety, has a high sense of accountability, delivers high quality work and maintains a heathy relationship at work.",
-"PO Stakeholder of the Year (HR)": "A staff/partner in the HR department who has a high sense of accountability, delivers high quality work, and maintains a heathy relationship at work."
+  "RAIS Staff of the Year": "A staff in the school who demonstrates strong accountability, consistently delivers high-quality work, and fosters healthy, respectful relationships with both parents and pupils. Creates a supportive learning environment, communicates openly and professionally.",
 };
 
 // --- Awards ---
 const awards = [
-"PO leadership award" , "PO Excellence Award (POA STAFF)", "PO Excellence Award (POB STAFF)", "PO Excellence Award (POC STAFF)", "PO Excellence Award (POD STAFF)", 
-"PO Excellence Award (POL STAFF)", "PO Excellence Award (POS STAFF)", "PO Excellence Award (POA PARTNER)" , "PO Excellence Award (POB PARTNER)", "PO Excellence Award (POC PARTNER)" , 
-"PO Excellence Award (POD PARTNER)" , "PO Excellence Award (POL PARTNER)", "PO Excellence Award (POS Partner)", "PO Excellence Award (Vacuum truck drivers)", "PO Stakeholder of the Year (CCR Cleaners)", 
-"PO Stakeholder of the Year (Plant Cleaners)", "PO Stakeholder of the Year (CCR Security)", "PO Stakeholder of the Year (CCR Canteen staff)", "PO Stakeholder of the Year (Chemical Handlers)", 
-"PO Stakeholder of the Year (Fire team)", "PO Stakeholder of the Year (CMO)", "PO Stakeholder of the Year (ESD)","PO Stakeholder of the Year (LSS)","PO Stakeholder of the Year (IMT)",
-"PO Stakeholder of the Year (CPM)" , "PO Stakeholder of the Year (HR)"
+  "RAIS Staff of the Year"
 ];
 
+// Ask the user if they want to change them
+const departments = ["Operations", "Human Resources", "Finance", "Technical Services", "Corporate Affairs"];
+const managers = ["James Okon", "Patricia Balogun", "Emeka Nwosu", "Linda Eze", "Tunde Bamidele"];
 const container = document.getElementById("awardsContainer");
 
+// --- Load staff list (JSON) ---
+let staffList = [];
+fetch("candidates.json")
+  .then(res => res.json())
+  .then(data => {
+    staffList = data;
+    console.log("✅ Staff list loaded:", staffList.length, "records");
+  })
+  .catch(err => console.error("Error loading staff list:", err));
+
+// --- Render Awards ---
 // --- Render Awards ---
 awards.forEach((award, i) => {
   const div = document.createElement("div");
   div.classList.add("award-section");
-  
-  // For all awards, use manual input fields (no autofill)
-  const inputField = `
-    <label class="required">Nominee Full Name</label>
-    <input type="text" name="nomineeName_${i}" placeholder="Enter nominee's full name" required />
-    <label class="required">Department</label>
-    <input type="text" name="nomineeDept_${i}" placeholder="Enter nominee's department" required />
-    <label class="required">Company</label>
-    <input type="text" name="nomineeCompany_${i}" placeholder="Enter nominee's company" required />
-    <label class="required">Status (Staff/Partner)</label>
-    <input type="text" name="nomineestatus_${i}" placeholder="Enter Staff or Partner" required />
-  `;
+  let inputField = "";
+
+  if (award === "Manager of the Year") {
+    // Only manager name input
+    inputField = `
+      <label>Manager's Name</label>
+      <input type="text" name="nomineeName_${i}" placeholder="Enter manager's full name" />
+      <label>Department</label>
+      <input type="text" name="nomineeDept_${i}" placeholder="Enter manager's Department" />
+    `;   
+  } else if (award === "Most Collaborative Dept of the Year") {
+    // Only department name input
+    inputField = `
+      <label>Department Name</label>
+      <input type="text" name="nomineeDept_${i}" placeholder="Enter department name" />
+    `;
+  } else if (award === "The Continuous Improvement Team (CIT) Award") {
+    // Only department name input
+    inputField = `
+      <label>Team (Unit) Name</label>
+      <input type="text" name="nomineeDept_${i}" placeholder="Enter team (Unit) name" />
+    `;
+  }
+  else {
+    inputField = `
+      <label>Nominee</label>
+      <input type="text" list="candidateList_${i}" name="nomineeName_${i}" placeholder="Type candidate name..." autocomplete="off" >
+      <datalist id="candidateList_${i}"></datalist>
+      <label>Department</label>
+      <input type="text" name="nomineeDept_${i}" readonly />
+      <label>Company</label>
+      <input type="text" name="nomineeCompany_${i}" readonly />
+      <label>Status</label>
+      <input type="text" name="nomineestatus_${i}" readonly />
+    `;
+  }
 
   div.innerHTML = `<h3>${i + 1}. ${award}</h3>
     <p style="color:#ccc; font-size:0.9rem; margin-bottom:10px;">
@@ -447,41 +449,43 @@ awards.forEach((award, i) => {
   container.appendChild(div);
 });
 
-// --- Form Validation ---
-function validateForm() {
-  const firstName = document.getElementById("nominatorFirstName").value.trim();
-  const lastName = document.getElementById("nominatorLastName").value.trim();
-  const department = document.getElementById("nominatorDepart").value.trim();
-  const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
-  const employeeNumber = document.getElementById("employeeNumber").value.trim();
+// --- Dynamic Autocomplete ---
+container.addEventListener("input", (e) => {
+  if (!e.target.name?.startsWith("nomineeName_")) return;
+  const input = e.target;
+  const datalist = document.getElementById(input.getAttribute("list"));
+  const value = input.value.toLowerCase();
 
-  // Check nominator information
-  if (!firstName || !lastName || !department) {
-    return "Please fill in all nominator information fields.";
+  datalist.innerHTML = "";
+  if (value.length < 2) return;
+
+  const filtered = staffList
+    .filter(person =>
+      person["Employee Name"].toLowerCase().includes(value)
+    )
+    .slice(0, 20);
+
+  filtered.forEach(person => {
+    const option = document.createElement("option");
+    option.value = person["Employee Name"];
+    datalist.appendChild(option);
+  });
+});
+
+// --- Autofill other fields ---
+container.addEventListener("change", (e) => {
+  if (!e.target.name?.startsWith("nomineeName_")) return;
+  const input = e.target;
+  const index = input.name.split("_")[1];
+
+  const selected = staffList.find(p => p["Employee Name"] === input.value);
+
+  if (selected) {
+    document.querySelector(`[name='nomineeDept_${index}']`).value = selected["Department"];
+    document.querySelector(`[name='nomineeCompany_${index}']`).value = selected["Company"];
+    document.querySelector(`[name='nomineestatus_${index}']`).value = selected["Status"];
   }
-
-  // Check email or employee number
-  const validDomains = ["nlng.com", "nsml.com", "raisbny.com"];
-  const emailDomain = email.includes("@") ? email.split("@")[1] : "";
-  
-  if (!((email && validDomains.includes(emailDomain)) || employeeNumber)) {
-    return "Please enter a valid company email or your employee number.";
-  }
-
-  // Check all award fields
-  for (let i = 0; i < awards.length; i++) {
-    const nomineeName = document.querySelector(`[name='nomineeName_${i}']`).value.trim();
-    const nomineeDept = document.querySelector(`[name='nomineeDept_${i}']`).value.trim();
-    const nomineeCompany = document.querySelector(`[name='nomineeCompany_${i}']`).value.trim();
-    const nomineeStatus = document.querySelector(`[name='nomineestatus_${i}']`).value.trim();
-
-    if (!nomineeName || !nomineeDept || !nomineeCompany || !nomineeStatus) {
-      return `Please fill in all fields for award: ${awards[i]}`;
-    }
-  }
-
-  return null; // No errors
-}
+});
 
 // --- Submit to Firebase ---
 document.getElementById("nominationForm").addEventListener("submit", async (e) => {
@@ -497,15 +501,6 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 
   const message = document.getElementById("message");
   const submitBtn = e.target.querySelector("button[type='submit']");
-  
-  // Validate form
-  const validationError = validateForm();
-  if (validationError) {
-    message.textContent = `⚠️ ${validationError}`;
-    message.style.color = "yellow";
-    return;
-  }
-
   submitBtn.disabled = true;
   submitBtn.style.opacity = 0.5;
 
@@ -514,6 +509,18 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
   const department = document.getElementById("nominatorDepart").value.trim();
   const email = document.getElementById("nominatorEmail").value.trim().toLowerCase();
   const employeeNumber = document.getElementById("employeeNumber").value.trim();
+
+  const validDomains = ["nlng.com", "nsml.com", "raisbny.com"];
+  const emailDomain = email.includes("@") ? email.split("@")[1] : "";
+
+  // ✅ Validation: Must have either valid email OR employee number
+  if (!((email && validDomains.includes(emailDomain)) || employeeNumber)) {
+    message.textContent = "⚠️ Please enter a valid company email or your employee number.";
+    message.style.color = "yellow";
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = 1;
+    return;
+  }
 
   message.textContent = "⏳ Submitting nomination...";
   message.style.color = "white";
@@ -538,10 +545,10 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     awards.forEach((award, i) => {
       formData[`award_${i + 1}`] = {
         award,
-        nomineeName: document.querySelector(`[name='nomineeName_${i}']`).value.trim(),
-        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`).value.trim(),
-        nomineeCompany: document.querySelector(`[name='nomineeCompany_${i}']`).value.trim(),
-        nomineestatus: document.querySelector(`[name='nomineestatus_${i}']`).value.trim()
+        nomineeName: document.querySelector(`[name='nomineeName_${i}']`)?.value || "",
+        nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`)?.value || "",
+        nomineeCompany: document.querySelector(`[name='nomineeCompany_${i}']`)?.value || "",
+        nomineestatus: document.querySelector(`[name='nomineestatus_${i}']`)?.value || ""
       };
     });
 
