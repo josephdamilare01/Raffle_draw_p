@@ -392,7 +392,7 @@ const container = document.getElementById("awardsContainer");
 
 // --- Load staff list (JSON) ---
 let staffList = [];
-fetch("candidates.json")
+fetch("candidates_2.json")
   .then(res => res.json())
   .then(data => {
     staffList = data;
@@ -580,6 +580,7 @@ document.getElementById("VotingForm").addEventListener("submit", async (e) => {
 </script>
 </body>
 </html>
+
 
 
 
