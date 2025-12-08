@@ -1,709 +1,709 @@
 [
-    {
-        "S\/No":1,
-        "Employee Name":"Richard White",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":2,
-        "Employee Name":"Marytina Osuchukwu",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":3,
-        "Employee Name":"Ishiekwene Moses",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":4,
-        "Employee Name":"Taiwo Adeyemi",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":5,
-        "Employee Name":"Nkechi Ovuomarahasu",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":6,
-        "Employee Name":"Tokunbo Ogunbanjo",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":7,
-        "Employee Name":"Chidinma Eze",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":8,
-        "Employee Name":"Amarachi Okore-Ulu",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":9,
-        "Employee Name":"Uthman Abdullahi",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":10,
-        "Employee Name":"Innocent Ojukwu",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":11,
-        "Employee Name":"Nkiruka Okafor",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":12,
-        "Employee Name":"Abubakar Abdullahi",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":13,
-        "Employee Name":"Gloria Nwineh",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":14,
-        "Employee Name":"David Kanani",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":15,
-        "Employee Name":"Iyayi Awolayi",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":16,
-        "Employee Name":"Temitayo Ogundoju",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":17,
-        "Employee Name":"Christopher Ugbede",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":18,
-        "Employee Name":"Miedi Walton",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":19,
-        "Employee Name":"Jackson Emmanuel",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":20,
-        "Employee Name":"Adeyemi Adesanwo",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":21,
-        "Employee Name":"Ajadi Oguntunde",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":22,
-        "Employee Name":"Prisca Nwokoro",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":23,
-        "Employee Name":"Jane Eso",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":24,
-        "Employee Name":"Gabriel Meshoye",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":25,
-        "Employee Name":"Adeniyi Olusegun",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":26,
-        "Employee Name":"Mary Ebute",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":27,
-        "Employee Name":"Pamela Longjohn (L4L)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":28,
-        "Employee Name":"Jacqueline Smit",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":29,
-        "Employee Name":"Titilayo Tunde-Akinbode",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":30,
-        "Employee Name":"Oluyemisi Aluko (EY Leader)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":31,
-        "Employee Name":"Boomni Aholu (IEYC L4L)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":32,
-        "Employee Name":"Grace Chikezie-Godwin",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":33,
-        "Employee Name":"Precious Ndukwu ",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":34,
-        "Employee Name":"Chinwe Onyeche",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":35,
-        "Employee Name":"Emilia Hart",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":36,
-        "Employee Name":"Edwina Anusonwu (MP1 Leader)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":37,
-        "Employee Name":"Lynda Egegbula",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":38,
-        "Employee Name":"Naomi Akoh (L4L)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":39,
-        "Employee Name":"Bosede Oyewole",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":40,
-        "Employee Name":"Adaku Ogbonna",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":41,
-        "Employee Name":"Igwe Chijioke",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":42,
-        "Employee Name":"Elizabeth Eze",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":43,
-        "Employee Name":"Mary Nwankpa  (L4L)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":44,
-        "Employee Name":"Manasseh Ejim",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":45,
-        "Employee Name":"Blessing Promise-Jeremiah",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":46,
-        "Employee Name":"Maryann Ituen (MP2 Leader)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":47,
-        "Employee Name":"George Ugwu",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":48,
-        "Employee Name":"Johnson Onuoha",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":49,
-        "Employee Name":"Lucy Edokpa",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":50,
-        "Employee Name":"Sandra Success-Olaobaju (MP3 Lead)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":51,
-        "Employee Name":"Florence Ashikogu",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":52,
-        "Employee Name":"Udeme Ufot ",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":53,
-        "Employee Name":"Onubi Uboyi",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":54,
-        "Employee Name":"Isaiah Fayinto (Maths L4L)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":55,
-        "Employee Name":"Bamidele Adeyemo (L4L)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":56,
-        "Employee Name":"Tina Dada (English L4L)",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":57,
-        "Employee Name":"Hendrik Smit",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":58,
-        "Employee Name":"Chris Akiba-Eyo  ",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":59,
-        "Employee Name":"Olukayode Kayode",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":60,
-        "Employee Name":"Meghan Perry",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":61,
-        "Employee Name":"Rosemary Okafor",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":62,
-        "Employee Name":"Ibifiri Mangete",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":63,
-        "Employee Name":"Eucharia Nnaji",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":64,
-        "Employee Name":"Uzoamaka Leria",
-        "Department":"RAIS Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":65,
-        "Employee Name":"Ikawuru Ikawuru",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":66,
-        "Employee Name":"Felicita Eso",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":67,
-        "Employee Name":"Shehu Adam",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":68,
-        "Employee Name":"Enudeme Moses",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":69,
-        "Employee Name":"Taiwo Afolabi",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":70,
-        "Employee Name":"Alex Pollyn",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":71,
-        "Employee Name":"Moshood Abdulrauf",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":72,
-        "Employee Name":"Kingsley Wilcox",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":73,
-        "Employee Name":"May Omoregie",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":74,
-        "Employee Name":"Mercy Anucha ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":75,
-        "Employee Name":"Justice Idachaba",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":76,
-        "Employee Name":"Maureen Melete",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":77,
-        "Employee Name":"Obot Queen ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":78,
-        "Employee Name":"Amodu Grace ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":79,
-        "Employee Name":"Uzosike Goodness ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":80,
-        "Employee Name":" Olumese Joy",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":81,
-        "Employee Name":"Jumbo Ibifiri",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":82,
-        "Employee Name":"Jumbo Pretty L.",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":83,
-        "Employee Name":"Enyinda Catherine A.",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":84,
-        "Employee Name":"Opara Sandy",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":85,
-        "Employee Name":"Augustine Mercy",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":86,
-        "Employee Name":"Pollyn Nancy",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":87,
-        "Employee Name":"Ochechi priscillia",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":88,
-        "Employee Name":"Igbinosa Esosa",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":89,
-        "Employee Name":"George Bright ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":90,
-        "Employee Name":"Regina Vareba ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":91,
-        "Employee Name":"Ezeifedi Obedience",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":92,
-        "Employee Name":"Ebere Eze",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":93,
-        "Employee Name":"Hannah Jonah                                               ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":94,
-        "Employee Name":"Ursula Nwaegbu",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":95,
-        "Employee Name":"Esther Iwuoha                                                                    ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":96,
-        "Employee Name":"Iyowuna Patrick",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":97,
-        "Employee Name":"Deborah Pollyn",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":98,
-        "Employee Name":"Daima Oghu                                                                                  ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":99,
-        "Employee Name":"Vivian Longjohn  ",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":100,
-        "Employee Name":"Tumini Jacob",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    },
-    {
-        "S\/No":101,
-        "Employee Name":"Jesse Hart",
-        "Department":"Graced-One Staff",
-        "Company":null,
-        "Status":null
-    }
+  {
+    "S/No": 1,
+    "Employee Name": "Richard White",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 2,
+    "Employee Name": "Marytina Osuchukwu",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 3,
+    "Employee Name": "Ishiekwene Moses",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 4,
+    "Employee Name": "Taiwo Adeyemi",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 5,
+    "Employee Name": "Nkechi Ovuomarahasu",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 6,
+    "Employee Name": "Tokunbo Ogunbanjo",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 7,
+    "Employee Name": "Chidinma Eze",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 8,
+    "Employee Name": "Amarachi Okore-Ulu",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 9,
+    "Employee Name": "Uthman Abdullahi",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 10,
+    "Employee Name": "Innocent Ojukwu",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 11,
+    "Employee Name": "Nkiruka Okafor",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 12,
+    "Employee Name": "Abubakar Abdullahi",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 13,
+    "Employee Name": "Gloria Nwineh",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 14,
+    "Employee Name": "David Kanani",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 15,
+    "Employee Name": "Iyayi Awolayi",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 16,
+    "Employee Name": "Temitayo Ogundoju",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 17,
+    "Employee Name": "Christopher Ugbede",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 18,
+    "Employee Name": "Miedi Walton",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 19,
+    "Employee Name": "Jackson Emmanuel",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 20,
+    "Employee Name": "Adeyemi Adesanwo",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 21,
+    "Employee Name": "Ajadi Oguntunde",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 22,
+    "Employee Name": "Prisca Nwokoro",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 23,
+    "Employee Name": "Jane Eso",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 24,
+    "Employee Name": "Gabriel Meshoye",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 25,
+    "Employee Name": "Adeniyi Olusegun",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 26,
+    "Employee Name": "Mary Ebute",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 27,
+    "Employee Name": "Pamela Longjohn (L4L)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 28,
+    "Employee Name": "Jacqueline Smit",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 29,
+    "Employee Name": "Titilayo Tunde-Akinbode",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 30,
+    "Employee Name": "Oluyemisi Aluko (EY Leader)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 31,
+    "Employee Name": "Boomni Aholu (IEYC L4L)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 32,
+    "Employee Name": "Grace Chikezie-Godwin",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 33,
+    "Employee Name": "Precious Ndukwu",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 34,
+    "Employee Name": "Chinwe Onyeche",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 35,
+    "Employee Name": "Emilia Hart",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 36,
+    "Employee Name": "Edwina Anusonwu (MP1 Leader)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 37,
+    "Employee Name": "Lynda Egegbula",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 38,
+    "Employee Name": "Naomi Akoh (L4L)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 39,
+    "Employee Name": "Bosede Oyewole",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 40,
+    "Employee Name": "Adaku Ogbonna",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 41,
+    "Employee Name": "Igwe Chijioke",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 42,
+    "Employee Name": "Elizabeth Eze",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 43,
+    "Employee Name": "Mary Nwankpa  (L4L)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 44,
+    "Employee Name": "Manasseh Ejim",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 45,
+    "Employee Name": "Blessing Promise-Jeremiah",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 46,
+    "Employee Name": "Maryann Ituen (MP2 Leader)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 47,
+    "Employee Name": "George Ugwu",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 48,
+    "Employee Name": "Johnson Onuoha",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 49,
+    "Employee Name": "Lucy Edokpa",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 50,
+    "Employee Name": "Sandra Success-Olaobaju (MP3 Lead)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 51,
+    "Employee Name": "Florence Ashikogu",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 52,
+    "Employee Name": "Udeme Ufot",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 53,
+    "Employee Name": "Onubi Uboyi",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 54,
+    "Employee Name": "Isaiah Fayinto (Maths L4L)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 55,
+    "Employee Name": "Bamidele Adeyemo (L4L)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 56,
+    "Employee Name": "Tina Dada (English L4L)",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 57,
+    "Employee Name": "Hendrik Smit",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 58,
+    "Employee Name": "Chris Akiba-Eyo",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 59,
+    "Employee Name": "Olukayode Kayode",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 60,
+    "Employee Name": "Meghan Perry",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 61,
+    "Employee Name": "Rosemary Okafor",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 62,
+    "Employee Name": "Ibifiri Mangete",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 63,
+    "Employee Name": "Eucharia Nnaji",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 64,
+    "Employee Name": "Uzoamaka Leria",
+    "Department": "HR",
+    "Company": "RAIS",
+    "Status": "Staff"
+  },
+  {
+    "S/No": 65,
+    "Employee Name": "Ikawuru Ikawuru",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 66,
+    "Employee Name": "Felicita Eso",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 67,
+    "Employee Name": "Shehu Adam",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 68,
+    "Employee Name": "Enudeme Moses",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 69,
+    "Employee Name": "Taiwo Afolabi",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 70,
+    "Employee Name": "Alex Pollyn",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 71,
+    "Employee Name": "Moshood Abdulrauf",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 72,
+    "Employee Name": "Kingsley Wilcox",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 73,
+    "Employee Name": "May Omoregie",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 74,
+    "Employee Name": "Mercy Anucha",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 75,
+    "Employee Name": "Justice Idachaba",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 76,
+    "Employee Name": "Maureen Melete",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 77,
+    "Employee Name": "Obot Queen",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 78,
+    "Employee Name": "Amodu Grace",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 79,
+    "Employee Name": "Uzosike Goodness",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 80,
+    "Employee Name": "Olumese Joy",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 81,
+    "Employee Name": "Jumbo Ibifiri",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 82,
+    "Employee Name": "Jumbo Pretty L.",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 83,
+    "Employee Name": "Enyinda Catherine A.",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 84,
+    "Employee Name": "Opara Sandy",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 85,
+    "Employee Name": "Augustine Mercy",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 86,
+    "Employee Name": "Pollyn Nancy",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 87,
+    "Employee Name": "Ochechi priscillia",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 88,
+    "Employee Name": "Igbinosa Esosa",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 89,
+    "Employee Name": "George Bright",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 90,
+    "Employee Name": "Regina Vareba",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 91,
+    "Employee Name": "Ezeifedi Obedience",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 92,
+    "Employee Name": "Ebere Eze",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 93,
+    "Employee Name": "Hannah Jonah",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 94,
+    "Employee Name": "Ursula Nwaegbu",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 95,
+    "Employee Name": "Esther Iwuoha",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 96,
+    "Employee Name": "Iyowuna Patrick",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 97,
+    "Employee Name": "Deborah Pollyn",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 98,
+    "Employee Name": "Daima Oghu",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 99,
+    "Employee Name": "Vivian Longjohn",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 100,
+    "Employee Name": "Tumini Jacob",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  },
+  {
+    "S/No": 101,
+    "Employee Name": "Jesse Hart",
+    "Department": "HR",
+    "Company": "Graced-One",
+    "Status": "Partner"
+  }
 ]
