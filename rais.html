@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>🏆 NLNG Award Nomination Form 2025 - RAIS</title>
+<title>🏆 NLNG Award Voting Form 2025 - RAIS</title>
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
@@ -273,16 +273,16 @@ footer {
 <div class="orb"></div><div class="orb"></div><div class="orb"></div>
 
 <div class="container">
-  <h1>🏆 NLNG Award Nomination Form 2025 - RAIS</h1>
+  <h1>🏆 NLNG Award Voting Form 2025 - RAIS</h1>
   <p class="note">You can only vote for one unique person. Please complete all fields carefully..</p>
 
   <!-- Date Information Banner -->
   <div class="date-info" id="dateInfo">
-    <p>Nomination Period: <span class="date-open" id="startDateDisplay">Loading...</span> to <span class="date-close" id="closeDateDisplay">Loading...</span></p>
-    <p id="nominationStatus"></p>
+    <p>Voting Period: <span class="date-open" id="startDateDisplay">Loading...</span> to <span class="date-close" id="closeDateDisplay">Loading...</span></p>
+    <p id="VotingStatus"></p>
   </div>
 
-  <form id="nominationForm">
+  <form id="VotingForm">
     <div class="section-title">Nominator Information</div>
     <label>First Name</label>
     <input type="text" id="nominatorFirstName" required />
@@ -297,15 +297,15 @@ footer {
     <input type="text" id="employeeNumber" placeholder="Enter employee number if no email" />
 
 
-    <div class="section-title">Award Nominations</div>
+    <div class="section-title">Award Votings</div>
     <div id="awardsContainer"></div>
 
-    <button type="submit" id="submitButton">Submit Nominations</button>
+    <button type="submit" id="submitButton">Submit Your Votes</button>
     <div class="message" id="message"></div>
   </form>
 </div>
 
-<footer>© 2025 NLNG | Nomination Portal — All Rights Reserved</footer>
+<footer>© 2025 NLNG | Voting Portal — All Rights Reserved</footer>
 
 <!-- JS -->
 <script type="module">
@@ -328,7 +328,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 // --- Date Configuration ---
-const nominationDates = {
+const VotingDates = {
   startDate: new Date('2025-12-9T00:00:00'), // Set your start date here
   closeDate: new Date('2025-12-11T23:23:59')  // Set your close date here
 };
@@ -337,34 +337,34 @@ const nominationDates = {
 function updateDateDisplay() {
   const startDateDisplay = document.getElementById('startDateDisplay');
   const closeDateDisplay = document.getElementById('closeDateDisplay');
-  const nominationStatus = document.getElementById('nominationStatus');
+  const VotingStatus = document.getElementById('VotingStatus');
   const submitButton = document.getElementById('submitButton');
-  const form = document.getElementById('nominationForm');
+  const form = document.getElementById('VotingForm');
 
   // Format dates for display
   const options = { year: 'numeric', month: 'long', day: 'numeric' };
-  startDateDisplay.textContent = nominationDates.startDate.toLocaleDateString('en-US', options);
-  closeDateDisplay.textContent = nominationDates.closeDate.toLocaleDateString('en-US', options);
+  startDateDisplay.textContent = VotingDates.startDate.toLocaleDateString('en-US', options);
+  closeDateDisplay.textContent = VotingDates.closeDate.toLocaleDateString('en-US', options);
 
   const now = new Date();
   
-  if (now < nominationDates.startDate) {
-    // Nominations haven't started yet
-    nominationStatus.innerHTML = `<span class="date-closed">Nominations open on ${nominationDates.startDate.toLocaleDateString('en-US', options)}</span>`;
+  if (now < VotingDates.startDate) {
+    // Votings haven't started yet
+    VotingStatus.innerHTML = `<span class="date-closed">Votings open on ${VotingDates.startDate.toLocaleDateString('en-US', options)}</span>`;
     submitButton.disabled = true;
     form.style.opacity = '0.6';
     form.style.pointerEvents = 'none';
-  } else if (now > nominationDates.closeDate) {
-    // Nominations have closed
-    nominationStatus.innerHTML = `<span class="date-closed">Nominations are now closed</span>`;
+  } else if (now > VotingDates.closeDate) {
+    // Votings have closed
+    VotingStatus.innerHTML = `<span class="date-closed">Votings are now closed</span>`;
     submitButton.disabled = true;
     form.style.opacity = '0.6';
     form.style.pointerEvents = 'none';
   } else {
-    // Nominations are open
-    const daysLeft = Math.ceil((nominationDates.closeDate - now) / (1000 * 60 * 60 * 24));
-    nominationStatus.textContent = `Nominations are OPEN! ${daysLeft} days remaining`;
-    nominationStatus.style.color = '#00ffcc';
+    // Votings are open
+    const daysLeft = Math.ceil((VotingDates.closeDate - now) / (1000 * 60 * 60 * 24));
+    VotingStatus.textContent = `Votings are OPEN! ${daysLeft} days remaining`;
+    VotingStatus.style.color = '#00ffcc';
     submitButton.disabled = false;
     form.style.opacity = '1';
     form.style.pointerEvents = 'auto';
@@ -488,13 +488,13 @@ container.addEventListener("change", (e) => {
 });
 
 // --- Submit to Firebase ---
-document.getElementById("nominationForm").addEventListener("submit", async (e) => {
+document.getElementById("VotingForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  // Check if nominations are open
+  // Check if Votings are open
   const now = new Date();
-  if (now < nominationDates.startDate || now > nominationDates.closeDate) {
-    document.getElementById('message').textContent = "❌ Nominations are currently closed.";
+  if (now < VotingDates.startDate || now > VotingDates.closeDate) {
+    document.getElementById('message').textContent = "❌ Votings are currently closed.";
     document.getElementById('message').style.color = "red";
     return;
   }
@@ -522,19 +522,19 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     return;
   }
 
-  message.textContent = "⏳ Submitting nomination...";
+  message.textContent = "⏳ Submitting Voting...";
   message.style.color = "white";
 
   const uniqueKey = `${firstName.toLowerCase()}_${lastName.toLowerCase()}_${department.toLowerCase()}_${email || employeeNumber}`;
 
   try {
     // Check for existing submission
-    const q = query(ref(db, "nominations"), orderByChild("uniqueKey"), equalTo(uniqueKey));
+    const q = query(ref(db, "Votings"), orderByChild("uniqueKey"), equalTo(uniqueKey));
     const snap = await get(q);
 
     if (snap.exists()) {
       message.style.color = "#ff8080";
-      message.textContent = "⚠️ You have already submitted nominations.";
+      message.textContent = "⚠️ You have already submitted Votings.";
       submitBtn.disabled = false;
       submitBtn.style.opacity = 1;
       return;
@@ -553,7 +553,7 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     });
 
     // Push to Firebase
-    const newRef = push(ref(db, "nominations"));
+    const newRef = push(ref(db, "Votings"));
     await set(newRef, {
       nominatorFirstName: firstName,
       nominatorLastName: lastName,
@@ -566,13 +566,13 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     });
 
     message.style.color = "lime";
-    message.textContent = "✅ Nomination submitted successfully!";
+    message.textContent = "✅ Voting submitted successfully!";
     setTimeout(() => window.location.href = "thankyou.html", 2000);
 
   } catch (err) {
     console.error(err);
     message.style.color = "red";
-    message.textContent = "❌ Error submitting nominations.";
+    message.textContent = "❌ Error submitting Votings.";
     submitBtn.disabled = false;
     submitBtn.style.opacity = 1;
   }
@@ -580,4 +580,5 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
 
