@@ -180,8 +180,8 @@
 
     .award-title {
       font-size: 1.5em;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
       border-bottom: 2px solid var(--accent1);
       display: flex;
       align-items: center;
@@ -194,106 +194,149 @@
       color: var(--accent1);
     }
 
-    .candidate-results {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
+    /* Winners Grid - Side by Side */
+    .winners-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 10px;
     }
 
-    .candidate-result {
+    .winner-card {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 15px;
-      padding: 20px;
-      background: rgba(255,255,255,0.08);
-      border-radius: 12px;
+      text-align: center;
+      padding: 25px 15px;
+      border-radius: 15px;
       transition: all 0.3s ease;
-      border: 1px solid rgba(255,255,255,0.1);
       animation: slideIn 0.5s ease forwards;
       opacity: 0;
-      transform: translateX(-20px);
+      transform: translateY(20px);
     }
 
     @keyframes slideIn {
       to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
       }
     }
 
-    .candidate-result.first-place {
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+    .winner-card.first-place {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05));
       border: 2px solid var(--gold);
-      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);
+      order: 1;
     }
 
-    .candidate-result.second-place {
-      background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(192, 192, 192, 0.1));
+    .winner-card.second-place {
+      background: linear-gradient(135deg, rgba(192, 192, 192, 0.15), rgba(192, 192, 192, 0.05));
       border: 2px solid var(--silver);
-      box-shadow: 0 0 20px rgba(192, 192, 192, 0.3);
+      box-shadow: 0 0 25px rgba(192, 192, 192, 0.2);
+      order: 2;
     }
 
-    .candidate-result.third-place {
-      background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(205, 127, 50, 0.1));
+    .winner-card.third-place {
+      background: linear-gradient(135deg, rgba(205, 127, 50, 0.15), rgba(205, 127, 50, 0.05));
       border: 2px solid var(--bronze);
-      box-shadow: 0 0 20px rgba(205, 127, 50, 0.3);
+      box-shadow: 0 0 25px rgba(205, 127, 50, 0.2);
+      order: 3;
     }
 
-    .position-badge {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 35px;
-      height: 35px;
-      border-radius: 50%;
+    .position-ribbon {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 5px 20px;
+      border-radius: 20px;
       font-weight: bold;
       font-size: 0.9em;
-      margin-right: 10px;
+      z-index: 2;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.2);
     }
 
-    .position-badge.first {
+    .position-ribbon.first {
       background-color: var(--gold);
       color: #000;
     }
 
-    .position-badge.second {
+    .position-ribbon.second {
       background-color: var(--silver);
       color: #000;
     }
 
-    .position-badge.third {
+    .position-ribbon.third {
       background-color: var(--bronze);
       color: #fff;
     }
 
-    .candidate-image {
-      width: 70px;
-      height: 70px;
+    .winner-image-container {
+      position: relative;
+      margin-bottom: 15px;
+    }
+
+    .winner-image {
+      width: 120px;
+      height: 120px;
       border-radius: 50%;
       object-fit: cover;
-      border: 3px solid rgba(255,255,255,0.8);
+      border: 4px solid rgba(255,255,255,0.9);
       transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
     }
 
-    .candidate-result:hover .candidate-image {
+    .winner-card:hover .winner-image {
+      transform: scale(1.05);
       border-color: var(--accent1);
-      transform: scale(1.1);
     }
 
-    .candidate-info {
-      flex-grow: 1;
+    .winner-info {
+      width: 100%;
     }
 
-    .candidate-name {
-      font-size: 1.2em;
-      font-weight: 600;
+    .winner-name {
+      font-size: 1.3em;
+      font-weight: 700;
       color: var(--white);
+      margin-bottom: 5px;
+      line-height: 1.3;
     }
 
-    .candidate-role {
+    .winner-position {
       font-size: 0.9em;
-      opacity: 0.8;
+      opacity: 0.9;
       color: var(--accent1);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .winner-role {
+      font-size: 0.85em;
+      opacity: 0.8;
+      color: var(--accent3);
+      font-style: italic;
+    }
+
+    /* Medal icons */
+    .medal-icon {
+      font-size: 2em;
+      margin-bottom: 15px;
+    }
+
+    .medal-icon.first {
+      color: var(--gold);
+      text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    }
+
+    .medal-icon.second {
+      color: var(--silver);
+      text-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+
+    .medal-icon.third {
+      color: var(--bronze);
+      text-shadow: 0 0 10px rgba(205, 127, 50, 0.5);
     }
 
     /* Controls */
@@ -347,6 +390,22 @@
     }
 
     /* Responsive Design */
+    @media (max-width: 1024px) {
+      .winners-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+      }
+      
+      .winner-image {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .winner-name {
+        font-size: 1.1em;
+      }
+    }
+
     @media (max-width: 768px) {
       .container {
         width: 95%;
@@ -371,15 +430,36 @@
         font-size: 2em;
       }
 
-      .candidate-result {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
+      .winners-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
       }
-
-      .position-badge {
-        order: -1;
-        margin-right: 0;
+      
+      .winner-card {
+        flex-direction: row;
+        text-align: left;
+        padding: 20px;
+        gap: 20px;
+      }
+      
+      .winner-image-container {
+        margin-bottom: 0;
+        flex-shrink: 0;
+      }
+      
+      .winner-image {
+        width: 80px;
+        height: 80px;
+      }
+      
+      .position-ribbon {
+        top: -8px;
+        padding: 4px 15px;
+        font-size: 0.8em;
+      }
+      
+      .medal-icon {
+        display: none;
       }
 
       .controls {
@@ -401,10 +481,26 @@
       }
     }
 
-    /* Animation delays for candidate results */
-    .candidate-result:nth-child(1) { animation-delay: 0.1s; }
-    .candidate-result:nth-child(2) { animation-delay: 0.2s; }
-    .candidate-result:nth-child(3) { animation-delay: 0.3s; }
+    @media (max-width: 480px) {
+      .winner-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
+      }
+      
+      .winner-image-container {
+        margin-bottom: 10px;
+      }
+      
+      .medal-icon {
+        display: block;
+      }
+    }
+
+    /* Animation delays for winner cards */
+    .winner-card:nth-child(1) { animation-delay: 0.1s; }
+    .winner-card:nth-child(2) { animation-delay: 0.2s; }
+    .winner-card:nth-child(3) { animation-delay: 0.3s; }
   </style>
 </head>
 
@@ -769,7 +865,7 @@
       });
     }
 
-    // Render results
+    // Render results in side-by-side layout
     function renderResults() {
       resultsContainer.innerHTML = '';
       
@@ -782,38 +878,44 @@
             <i class="${award.icon}"></i>
             <span>${award.name}</span>
           </div>
-          <div class="candidate-results" id="candidates-${award.id}">
-            <!-- Winners will be added here -->
+          <div class="winners-grid" id="winners-${award.id}">
+            <!-- Winners will be added here in side-by-side layout -->
           </div>
         `;
         
         resultsContainer.appendChild(awardResults);
         
-        // Render winners
-        const candidateResults = document.getElementById(`candidates-${award.id}`);
+        // Render winners in grid layout
+        const winnersGrid = document.getElementById(`winners-${award.id}`);
         award.winners.forEach((winner, index) => {
           const positionClass = winner.position.includes('1st') ? 'first-place' : 
                                winner.position.includes('2nd') ? 'second-place' : 
                                'third-place';
           
-          const positionBadge = winner.position.includes('1st') ? '1st' : 
-                               winner.position.includes('2nd') ? '2nd' : '3rd';
+          const positionText = winner.position.includes('1st') ? '1st' : 
+                              winner.position.includes('2nd') ? '2nd' : '3rd';
           
-          const badgeClass = winner.position.includes('1st') ? 'first' : 
-                            winner.position.includes('2nd') ? 'second' : 'third';
+          const medalIconClass = winner.position.includes('1st') ? 'first' : 
+                                winner.position.includes('2nd') ? 'second' : 'third';
           
-          const candidateElement = document.createElement('div');
-          candidateElement.className = `candidate-result ${positionClass}`;
-          candidateElement.innerHTML = `
-            <div class="position-badge ${badgeClass}">${positionBadge}</div>
-            <img src="${winner.img}" alt="${winner.name}" class="candidate-image">
-            <div class="candidate-info">
-              <div class="candidate-name">${winner.name}</div>
-              <div class="candidate-role">${winner.role} • ${winner.position}</div>
+          const medalIcon = winner.position.includes('1st') ? 'fas fa-medal' : 
+                           winner.position.includes('2nd') ? 'fas fa-medal' : 'fas fa-medal';
+          
+          const winnerCard = document.createElement('div');
+          winnerCard.className = `winner-card ${positionClass}`;
+          winnerCard.innerHTML = `
+            <div class="position-ribbon ${medalIconClass}">${positionText}</div>
+            <div class="winner-image-container">
+              <img src="${winner.img}" alt="${winner.name}" class="winner-image">
+            </div>
+            <div class="winner-info">
+              <div class="winner-name">${winner.name}</div>
+              <div class="winner-position">${winner.position}</div>
+              <div class="winner-role">${winner.role}</div>
             </div>
           `;
           
-          candidateResults.appendChild(candidateElement);
+          winnersGrid.appendChild(winnerCard);
         });
       });
     }
