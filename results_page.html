@@ -19,6 +19,9 @@
       --accent3: #00c6ff;
       --white: #ffffff;
       --dark-text: #00151f;
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --bronze: #CD7F32;
     }
 
     /* Reset & Base */
@@ -218,10 +221,49 @@
       }
     }
 
-    .candidate-result.winner {
-      background: linear-gradient(135deg, rgba(255,204,0,0.2), rgba(255,215,0,0.1));
-      border: 2px solid var(--accent2);
-      box-shadow: 0 0 20px rgba(255,204,0,0.3);
+    .candidate-result.first-place {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 215, 0, 0.1));
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+    }
+
+    .candidate-result.second-place {
+      background: linear-gradient(135deg, rgba(192, 192, 192, 0.2), rgba(192, 192, 192, 0.1));
+      border: 2px solid var(--silver);
+      box-shadow: 0 0 20px rgba(192, 192, 192, 0.3);
+    }
+
+    .candidate-result.third-place {
+      background: linear-gradient(135deg, rgba(205, 127, 50, 0.2), rgba(205, 127, 50, 0.1));
+      border: 2px solid var(--bronze);
+      box-shadow: 0 0 20px rgba(205, 127, 50, 0.3);
+    }
+
+    .position-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 0.9em;
+      margin-right: 10px;
+    }
+
+    .position-badge.first {
+      background-color: var(--gold);
+      color: #000;
+    }
+
+    .position-badge.second {
+      background-color: var(--silver);
+      color: #000;
+    }
+
+    .position-badge.third {
+      background-color: var(--bronze);
+      color: #fff;
     }
 
     .candidate-image {
@@ -252,32 +294,6 @@
       font-size: 0.9em;
       opacity: 0.8;
       color: var(--accent1);
-    }
-
-    .vote-count {
-      font-size: 1.8em;
-      font-weight: bold;
-      color: var(--accent2);
-      min-width: 70px;
-      text-align: center;
-      text-shadow: 0 0 10px rgba(255,204,0,0.3);
-    }
-
-    .vote-bar-container {
-      flex-grow: 1;
-      height: 20px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .vote-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent1), var(--accent3));
-      border-radius: 10px;
-      transition: width 1s ease;
-      box-shadow: 0 0 10px rgba(0,255,204,0.3);
     }
 
     /* Controls */
@@ -330,15 +346,6 @@
       position: relative;
     }
 
-    /* Percentage Display */
-    .percentage-display {
-      min-width: 60px;
-      text-align: right;
-      font-weight: 600;
-      color: var(--accent1);
-      font-size: 1.1em;
-    }
-
     /* Responsive Design */
     @media (max-width: 768px) {
       .container {
@@ -370,13 +377,9 @@
         gap: 10px;
       }
 
-      .vote-bar-container {
-        width: 100%;
-        order: 3;
-      }
-
-      .percentage-display {
-        order: 4;
+      .position-badge {
+        order: -1;
+        margin-right: 0;
       }
 
       .controls {
@@ -402,8 +405,6 @@
     .candidate-result:nth-child(1) { animation-delay: 0.1s; }
     .candidate-result:nth-child(2) { animation-delay: 0.2s; }
     .candidate-result:nth-child(3) { animation-delay: 0.3s; }
-    .candidate-result:nth-child(4) { animation-delay: 0.4s; }
-    .candidate-result:nth-child(5) { animation-delay: 0.5s; }
   </style>
 </head>
 
@@ -421,27 +422,27 @@
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <h1>NLNG Employee Excellence Awards</h1>
-      <h2>Voting Results - Admin Dashboard</h2>
+      <h1>NLNG Partner Excellence Awards 2023</h1>
+      <h2>Final Results - Winners Announcement</h2>
     </div>
 
     <!-- Stats -->
     <div class="stats-container" id="statsContainer">
       <div class="stat-card">
-        <div class="stat-number" id="totalVotes">0</div>
-        <div class="stat-label">Total Votes</div>
+        <div class="stat-number" id="totalAwards">26</div>
+        <div class="stat-label">Award Categories</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="totalVoters">0</div>
-        <div class="stat-label">Total Voters</div>
+        <div class="stat-number" id="totalWinners">78</div>
+        <div class="stat-label">Award Winners</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="participationRate">0%</div>
-        <div class="stat-label">Participation Rate</div>
+        <div class="stat-number" id="year">2023</div>
+        <div class="stat-label">Award Year</div>
       </div>
       <div class="stat-card">
-        <div class="stat-number" id="leadingCategory">-</div>
-        <div class="stat-label">Most Competitive</div>
+        <div class="stat-number" id="ceremony">Final</div>
+        <div class="stat-label">Results</div>
       </div>
     </div>
 
@@ -452,274 +453,369 @@
 
     <!-- Controls -->
     <div class="controls">
-      <button class="control-btn" id="refreshBtn">
-        <i class="fas fa-sync-alt"></i> Refresh Results
-      </button>
       <button class="control-btn back-btn" id="backBtn">
-        <i class="fas fa-arrow-left"></i> Back to Voting
+        <i class="fas fa-arrow-left"></i> Back to Home
       </button>
     </div>
   </div>
 
   <!-- Footer -->
   <footer>
-    <p>NLNG Employee Excellence Awards 2023 | Admin Dashboard</p>
+    <p>NLNG Partner Excellence Awards 2023 | Official Winners Announcement</p>
   </footer>
 
-  <!-- Firebase SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getDatabase, ref, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyBtCudg-7Z5ZwjCs8XroeOqa2qlvOIOV4w",
-      authDomain: "nlng-voting-system.firebaseapp.com",
-      databaseURL: "https://nlng-voting-system-default-rtdb.firebaseio.com",
-      projectId: "nlng-voting-system",
-      storageBucket: "nlng-voting-system.firebasestorage.app",
-      messagingSenderId: "851277078103",
-      appId: "1:851277078103:web:54066162daafda99470d12",
-      measurementId: "G-D6MX1JL08C"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    // Awards data (same as voting page)
+  <script>
+    // Winners data according to the provided list
     const awardsData = [
       {
-        id: "leadership",
-        name: "Leadership Excellence Award",
+        id: "tp-partner",
+        name: "TP Partner of the Year Award",
         icon: "fas fa-trophy",
-        candidates: [
-          { name: "John Okafor", role: "Senior Manager", img: "https://i.pravatar.cc/150?img=1" },
-          { name: "Amina Bello", role: "Department Head", img: "https://i.pravatar.cc/150?img=2" },
-          { name: "Chinedu Nwosu", role: "Team Lead", img: "https://i.pravatar.cc/150?img=3" },
-          { name: "Grace Eze", role: "Project Manager", img: "https://i.pravatar.cc/150?img=4" }
+        winners: [
+          { name: "FAYOMI TOM", position: "1st Place", role: "TP Partner", img: "https://randomuser.me/api/portraits/men/1.jpg" },
+          { name: "RAYMOND ERIVO", position: "2nd Place", role: "TP Partner", img: "https://randomuser.me/api/portraits/men/2.jpg" },
+          { name: "SOTONYE ORIYE", position: "3rd Place", role: "TP Partner", img: "https://randomuser.me/api/portraits/women/1.jpg" }
+        ]
+      },
+      {
+        id: "csd-tf-partner",
+        name: "CSD/TF Partner of the Year Award",
+        icon: "fas fa-award",
+        winners: [
+          { name: "AMBROSE ODIAKA", position: "1st Place", role: "CSD/TF Partner", img: "https://randomuser.me/api/portraits/men/3.jpg" },
+          { name: "CHUKWU NGOZI", position: "2nd Place", role: "CSD/TF Partner", img: "https://randomuser.me/api/portraits/women/2.jpg" },
+          { name: "FREDRICK MADUKAKU KANU", position: "3rd Place", role: "CSD/TF Partner", img: "https://randomuser.me/api/portraits/men/4.jpg" }
+        ]
+      },
+      {
+        id: "te-partner",
+        name: "TE Partner of the Year Award",
+        icon: "fas fa-medal",
+        winners: [
+          { name: "EZEKIEL-HART DAGOGO", position: "1st Place", role: "TE Partner", img: "https://randomuser.me/api/portraits/men/5.jpg" },
+          { name: "EZEH PRINCE KELVIN", position: "2nd Place", role: "TE Partner", img: "https://randomuser.me/api/portraits/men/6.jpg" },
+          { name: "IJEH AMARACHI", position: "3rd Place", role: "TE Partner", img: "https://randomuser.me/api/portraits/women/3.jpg" }
+        ]
+      },
+      {
+        id: "pt-partner",
+        name: "PT Partner of the Year Award",
+        icon: "fas fa-star",
+        winners: [
+          { name: "DHANUNJAYA PALUGULLA", position: "1st Place", role: "PT Partner", img: "https://randomuser.me/api/portraits/men/7.jpg" },
+          { name: "SEGUN ADEBOLA OLADUNJOYE", position: "2nd Place", role: "PT Partner", img: "https://randomuser.me/api/portraits/men/8.jpg" },
+          { name: "JAMES EMMANUEL ABAKPA", position: "3rd Place", role: "PT Partner", img: "https://randomuser.me/api/portraits/men/9.jpg" }
+        ]
+      },
+      {
+        id: "ps-pg-partner",
+        name: "PS/PG Partner of the Year Award",
+        icon: "fas fa-crown",
+        winners: [
+          { name: "FESTUS ODIASE", position: "1st Place", role: "PS/PG Partner", img: "https://randomuser.me/api/portraits/men/10.jpg" },
+          { name: "JANET ORIEJI ODOGWU", position: "2nd Place", role: "PS/PG Partner", img: "https://randomuser.me/api/portraits/women/4.jpg" },
+          { name: "PHILIP ABOLARIN", position: "3rd Place", role: "PS/PG Partner", img: "https://randomuser.me/api/portraits/men/11.jpg" }
+        ]
+      },
+      {
+        id: "po-partner",
+        name: "PO Partner of the Year Award",
+        icon: "fas fa-trophy",
+        winners: [
+          { name: "LANCELOT ALLISON", position: "1st Place", role: "PO Partner", img: "https://randomuser.me/api/portraits/men/12.jpg" },
+          { name: "CLARKSON BIEBUMA BANIGO", position: "2nd Place", role: "PO Partner", img: "https://randomuser.me/api/portraits/men/13.jpg" },
+          { name: "AKODU SHAMSUDEEN ALABI", position: "3rd Place", role: "PO Partner", img: "https://randomuser.me/api/portraits/men/14.jpg" }
+        ]
+      },
+      {
+        id: "pm-partner",
+        name: "PM Partner of the Year Award",
+        icon: "fas fa-award",
+        winners: [
+          { name: "DAVID ONORIODE MUEMUIFO", position: "1st Place", role: "PM Partner", img: "https://randomuser.me/api/portraits/men/15.jpg" },
+          { name: "EBERE WABARA", position: "2nd Place", role: "PM Partner", img: "https://randomuser.me/api/portraits/women/5.jpg" },
+          { name: "JOSEPHINE BENSTOWE", position: "3rd Place", role: "PM Partner", img: "https://randomuser.me/api/portraits/women/6.jpg" }
+        ]
+      },
+      {
+        id: "pi-partner",
+        name: "PI Partner of the Year Award",
+        icon: "fas fa-medal",
+        winners: [
+          { name: "KENNETH ANYANWU", position: "1st Place", role: "PI Partner", img: "https://randomuser.me/api/portraits/men/16.jpg" },
+          { name: "SHIMEA CHINU ODOGWU", position: "2nd Place", role: "PI Partner", img: "https://randomuser.me/api/portraits/women/7.jpg" },
+          { name: "EJIRO COLLINS ADU", position: "3rd Place", role: "PI Partner", img: "https://randomuser.me/api/portraits/men/17.jpg" }
+        ]
+      },
+      {
+        id: "pc-partner",
+        name: "PC Partner of the Year Award",
+        icon: "fas fa-star",
+        winners: [
+          { name: "MUKAILA OLAYIWOLA ABDULRAHEEM", position: "1st Place", role: "PC Partner", img: "https://randomuser.me/api/portraits/men/18.jpg" },
+          { name: "SOTONYE CHRISTIAN EZEKIEL-HART", position: "2nd Place", role: "PC Partner", img: "https://randomuser.me/api/portraits/men/19.jpg" },
+          { name: "GRAHAM SOLOMON PEPPLE", position: "3rd Place", role: "PC Partner", img: "https://randomuser.me/api/portraits/men/20.jpg" }
+        ]
+      },
+      {
+        id: "csl-partner",
+        name: "CSL Partner of the Year Award",
+        icon: "fas fa-crown",
+        winners: [
+          { name: "BELEMA WILCOX", position: "1st Place", role: "CSL Partner", img: "https://randomuser.me/api/portraits/men/21.jpg" },
+          { name: "VICTOR BANIGO", position: "2nd Place", role: "CSL Partner", img: "https://randomuser.me/api/portraits/men/22.jpg" },
+          { name: "DANIEL HART", position: "3rd Place", role: "CSL Partner", img: "https://randomuser.me/api/portraits/men/23.jpg" }
+        ]
+      },
+      {
+        id: "csi-partner",
+        name: "CSI Partner of the Year Award",
+        icon: "fas fa-trophy",
+        winners: [
+          { name: "IKEDUBA EMMANUEL", position: "1st Place", role: "CSI Partner", img: "https://randomuser.me/api/portraits/men/24.jpg" },
+          { name: "BOMA WILLIAM-JUMBO", position: "2nd Place", role: "CSI Partner", img: "https://randomuser.me/api/portraits/men/25.jpg" },
+          { name: "EMMANUEL BENSTOWE", position: "3rd Place", role: "CSI Partner", img: "https://randomuser.me/api/portraits/men/26.jpg" }
+        ]
+      },
+      {
+        id: "hse-partner",
+        name: "HSE Partner of the Year Award",
+        icon: "fas fa-award",
+        winners: [
+          { name: "OBINNA NNAJI", position: "1st Place", role: "HSE Partner", img: "https://randomuser.me/api/portraits/men/27.jpg" },
+          { name: "JOHN TAIWO AKINBAYO", position: "2nd Place", role: "HSE Partner", img: "https://randomuser.me/api/portraits/men/28.jpg" },
+          { name: "ROLLINGS DIMIEARI. ROGERS", position: "3rd Place", role: "HSE Partner", img: "https://randomuser.me/api/portraits/men/29.jpg" }
+        ]
+      },
+      {
+        id: "hr-partner",
+        name: "HR Partner of the Year Award",
+        icon: "fas fa-medal",
+        winners: [
+          { name: "OBETEN ETENG", position: "1st Place", role: "HR Partner", img: "https://randomuser.me/api/portraits/men/30.jpg" },
+          { name: "ADEWUNMI KOMOLAFE", position: "2nd Place", role: "HR Partner", img: "https://randomuser.me/api/portraits/women/8.jpg" },
+          { name: "RICHARD CHUKWU", position: "3rd Place", role: "HR Partner", img: "https://randomuser.me/api/portraits/men/31.jpg" }
+        ]
+      },
+      {
+        id: "cse-partner",
+        name: "CSE Partner of the Year Award",
+        icon: "fas fa-star",
+        winners: [
+          { name: "EFEREBO LYSTER", position: "1st Place", role: "CSE Partner", img: "https://randomuser.me/api/portraits/men/32.jpg" },
+          { name: "PEPPLE PRETTY", position: "2nd Place", role: "CSE Partner", img: "https://randomuser.me/api/portraits/women/9.jpg" },
+          { name: "PATIENCE AGU", position: "3rd Place", role: "CSE Partner", img: "https://randomuser.me/api/portraits/women/10.jpg" }
+        ]
+      },
+      {
+        id: "css-partner",
+        name: "CSS Partner of the Year Award",
+        icon: "fas fa-crown",
+        winners: [
+          { name: "SOTONYE DUKE", position: "1st Place", role: "CSS Partner", img: "https://randomuser.me/api/portraits/men/33.jpg" },
+          { name: "KAYODE ADENIAN", position: "2nd Place", role: "CSS Partner", img: "https://randomuser.me/api/portraits/men/34.jpg" },
+          { name: "MICHAEL ISHIEKWENE", position: "3rd Place", role: "CSS Partner", img: "https://randomuser.me/api/portraits/men/35.jpg" }
+        ]
+      },
+      {
+        id: "cpm-partner",
+        name: "CPM Partner of the Year Award",
+        icon: "fas fa-trophy",
+        winners: [
+          { name: "ANDREW OKOME", position: "1st Place", role: "CPM Partner", img: "https://randomuser.me/api/portraits/men/36.jpg" },
+          { name: "EZEKIEL-HART JENNIFER KUROTAMUNOYE", position: "2nd Place", role: "CPM Partner", img: "https://randomuser.me/api/portraits/women/11.jpg" },
+          { name: "VIVIENNE EBADAN", position: "3rd Place", role: "CPM Partner", img: "https://randomuser.me/api/portraits/women/12.jpg" }
+        ]
+      },
+      {
+        id: "cmo-partner",
+        name: "CMO Partner of the Year Award",
+        icon: "fas fa-award",
+        winners: [
+          { name: "DUROJAYE OLUTOSIN", position: "1st Place", role: "CMO Partner", img: "https://randomuser.me/api/portraits/men/37.jpg" },
+          { name: "IGBARA ECHI", position: "2nd Place", role: "CMO Partner", img: "https://randomuser.me/api/portraits/women/13.jpg" },
+          { name: "CLARK NUVIE", position: "3rd Place", role: "CMO Partner", img: "https://randomuser.me/api/portraits/men/38.jpg" }
+        ]
+      },
+      {
+        id: "rais-partner",
+        name: "RAIS Partner of the Year Award",
+        icon: "fas fa-medal",
+        winners: [
+          { name: "Amarachi Okore-Ulu", position: "1st Place", role: "RAIS Partner", img: "https://randomuser.me/api/portraits/women/14.jpg" },
+          { name: "Grace Chikezie-Godwin", position: "2nd Place", role: "RAIS Partner", img: "https://randomuser.me/api/portraits/women/15.jpg" },
+          { name: "Gabriel Meshoye", position: "3rd Place", role: "RAIS Partner", img: "https://randomuser.me/api/portraits/men/39.jpg" }
+        ]
+      },
+      {
+        id: "nt-partner",
+        name: "NT Partner of the Year Award",
+        icon: "fas fa-star",
+        winners: [
+          { name: "SOALA PEPPLE", position: "1st Place", role: "NT Partner", img: "https://randomuser.me/api/portraits/women/16.jpg" },
+          { name: "ACHOMUBA ISIOMA", position: "2nd Place", role: "NT Partner", img: "https://randomuser.me/api/portraits/women/17.jpg" }
         ]
       },
       {
         id: "innovation",
-        name: "Innovation Award",
-        icon: "fas fa-lightbulb",
-        candidates: [
-          { name: "Emeka Uche", role: "R&D Specialist", img: "https://i.pravatar.cc/150?img=5" },
-          { name: "Ifeoma Okeke", role: "Product Developer", img: "https://i.pravatar.cc/150?img=6" },
-          { name: "Umar Danladi", role: "Tech Lead", img: "https://i.pravatar.cc/150?img=7" },
-          { name: "Ngozi Udo", role: "Innovation Manager", img: "https://i.pravatar.cc/150?img=8" }
+        name: "Most Innovative Award",
+        icon: "fas fa-crown",
+        winners: [
+          { name: "BAKARE OLUSEGUN RASAKI", position: "1st Place", role: "Most Innovative", img: "https://randomuser.me/api/portraits/men/40.jpg" },
+          { name: "AMBROSE ODIAKA", position: "2nd Place", role: "Most Innovative", img: "https://randomuser.me/api/portraits/men/41.jpg" },
+          { name: "EDAFE PATRICK OMOKO", position: "3rd Place", role: "Most Innovative", img: "https://randomuser.me/api/portraits/men/42.jpg" }
         ]
       },
       {
-        id: "teamwork",
-        name: "Teamwork Award",
-        icon: "fas fa-users",
-        candidates: [
-          { name: "Fatima Ahmed", role: "Team Coordinator", img: "https://i.pravatar.cc/150?img=9" },
-          { name: "Samuel Johnson", role: "Collaboration Lead", img: "https://i.pravatar.cc/150?img=10" },
-          { name: "Ruth Okon", role: "Project Coordinator", img: "https://i.pravatar.cc/150?img=11" },
-          { name: "David Musa", role: "Department Lead", img: "https://i.pravatar.cc/150?img=12" }
+        id: "sustainability",
+        name: "Sustainability Award",
+        icon: "fas fa-leaf",
+        winners: [
+          { name: "HUSSAINI ABUBAKAR AHMAD", position: "1st Place", role: "Sustainability Champion", img: "https://randomuser.me/api/portraits/men/43.jpg" },
+          { name: "OKWEYE JACOB CHUKWUNWEIKE", position: "2nd Place", role: "Sustainability Champion", img: "https://randomuser.me/api/portraits/men/44.jpg" },
+          { name: "HENRY VICTOR SEGUN", position: "3rd Place", role: "Sustainability Champion", img: "https://randomuser.me/api/portraits/men/45.jpg" }
         ]
       },
       {
-        id: "customer-service",
-        name: "Customer Service Excellence",
-        icon: "fas fa-headset",
-        candidates: [
-          { name: "Susan Adebayo", role: "Client Relations", img: "https://i.pravatar.cc/150?img=13" },
-          { name: "Michael Okoro", role: "Support Specialist", img: "https://i.pravatar.cc/150?img=14" },
-          { name: "Patience Eze", role: "Customer Success", img: "https://i.pravatar.cc/150?img=15" },
-          { name: "James Okafor", role: "Service Manager", img: "https://i.pravatar.cc/150?img=16" }
-        ]
-      },
-      {
-        id: "safety",
-        name: "Safety Excellence Award",
+        id: "integrity",
+        name: "Integrity Award",
         icon: "fas fa-shield-alt",
-        candidates: [
-          { name: "Bola Adekunle", role: "Safety Officer", img: "https://i.pravatar.cc/150?img=17" },
-          { name: "Tunde Lawal", role: "Compliance Manager", img: "https://i.pravatar.cc/150?img=18" },
-          { name: "Chioma Nwankwo", role: "Risk Analyst", img: "https://i.pravatar.cc/150?img=19" },
-          { name: "Peter Okon", role: "Safety Coordinator", img: "https://i.pravatar.cc/150?img=20" }
+        winners: [
+          { name: "AFENGBAI BOSEDE USEOMO", position: "1st Place", role: "Integrity Champion", img: "https://randomuser.me/api/portraits/women/18.jpg" },
+          { name: "ANYACHOR CHIJIOKE", position: "2nd Place", role: "Integrity Champion", img: "https://randomuser.me/api/portraits/men/46.jpg" },
+          { name: "KOLAWOLE PETER BABATUNDE", position: "3rd Place", role: "Integrity Champion", img: "https://randomuser.me/api/portraits/men/47.jpg" }
+        ]
+      },
+      {
+        id: "mentor",
+        name: "Most Inspirational Mentor Award",
+        icon: "fas fa-user-graduate",
+        winners: [
+          { name: "BAKARE OLUSEGUN RASAKI", position: "1st Place", role: "Inspirational Mentor", img: "https://randomuser.me/api/portraits/men/48.jpg" },
+          { name: "OKWEYE JACOB CHUKWUNWEIKE", position: "2nd Place", role: "Inspirational Mentor", img: "https://randomuser.me/api/portraits/men/49.jpg" },
+          { name: "OMOLE JOHN OLADAPO", position: "3rd Place", role: "Inspirational Mentor", img: "https://randomuser.me/api/portraits/men/50.jpg" }
+        ]
+      },
+      {
+        id: "got-ya-back",
+        name: "The 'I Got Ya Back' Award",
+        icon: "fas fa-hands-helping",
+        winners: [
+          { name: "OMOLE JOHN OLADAPO", position: "1st Place", role: "Team Support", img: "https://randomuser.me/api/portraits/men/51.jpg" },
+          { name: "KRUTKOV ANDREI", position: "2nd Place", role: "Team Support", img: "https://randomuser.me/api/portraits/men/52.jpg" },
+          { name: "ONUORAH KINGSLEY CHUKWUDI", position: "3rd Place", role: "Team Support", img: "https://randomuser.me/api/portraits/men/53.jpg" }
+        ]
+      },
+      {
+        id: "enterprise-first",
+        name: "Enterprise First Award",
+        icon: "fas fa-building",
+        winners: [
+          { name: "DAVID ONORIODE MUEMUIFO", position: "1st Place", role: "Enterprise Champion", img: "https://randomuser.me/api/portraits/men/54.jpg" },
+          { name: "GUOBADIA OSAGIE", position: "2nd Place", role: "Enterprise Champion", img: "https://randomuser.me/api/portraits/men/55.jpg" },
+          { name: "KOLAWOLE EMMANUEL OLUWATOYIN", position: "3rd Place", role: "Enterprise Champion", img: "https://randomuser.me/api/portraits/men/56.jpg" }
+        ]
+      },
+      {
+        id: "manager-year",
+        name: "MANAGER OF THE YEAR",
+        icon: "fas fa-user-tie",
+        winners: [
+          { name: "ADEKWU OMOCHI", position: "1st Place", role: "Manager of the Year", img: "https://randomuser.me/api/portraits/women/19.jpg" },
+          { name: "HUSSAINI ABUBAKAR", position: "2nd Place", role: "Manager of the Year", img: "https://randomuser.me/api/portraits/men/57.jpg" },
+          { name: "VICTOR OJABO", position: "3rd Place", role: "Manager of the Year", img: "https://randomuser.me/api/portraits/men/58.jpg" }
+        ]
+      },
+      {
+        id: "collaborative-dept",
+        name: "Most Collaborative Dept Award",
+        icon: "fas fa-users",
+        winners: [
+          { name: "PM Department", position: "1st Place", role: "Most Collaborative", img: "https://randomuser.me/api/portraits/men/59.jpg" },
+          { name: "ESD Department", position: "2nd Place", role: "Most Collaborative", img: "https://randomuser.me/api/portraits/women/20.jpg" },
+          { name: "PO Department", position: "3rd Place", role: "Most Collaborative", img: "https://randomuser.me/api/portraits/men/60.jpg" }
+        ]
+      },
+      {
+        id: "continuous-improvement",
+        name: "Continuous Improvement Award",
+        icon: "fas fa-chart-line",
+        winners: [
+          { name: "IMT Department", position: "1st Place", role: "Continuous Improvement", img: "https://randomuser.me/api/portraits/men/61.jpg" },
+          { name: "PMT Department", position: "2nd Place", role: "Continuous Improvement", img: "https://randomuser.me/api/portraits/women/21.jpg" },
+          { name: "TI Department", position: "3rd Place", role: "Continuous Improvement", img: "https://randomuser.me/api/portraits/men/62.jpg" }
         ]
       }
     ];
 
     // DOM Elements
-    const statsContainer = document.getElementById('statsContainer');
-    const totalVotes = document.getElementById('totalVotes');
-    const totalVoters = document.getElementById('totalVoters');
-    const participationRate = document.getElementById('participationRate');
-    const leadingCategory = document.getElementById('leadingCategory');
     const resultsContainer = document.getElementById('resultsContainer');
-    const refreshBtn = document.getElementById('refreshBtn');
     const backBtn = document.getElementById('backBtn');
-
-    // State variables
-    let resultsData = {};
-    let totalVotesCount = 0;
 
     // Initialize the page
     function initPage() {
-      // Check admin authentication
-      checkAdminAuth();
-      
       // Set up event listeners
       setupEventListeners();
       
-      // Load initial results
-      loadResults();
-    }
-
-    // Check if user is authenticated as admin
-    function checkAdminAuth() {
-      const password = localStorage.getItem('nlngAdminAuth');
-      if (password !== 'NLNG2025') {
-        const enteredPassword = prompt('Enter admin password:');
-        if (enteredPassword === 'NLNG2025') {
-          localStorage.setItem('nlngAdminAuth', 'NLNG2025');
-        } else {
-          alert('Incorrect password. Access denied.');
-          window.location.href = 'index.html';
-        }
-      }
+      // Render results
+      renderResults();
     }
 
     // Setup event listeners
     function setupEventListeners() {
-      // Refresh button
-      refreshBtn.addEventListener('click', () => {
-        loadResults();
-      });
-      
       // Back button
       backBtn.addEventListener('click', () => {
         window.location.href = 'index.html';
       });
     }
 
-    // Load results from Firebase
-    async function loadResults() {
-      try {
-        // Get all votes to count total voters
-        const votesRef = ref(db, 'votes');
-        const votesSnapshot = await get(votesRef);
-        const totalVotersCount = votesSnapshot.exists() ? Object.keys(votesSnapshot.val()).length : 0;
-        
-        totalVoters.textContent = totalVotersCount;
-        
-        // Get results data
-        const resultsRef = ref(db, 'results');
-        const resultsSnapshot = await get(resultsRef);
-        
-        if (resultsSnapshot.exists()) {
-          resultsData = resultsSnapshot.val();
-          renderResults();
-          calculateStats();
-        } else {
-          resultsContainer.innerHTML = '<p style="text-align: center; padding: 40px; color: var(--accent1);">No votes have been cast yet.</p>';
-        }
-      } catch (error) {
-        console.error("Error loading results:", error);
-        alert("Error loading results. Please try again.");
-      }
-    }
-
     // Render results
     function renderResults() {
       resultsContainer.innerHTML = '';
-      totalVotesCount = 0;
       
       awardsData.forEach(award => {
         const awardResults = document.createElement('div');
         awardResults.className = 'award-results';
         
-        const awardResultData = resultsData[award.id] || {};
-        const candidatesWithVotes = award.candidates.map(candidate => {
-          return {
-            ...candidate,
-            votes: awardResultData[candidate.name] || 0
-          };
-        });
-        
-        // Sort by votes (descending)
-        candidatesWithVotes.sort((a, b) => b.votes - a.votes);
-        
-        // Calculate total votes for this award
-        const awardTotalVotes = candidatesWithVotes.reduce((sum, candidate) => sum + candidate.votes, 0);
-        totalVotesCount += awardTotalVotes;
-        
-        // Find winner(s) - there might be ties
-        const maxVotes = candidatesWithVotes[0]?.votes || 0;
-        const winners = candidatesWithVotes.filter(candidate => candidate.votes === maxVotes && maxVotes > 0);
-        
         awardResults.innerHTML = `
           <div class="award-title">
             <i class="${award.icon}"></i>
             <span>${award.name}</span>
-            <span style="margin-left: auto; font-size: 0.9em; color: var(--accent2);">Total Votes: ${awardTotalVotes}</span>
           </div>
           <div class="candidate-results" id="candidates-${award.id}">
-            <!-- Candidate results will be added here -->
+            <!-- Winners will be added here -->
           </div>
         `;
         
         resultsContainer.appendChild(awardResults);
         
-        // Render candidate results
+        // Render winners
         const candidateResults = document.getElementById(`candidates-${award.id}`);
-        candidatesWithVotes.forEach(candidate => {
-          const isWinner = winners.some(winner => winner.name === candidate.name);
-          const percentage = awardTotalVotes > 0 ? ((candidate.votes / awardTotalVotes) * 100).toFixed(1) : 0;
+        award.winners.forEach((winner, index) => {
+          const positionClass = winner.position.includes('1st') ? 'first-place' : 
+                               winner.position.includes('2nd') ? 'second-place' : 
+                               'third-place';
+          
+          const positionBadge = winner.position.includes('1st') ? '1st' : 
+                               winner.position.includes('2nd') ? '2nd' : '3rd';
+          
+          const badgeClass = winner.position.includes('1st') ? 'first' : 
+                            winner.position.includes('2nd') ? 'second' : 'third';
           
           const candidateElement = document.createElement('div');
-          candidateElement.className = `candidate-result ${isWinner ? 'winner' : ''}`;
+          candidateElement.className = `candidate-result ${positionClass}`;
           candidateElement.innerHTML = `
-            <img src="${candidate.img}" alt="${candidate.name}" class="candidate-image">
+            <div class="position-badge ${badgeClass}">${positionBadge}</div>
+            <img src="${winner.img}" alt="${winner.name}" class="candidate-image">
             <div class="candidate-info">
-              <div class="candidate-name">${candidate.name}</div>
-              <div class="candidate-role">${candidate.role}</div>
+              <div class="candidate-name">${winner.name}</div>
+              <div class="candidate-role">${winner.role} • ${winner.position}</div>
             </div>
-            <div class="vote-count">${candidate.votes}</div>
-            <div class="vote-bar-container">
-              <div class="vote-bar" style="width: ${percentage}%"></div>
-            </div>
-            <div class="percentage-display">${percentage}%</div>
           `;
           
           candidateResults.appendChild(candidateElement);
         });
       });
-    }
-
-    // Calculate and display statistics
-    function calculateStats() {
-      // Update total votes
-      totalVotes.textContent = totalVotesCount;
-      
-      // Calculate participation rate (assuming 500 total employees for demo)
-      const totalEmployees = 500;
-      const votersCount = parseInt(totalVoters.textContent);
-      const rate = ((votersCount / totalEmployees) * 100).toFixed(1);
-      participationRate.textContent = `${rate}%`;
-      
-      // Find most competitive category (highest number of votes)
-      let maxVotes = 0;
-      let competitiveCategory = '-';
-      
-      awardsData.forEach(award => {
-        const awardResultData = resultsData[award.id] || {};
-        const awardTotalVotes = Object.values(awardResultData).reduce((sum, votes) => sum + votes, 0);
-        
-        if (awardTotalVotes > maxVotes) {
-          maxVotes = awardTotalVotes;
-          competitiveCategory = award.name;
-        }
-      });
-      
-      leadingCategory.textContent = competitiveCategory.length > 15 
-        ? competitiveCategory.substring(0, 15) + '...' 
-        : competitiveCategory;
     }
 
     // Initialize the page when loaded
