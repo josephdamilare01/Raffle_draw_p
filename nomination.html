@@ -290,6 +290,23 @@ footer {
     margin-top: 12px;
 }
 
+
+/* Award justification fields */
+.award-section .justification-label { margin-top: 18px; color: #ffffff; }
+.award-section .justification-hint { color: #d9e8ff; font-size: .82rem; margin: 5px 0 8px; line-height: 1.5; }
+.award-section textarea.justification-input {
+  width: 100%; min-height: 135px; height: 135px; padding: 13px 14px;
+  color: #ffffff; background: rgba(0,0,0,.24); border: 1px solid rgba(255,255,255,.32);
+  border-radius: 10px; line-height: 1.6; resize: vertical;
+}
+.award-section textarea.justification-input::placeholder { color: rgba(255,255,255,.68); }
+.award-section textarea.justification-input:focus {
+  border-color: #00ffcc; outline: none; box-shadow: 0 0 0 3px rgba(0,255,204,.16);
+}
+.award-section .char-count { display:block; margin-top:5px; text-align:right; font-size:.82rem; color:#d9e8ff; }
+.award-section .char-count.is-valid { color:#00ffcc; }
+.award-section .char-count.is-short { color:#ffb4b4; }
+
 </style>
 </head>
 <body>
@@ -518,8 +535,30 @@ awards.forEach((award, i) => {
   div.innerHTML = `<h3>${i + 1}. ${award}</h3>
     <p style="color:#ccc; font-size:0.9rem; margin-bottom:10px;">
       ${awardDescriptions[award] || ""}
-    </p>${inputField}`;
+    </p>${inputField}
+    <label class="justification-label" for="justification_${i}">
+      Justification <span style="color:#ffcc00;">(minimum 100 characters)</span>
+    </label>
+    <p class="justification-hint">
+      Explain why this nominee deserves the award. Include specific examples of behaviours, contributions, or achievements relevant to this award.
+    </p>
+    <textarea class="justification-input" id="justification_${i}" name="justification_${i}"
+      minlength="100" maxlength="3000"
+      placeholder="Enter your justification here (at least 100 characters)..."
+      aria-describedby="justification_count_${i}"></textarea>
+    <span class="char-count is-short" id="justification_count_${i}">0 / 100 characters minimum</span>`;
   container.appendChild(div);
+});
+
+// Live character counter for every award justification.
+container.addEventListener("input", (e) => {
+  if (!e.target.matches(".justification-input")) return;
+  const textarea = e.target;
+  const count = textarea.value.trim().length;
+  const counter = document.getElementById(textarea.getAttribute("aria-describedby"));
+  counter.textContent = `${count} / 100 characters minimum`;
+  counter.classList.toggle("is-valid", count >= 100);
+  counter.classList.toggle("is-short", count < 100);
 });
 
 // --- Dynamic Autocomplete ---
@@ -595,6 +634,38 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     return;
   }
 
+  // Require a 100-character justification for each award nomination entered.
+  const incompleteJustifications = [];
+  awards.forEach((award, i) => {
+    const nomineeName = document.querySelector(`[name='nomineeName_${i}']`)?.value.trim() || "";
+    const nomineeDept = document.querySelector(`[name='nomineeDept_${i}']`)?.value.trim() || "";
+    const justification = document.querySelector(`[name='justification_${i}']`)?.value.trim() || "";
+    if ((nomineeName !== "" || nomineeDept !== "") && justification.length < 100) {
+      incompleteJustifications.push(`${i + 1}. ${award}`);
+    }
+  });
+
+  if (incompleteJustifications.length > 0) {
+    message.style.color = "#ffb4b4";
+    message.textContent = "Please provide at least 100 characters of justification for each nomination entered. Check: " +
+      incompleteJustifications.join("; ");
+    submitBtn.disabled = false;
+    submitBtn.style.opacity = 1;
+
+    const firstMissing = awards.findIndex((award, i) => {
+      const nomineeName = document.querySelector(`[name='nomineeName_${i}']`)?.value.trim() || "";
+      const nomineeDept = document.querySelector(`[name='nomineeDept_${i}']`)?.value.trim() || "";
+      const justification = document.querySelector(`[name='justification_${i}']`)?.value.trim() || "";
+      return (nomineeName !== "" || nomineeDept !== "") && justification.length < 100;
+    });
+    if (firstMissing >= 0) {
+      const field = document.getElementById(`justification_${firstMissing}`);
+      field.focus();
+      field.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+    return;
+  }
+
   message.textContent = "⏳ Submitting nomination...";
   message.style.color = "white";
 
@@ -621,7 +692,8 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
         nomineeName: document.querySelector(`[name='nomineeName_${i}']`)?.value || "",
         nomineeDept: document.querySelector(`[name='nomineeDept_${i}']`)?.value || "",
         nomineeCompany: document.querySelector(`[name='nomineeCompany_${i}']`)?.value || "",
-        nomineestatus: document.querySelector(`[name='nomineestatus_${i}']`)?.value || ""
+        nomineestatus: document.querySelector(`[name='nomineestatus_${i}']`)?.value || "",
+        justification: document.querySelector(`[name='justification_${i}']`)?.value.trim() || ""
       };
     });
 
@@ -653,3 +725,8 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
 </script>
 </body>
 </html>
+
+
+
+
+
