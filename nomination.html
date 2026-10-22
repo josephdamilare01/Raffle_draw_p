@@ -296,6 +296,14 @@ footer {
     <label>Employee Number (for Partner personnel without company email address)</label>
     <input type="text" id="employeeNumber" placeholder="Enter employee number if no email" />
 
+    <!-- Nomination Requirement section -->
+    <div class="section-title">Nomination Requirement</div>
+
+    <div class="date-info" id="dateInfo">
+    <p>Nomination Period: You are required to provide a clear justification, highlighting specific examples of how the nominee has demonstrated behaviours and qualities relevant to the award category and why they deserve to be recognized. </p>
+    </p> Please note that nominations submitted without a justification will be considered invalid and automatically voided.</p>
+    </div>
+
 
     <div class="section-title">Award Nominations</div>
     <div id="awardsContainer"></div>
@@ -329,8 +337,8 @@ const db = getDatabase(app);
 
 // --- Date Configuration ---
 const nominationDates = {
-  startDate: new Date('2026-11-11T00:00:00'), // Set your start date here
-  closeDate: new Date('2026-11-21T23:23:59')  // Set your close date here
+  startDate: new Date('2026-11-2T00:00:00'), // Set your start date here
+  closeDate: new Date('2026-11-7T23:23:59')  // Set your close date here
 };
 
 // --- Date Display and Validation ---
