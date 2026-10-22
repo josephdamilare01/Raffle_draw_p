@@ -233,6 +233,32 @@ footer {
   position: relative;
 }
 
+  
+#dateInfo {
+    text-align: left;
+    line-height: 1.7;
+}
+
+#dateInfo p {
+    margin: 0 0 14px;
+}
+
+#dateInfo .nomination-text {
+    color: #333333;
+    text-align: justify;
+}
+
+#dateInfo .nomination-warning {
+    color: #dc2626;
+    font-weight: 700;
+    text-align: left;
+    background-color: #fef2f2;
+    border-left: 4px solid #dc2626;
+    padding: 12px 15px;
+    border-radius: 4px;
+    margin-top: 12px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .container {
@@ -296,14 +322,22 @@ footer {
     <label>Employee Number (for Partner personnel without company email address)</label>
     <input type="text" id="employeeNumber" placeholder="Enter employee number if no email" />
 
-    <!-- Nomination Requirement section -->
-    <div class="section-title">Nomination Requirement</div>
+<!-- Nomination Requirement section -->
+<div class="section-title">Nomination Requirement</div>
 
-    <div class="date-info" id="dateInfo">
-    <p>Nomination Period: You are required to provide a clear justification, highlighting specific examples of how the nominee has demonstrated behaviours and qualities relevant to the award category and why they deserve to be recognized. </p>
-    </p> Please note that nominations submitted without a justification will be considered invalid and automatically voided.</p>
-    </div>
+<div class="date-info" id="dateInfo">
+    <p class="nomination-text">
+        <strong>Nomination Period:</strong> You are required to provide a clear
+        justification, highlighting specific examples of how the nominee has
+        demonstrated behaviours and qualities relevant to the award category
+        and why they deserve to be recognized.
+    </p>
 
+    <p class="nomination-warning">
+        Please note that nominations submitted without a justification will
+        be considered invalid and automatically voided.
+    </p>
+</div>
 
     <div class="section-title">Award Nominations</div>
     <div id="awardsContainer"></div>
