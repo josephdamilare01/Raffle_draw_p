@@ -715,13 +715,16 @@ document.getElementById("nominationForm").addEventListener("submit", async (e) =
     message.textContent = "✅ Nomination submitted successfully!";
     setTimeout(() => window.location.href = "thankyou.html", 2000);
 
-  } catch (err) {
-    console.error(err);
-    message.style.color = "red";
-    message.textContent = "❌ Error submitting nominations.";
-    submitBtn.disabled = false;
-    submitBtn.style.opacity = 1;
-  }
+} catch (err) {
+  console.error("Firebase nomination submission failed:", err);
+
+  message.style.color = "red";
+  message.textContent =
+    "❌ Submission failed: " + (err.message || "Unknown error");
+
+  submitBtn.disabled = false;
+  submitBtn.style.opacity = 1;
+}
 });
 </script>
 </body>
