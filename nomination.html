@@ -482,16 +482,147 @@ const managers = ["James Okon", "Patricia Balogun", "Emeka Nwosu", "Linda Eze", 
 const container = document.getElementById("awardsContainer");
 
 // --- Load staff list (JSON) ---
-let staffList = [];
-fetch("candidates.json")
-  .then(res => res.json())
-  .then(data => {
-    staffList = data;
-    console.log("✅ Staff list loaded:", staffList.length, "records");
-  })
-  .catch(err => console.error("Error loading staff list:", err));
 
-// --- Render Awards ---
+// --- Award-specific candidate files ---
+
+const candidateFilesByAward = {
+  "Most Collaborative Dept of the Year":
+    "candidates/most-collaborative-dept-of-the-year.json",
+
+  "The Continuous Improvement Team (CIT) Award":
+    "candidates/continuous-improvement-team.json",
+
+  "Manager of the Year":
+    "candidates/manager-of-the-year.json",
+
+  "Most Inspirational Mentor":
+    "candidates/most-inspirational-mentor.json",
+
+  "The 'I Got Ya Back' Award":
+    "candidates/i-got-ya-back.json",
+
+  "Most Innovative Award":
+    "candidates/most-innovative.json",
+
+  "Sustainability Award":
+    "candidates/sustainability.json",
+
+  "Integrity Award":
+    "candidates/integrity.json",
+
+  "Enterprise First Award":
+    "candidates/enterprise-first.json",
+
+  "PM Partner of the Year":
+    "candidates/pm-partner.json",
+
+  "PI Partner of the Year":
+    "candidates/pi-partner.json",
+
+  "PS/PG Partner of the Year":
+    "candidates/ps-pg-partner.json",
+
+  "PT Partner of the Year":
+    "candidates/pt-partner.json",
+
+  "PC Partner of the Year":
+    "candidates/pc-partner.json",
+
+  "Operations Partner of the Year":
+    "candidates/operations-partner.json",
+
+  "HSE Partner of the Year":
+    "candidates/hse-partner.json",
+
+  "CMO Partner of the Year":
+    "candidates/cmo-partner.json",
+
+  "ESD Partner of the Year":
+    "candidates/esd-partner.json",
+
+  "TP Partner of the Year":
+    "candidates/tp-partner.json",
+
+  "TE Partner of the Year":
+    "candidates/te-partner.json",
+
+  "TI/TF Partner of the Year":
+    "candidates/ti-tf-partner.json",
+
+  "IMT Partner of the Year":
+    "candidates/imt-partner.json",
+
+  "CSS Partner of the Year":
+    "candidates/css-partner.json",
+
+  "LSS Partner of the Year":
+    "candidates/lss-partner.json",
+
+  "CPM Partner of the Year Award":
+    "candidates/cpm-partner.json",
+
+  "NT Partner of the Year Award":
+    "candidates/nt-partner.json",
+
+  "HR Partner of the Year":
+    "candidates/hr-partner.json",
+
+  "RAIS Partner of the Year":
+    "candidates/rais-partner.json"
+};
+
+// Store candidates separately for each award
+const staffListsByAward = {};
+
+// Load all 28 files
+async function loadAwardCandidates() {
+
+  const results = await Promise.allSettled(
+    awards.map(async (award) => {
+
+      const file = candidateFilesByAward[award];
+
+      if (!file) {
+        throw new Error(`No candidate file configured for ${award}`);
+      }
+
+      const response = await fetch(file);
+
+      if (!response.ok) {
+        throw new Error(`Failed to load ${file}: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      if (!Array.isArray(data)) {
+        throw new Error(`${file} must contain a JSON array`);
+      }
+
+      staffListsByAward[award] = data;
+
+      console.log(
+        `✅ ${award}: ${data.length} candidates loaded`
+      );
+
+    })
+  );
+
+  results.forEach((result, index) => {
+    if (result.status === "rejected") {
+      console.error(
+        `❌ Candidate loading failed for ${awards[index]}:`,
+        result.reason
+      );
+    }
+  });
+
+  console.log("Award-specific candidate loading completed.");
+}
+
+// Wait until all candidate files have been processed
+await loadAwardCandidates();
+
+
 // --- Render Awards ---
 awards.forEach((award, i) => {
   const div = document.createElement("div");
@@ -562,22 +693,29 @@ container.addEventListener("input", (e) => {
   counter.classList.toggle("is-short", count < 100);
 });
 
-// --- Dynamic Autocomplete ---
+// --- Dynamic Autocomplete --- 
+// --- Award-specific Dynamic Autocomplete ---
 container.addEventListener("input", (e) => {
   if (!e.target.name?.startsWith("nomineeName_")) return;
   const input = e.target;
-  const datalist = document.getElementById(input.getAttribute("list"));
-  const value = input.value.toLowerCase();
-
+  const index = Number(input.name.split("_")[1]);
+  // Identify the award for this nomination field
+  const award = awards[index];
+  // Get candidates belonging to this award only
+  const staffList = staffListsByAward[award] || [];
+  const datalist = document.getElementById(
+    input.getAttribute("list")
+  );
+  const value = input.value.trim().toLowerCase();
   datalist.innerHTML = "";
   if (value.length < 2) return;
-
   const filtered = staffList
     .filter(person =>
-      person["Employee Name"].toLowerCase().includes(value)
+      (person["Employee Name"] || "")
+        .toLowerCase()
+        .includes(value)
     )
     .slice(0, 20);
-
   filtered.forEach(person => {
     const option = document.createElement("option");
     option.value = person["Employee Name"];
@@ -585,20 +723,46 @@ container.addEventListener("input", (e) => {
   });
 });
 
-// --- Autofill other fields ---
+// --- Award-specific Autofill ---
+
 container.addEventListener("change", (e) => {
   if (!e.target.name?.startsWith("nomineeName_")) return;
   const input = e.target;
-  const index = input.name.split("_")[1];
-
-  const selected = staffList.find(p => p["Employee Name"] === input.value);
-
+  const index = Number(input.name.split("_")[1]);
+  // Identify the award
+  const award = awards[index];
+  // Retrieve only this award's candidates
+  const staffList = staffListsByAward[award] || [];
+  const selected = staffList.find(
+    person => person["Employee Name"] === input.value.trim()
+  );
+  const deptField = document.querySelector(
+    `[name='nomineeDept_${index}']`
+  );
+  const companyField = document.querySelector(
+    `[name='nomineeCompany_${index}']`
+  );
+  const statusField = document.querySelector(
+    `[name='nomineestatus_${index}']`
+  );
   if (selected) {
-    document.querySelector(`[name='nomineeDept_${index}']`).value = selected["Department"];
-    document.querySelector(`[name='nomineeCompany_${index}']`).value = selected["Company"];
-    document.querySelector(`[name='nomineestatus_${index}']`).value = selected["Status"];
+    if (deptField) {
+      deptField.value = selected["Department"] || "";
+    }
+    if (companyField) {
+      companyField.value = selected["Company"] || "";
+    }
+    if (statusField) {
+      statusField.value = selected["Status"] || "";
+    }
+  } else {
+    // Clear autofill fields if the selected name is invalid
+    if (deptField) deptField.value = "";
+    if (companyField) companyField.value = "";
+    if (statusField) statusField.value = "";
   }
 });
+
 
 // --- Submit to Firebase ---
 document.getElementById("nominationForm").addEventListener("submit", async (e) => {
