@@ -1,0 +1,20 @@
+[
+  {
+    "Employee Name": "Jordan Sample 211",
+    "Department": "General",
+    "Company": "Example Partner Company",
+    "Status": "Active"
+  },
+  {
+    "Employee Name": "Taylor Fiction 212",
+    "Department": "General",
+    "Company": "Example Partner Company",
+    "Status": "Active"
+  },
+  {
+    "Employee Name": "Morgan Placeholder 213",
+    "Department": "General",
+    "Company": "Example Partner Company",
+    "Status": "Inactive"
+  }
+]

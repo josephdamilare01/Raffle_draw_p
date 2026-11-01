@@ -1,0 +1,20 @@
+[
+  {
+    "Employee Name": "Riley Placeholder 151",
+    "Department": "General",
+    "Company": "Example Partner Company",
+    "Status": "Active"
+  },
+  {
+    "Employee Name": "Avery Training 152",
+    "Department": "General",
+    "Company": "Example Partner Company",
+    "Status": "Active"
+  },
+  {
+    "Employee Name": "Jamie Candidate 153",
+    "Department": "General",
+    "Company": "Example Partner Company",
+    "Status": "Inactive"
+  }
+]

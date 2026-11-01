@@ -1,0 +1,20 @@
+[
+  {
+    "Employee Name": "Example Department A",
+    "Department": "Operations",
+    "Company": "NLNG",
+    "Status": "Active"
+  },
+  {
+    "Employee Name": "Example Department B",
+    "Department": "Technical Services",
+    "Company": "NLNG",
+    "Status": "Active"
+  },
+  {
+    "Employee Name": "Example Department C",
+    "Department": "Corporate Services",
+    "Company": "NLNG",
+    "Status": "Active"
+  }
+]

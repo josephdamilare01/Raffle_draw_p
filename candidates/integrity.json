@@ -1,0 +1,20 @@
+[
+  {
+    "Employee Name": "Cameron Practice 081",
+    "Department": "General",
+    "Company": "NLNG",
+    "Status": "Active"
+  },
+  {
+    "Employee Name": "Drew Example 082",
+    "Department": "General",
+    "Company": "NLNG",
+    "Status": "Active"
+  },
+  {
+    "Employee Name": "Alex Demo 083",
+    "Department": "General",
+    "Company": "NLNG",
+    "Status": "Inactive"
+  }
+]

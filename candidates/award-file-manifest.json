@@ -1,0 +1,170 @@
+[
+  {
+    "award_number": 1,
+    "award": "Most Collaborative Dept of the Year",
+    "file": "candidates/most-collaborative-dept-of-the-year.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 2,
+    "award": "The Continuous Improvement Team (CIT) Award",
+    "file": "candidates/continuous-improvement-team.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 3,
+    "award": "Manager of the Year",
+    "file": "candidates/manager-of-the-year.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 4,
+    "award": "Most Inspirational Mentor",
+    "file": "candidates/most-inspirational-mentor.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 5,
+    "award": "The 'I Got Ya Back' Award",
+    "file": "candidates/i-got-ya-back.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 6,
+    "award": "Most Innovative Award",
+    "file": "candidates/most-innovative.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 7,
+    "award": "Sustainability Award",
+    "file": "candidates/sustainability.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 8,
+    "award": "Integrity Award",
+    "file": "candidates/integrity.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 9,
+    "award": "Enterprise First Award",
+    "file": "candidates/enterprise-first.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 10,
+    "award": "PM Partner of the Year",
+    "file": "candidates/pm-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 11,
+    "award": "PI Partner of the Year",
+    "file": "candidates/pi-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 12,
+    "award": "PS/PG Partner of the Year",
+    "file": "candidates/ps-pg-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 13,
+    "award": "PT Partner of the Year",
+    "file": "candidates/pt-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 14,
+    "award": "PC Partner of the Year",
+    "file": "candidates/pc-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 15,
+    "award": "Operations Partner of the Year",
+    "file": "candidates/operations-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 16,
+    "award": "HSE Partner of the Year",
+    "file": "candidates/hse-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 17,
+    "award": "CMO Partner of the Year",
+    "file": "candidates/cmo-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 18,
+    "award": "ESD Partner of the Year",
+    "file": "candidates/esd-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 19,
+    "award": "TP Partner of the Year",
+    "file": "candidates/tp-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 20,
+    "award": "TE Partner of the Year",
+    "file": "candidates/te-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 21,
+    "award": "TI/TF Partner of the Year",
+    "file": "candidates/ti-tf-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 22,
+    "award": "IMT Partner of the Year",
+    "file": "candidates/imt-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 23,
+    "award": "CSS Partner of the Year",
+    "file": "candidates/css-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 24,
+    "award": "LSS Partner of the Year",
+    "file": "candidates/lss-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 25,
+    "award": "CPM Partner of the Year Award",
+    "file": "candidates/cpm-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 26,
+    "award": "NT Partner of the Year Award",
+    "file": "candidates/nt-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 27,
+    "award": "HR Partner of the Year",
+    "file": "candidates/hr-partner.json",
+    "dummy_records": 3
+  },
+  {
+    "award_number": 28,
+    "award": "RAIS Partner of the Year",
+    "file": "candidates/rais-partner.json",
+    "dummy_records": 3
+  }
+]
