@@ -174,9 +174,1353 @@
     "Status": "Partner Staff"
   },
   {
-    "Employee Name": "Jumbo Godswill Promise",
+    "Employee Name": "GBAMASOYE ALLWELL-BROWN",
     "Department": "CSL",
-    "Company": "AUGJ",
+    "Company": "PETMAM",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Clinton Obinna",
+    "Department": "CSL",
+    "Company": "Petman",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Telema Allison",
+    "Department": "CSL",
+    "Company": "Petman",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Christopher Nweke",
+    "Department": "CSL",
+    "Company": "Petman",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ENO ABAM",
+    "Department": "CSL",
+    "Company": "PETMAM",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BELEMA WILCOX",
+    "Department": "CSL",
+    "Company": "PETMAM",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JOHNSON ALLISON",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "TAMUNOIBIM EZEKIEL - HART",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "LOVELYN JUMBO",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JULIET JUMBO",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "TONYE HALLIDAY",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GIFT ABBEY",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "STANLEY JUMBO",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IPALIBO BROWN",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BENJAMIN HART",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HAPPINESS BROWN",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GODWIN PETERSIDE",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "FELIX PEPPLE",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HARRY PEPPLE",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "MAGNUS WILCOX",
+    "Department": "CSL",
+    "Company": "FIN-BONNY",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "MARTIN AKUJUOBI",
+    "Department": "CSL",
+    "Company": "NAMA",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GIWA RIMACHANTIN",
+    "Department": "CSL",
+    "Company": "NAMA",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "FIDELIS EZUGWU",
+    "Department": "CSL",
+    "Company": "NAMA",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ABUBAKAR SADIQ FEGGE",
+    "Department": "CSL",
+    "Company": "NAMA",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OLUMIDE GBAMIGBADE",
+    "Department": "CSL",
+    "Company": "DORNIER",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ANTHONY PEPPLE",
+    "Department": "CSL",
+    "Company": "DORNIER",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "MILDRED GREEN",
+    "Department": "CSL",
+    "Company": "DORNIER",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "TOBIN OMIEYE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JUMBO ISRAEL TAMUNOISM",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GREEN EBIEBO JUSTICE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "PEPPLE GODFREY P.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "UCHE NICODEMUS E.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "WEBBER VALENTINE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HERBERT ISAAC A.U.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JUMBO CHARLES K.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OCHUKO MOKE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BENSTOWE ALADIOKUMA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OWUJIE TAMUNOIMIM",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "UMOH DANIEL E.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JUMBO GODWIN INYE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BROWN EMMANUEL JOHN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OBINNA NDUKWE EKE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "EJELONU ONYEDIKACHI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DAN-JUMBO IBINYEFAGHA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IBRAHIM GARBA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ABDULRAHMAN IDRIS",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OMONI BOMA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BUSARI IBRAHEEM OLOLADE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HART VICTOR ATARI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BRISTOL IBIFUBARA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BROWN NIMI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "PEPPLE GODSWILL NENGI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BROWN CYNTHIA DIENYE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GARBA ABDULRASHEED SULEIMAN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BROWN OMIE DOUGHBO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GREEN LARRY T.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BRISTOL JIREH",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DAUDU JEFFERY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NWANKWO HENRY NONSO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "MUHAMMED NASIRU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OGBONNA SUNNY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ORELOPE LATEEF",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BASSEY GODWIN JAMES",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BASSEY MIRACLE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BOORE AYODEJI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IFEANYICHUKWU CHARLES",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ANYAEZE AMBASSADOR",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OWAGBEMI  VICTOR",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "LABRAN AHMED",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BANIGO EMMANUEL S.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HART NENGI LUCKY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OGBETE HARRY DANIEL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "CHIBUIKE UMECHIDUM",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "EMAEYAK JACOB",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "UBI STEPHEN O.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OGBATA CHRISTIAN ANAYO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ANTHONY KEHINDE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OKORIE STEPHEN, PETERS",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IGONI SOLOMON",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "MADU ONYEKACHI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ZORZOR ANTHONY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OKONTA JETHRO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "PIETERSON DAGOGO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "TUNDE AIYEDUN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BROWNSON KINGSLEY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ALEGHE YAKUBU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "WIKO VINCENT",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NNANNA JOHN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "CHIDI CHINEDU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ALALI JEHOSHUA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "PEPPLE ELVIS",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "WILCOX ABINYE GODSWILL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OPUDAPA REUBEN S.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GREEN EMMANUEL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JUMBO GODSWILL PROMISE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ADEMARATI LATEEF AANU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "TOBY WALLINGTON BOMA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "WARIBELEMA FINAPIRI ROMEO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "PEPPLE SAMUEL SUNNY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "FADEYI FATAI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BANIGO KENNETH SODIENYE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BANIGO ADONYE OBIE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DOMINGO GODSPOWER",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "EVANS JAMES",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JUMBO JONATHAN ABIYE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BANIGO DENNIS ABINYE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "AKANIYENE SUNDAY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ALADE SAMSON O.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DIRISU TIJANI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "SOLOMON GODSWILL SIMEONE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BONIFACE INNOCENT DAKAT",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IDAWARI ELIJAH",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "EZIRIM PRINCE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OLOWOKEERE SAHEED",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "UMOREN SOLOMON",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "WILLIAMS BANKOLE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ANEKWE TESSY MINA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NJOKU DENNIS UGOCHUKWU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "WILLIAMS TIMOTHY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "UDEORJI EUGENE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ADESINA KAMORU ALABI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ABRAHAM KINGSLEY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ISRAEL FRANCIS",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ABDULSALAM MUAZ",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ODIKA MATHEW",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "CHIEZE IKENNA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BROWN BOMA ADAGOGO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "LONGJOHN DAGOGO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OJUNU JIBRIL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ABDULLAHI SALMANU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ADEKALU JOHN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HORSEFALL DATUBO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "LONGJOHN DAGOGO  LESLY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NWOKORO  GODWIN BARTHOLOMEW",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DOMINGO  ANTHONY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "TAMUNOIDUWARI  FOMBO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OROK  JOHN EKPONG",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NDUBUISI  FRANKLIN IGONI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OLANIYI  OLAOYE TIMOTHY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OLAYIWOLA  TAOFEEK",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "EGBUAKPO  DAMIAN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NWIKO  JOHN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HART  VICTOR ATARI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HARUNA  SULEIMAN UMAR",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BRISTOL  JIREH",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "MUSTAPHA  SAFIYANU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NOSA  BELLO-OSAGIE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OGECHUKWU  DANIEL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "SOLOMON  FRIDAY MUFFAT",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BOORE  ELIZABETH AYOMIDE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ELVIS  IGHOEZAIBUE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ADAMU  HARUNA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OKON  ANDREW",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IKPE  SUNNY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IHEJIRIKA  CYNTHIA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OKORO  DICKSON OGAGA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "UDOM  CLEMENT",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JACKMAY   INYEIGBARIMA PETER",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OGUNDIPE  KAMILU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OBODOGULO  FORTUNE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ALLISON  HAMILTON",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OKAFOR  CHIKA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "FRANCIS  ANIEKAN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "AKINRETI  LAWRENCE ADE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "EJEOMO  LESLIE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "KADIRI  JONATHAN AKOH",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ENEH  OKECHUKWU CHRISTIAN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "AMAKIRI  DANIEL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "JUMBO  TONYE WISDOM",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "SEMEGNON  FRIDAY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "PEPPLE  ELVIS",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "KOKARA  STEPHEN SORLE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NWAFOR  CAJETHAN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "KUNOMANIEBOOFORI  INYE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DAUDA  HUSSAINI JOEL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "AKINBOLAJI  FELIX",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "MORGAN  DRESSMAN",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DIMKPA  SAMUEL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "WOGBO  CHIBUIKE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "OKORIGWE  FELIX OKE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ESSIEN  IBRAHIM",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "RAYNER  PAUL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NYAKNO  AKPAN KING",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "EWOH  MICAH EZEKIEL",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IBANGA  SAMBO UDUAK",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "AKPAN  ELIJAH NSE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DANGYIL  SOLOMON",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "AFAHA  UKAEME OKON",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DAPPA  IBIWANGI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ADAMU  USAINI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DANIEL   OYIWE OMONOWO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GABRIEL  FAMILUSI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NYKNO  SOLOMON",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "EPELLE  SAMUEL SILAS",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "MUFUTAU  ABDULLAHI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "VICTOR  NTEIJAH S.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GODSWILL  TOLOFARI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BOMA  WILCOX C.",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "DANIEL  OGOLI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "SUNDAY  GODBLESS LOVE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NSOH  NSOH FRIDAY",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "PROMISE  LEELASI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "LUKE  DAKOP MIWON",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "ETIM  EKPEYONG",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "NSEMEKE  UDOFIA",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BENEDICT  HART",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "SOTONYE  ALLISON",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "SULEIMAN  AJEIGBE",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "AUSTIN  NWAIWU",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "BOMA  BANIGO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "IBRAHIM  ABUBAKAR",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "TAIWO  OMOTAYO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "HILARY  EGBUJUO",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "GEORGE  EBI",
+    "Department": "CSL",
+    "Company": "Aug J",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Sola Osunwo",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Iwari L. Duke",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Sunday Omomila",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Ibikari Pepple",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Friday Benjamin",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Saviour Mgbeojirikwe",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Tamunotonye G. Hart",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Dennis Jumbo",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Abdulmalik Garba",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Unegbu Ndubuisi",
+    "Department": "CSL",
+    "Company": "Mandilas",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Hope Chihiura",
+    "Department": "CSL",
+    "Company": "Mandilas",
     "Status": "Partner Staff"
   }
 ]
