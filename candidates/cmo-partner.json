@@ -362,7 +362,19 @@
   {
     "Employee Name": "Igbara Echi",
     "Department": "CMO",
-    "Company": "ST CATHERINE",
+    "Company": "SGS Nigeria Limited.",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Richard Ben-Aboje",
+    "Department": "CMO",
+    "Company": "SGS Nigeria Limited.",
+    "Status": "Partner Staff"
+  },
+  {
+    "Employee Name": "Obibuba Onyinyechi",
+    "Department": "CMO",
+    "Company": "SGS Nigeria Limited.",
     "Status": "Partner Staff"
   }
 ]
