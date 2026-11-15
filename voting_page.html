@@ -309,21 +309,22 @@
       justify-items: center;
     }
 
-    .candidate {
-      background: rgba(255,255,255,0.1);
-      border-radius: 15px;
-      padding: 20px;
-      width: 100%;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
-      transition: all 0.3s ease;
-      cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.1);
-      animation: float 6s ease-in-out infinite;
-    }
+.candidate {
+  background: rgba(255,255,255,0.1);
+  border-radius: 15px;
+  padding: 20px;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,0.1);
+  animation: float 6s ease-in-out infinite;
+}
 
     @keyframes float {
       0% { transform: translateY(0) rotate(0deg); }
@@ -376,6 +377,46 @@
       font-size: 0.9em;
       opacity: 0.8;
     }
+
+/* Candidate Justification Styling */
+.candidate-content {
+  width: 100%;
+  min-width: 0;
+}
+
+.candidate-justification {
+  width: 100%;
+  margin-top: 14px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.25);
+  border-left: 3px solid var(--accent1);
+  border-radius: 8px;
+  text-align: left;
+  font-size: 0.78rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.92);
+  overflow-wrap: anywhere;
+  word-break: normal;
+}
+
+.candidate-justification strong {
+  display: block;
+  color: var(--accent1);
+  font-size: 0.82rem;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.candidate-justification p {
+  margin: 0;
+  font-weight: 400;
+}
+
+/* Keep candidate cards flexible as text increases */
+.candidate {
+  height: auto;
+  min-height: 100%;
+}
 
     /* Radio Button Styling */
     .radio-container {
@@ -1352,10 +1393,18 @@ const firebaseConfig = {
           <input type="radio" name="${award.id}" value="${candidate.name}" class="radio-input" id="${award.id}-${index}">
           <span class="radio-custom"></span>
           <div class="candidate-content">
-            <img src="${candidate.img}" alt="${candidate.name}">
-            <div class="candidate-name">${candidate.name}</div>
-            <div class="candidate-role">${candidate.role}</div>
-          </div>
+  <img src="${candidate.img}" alt="${candidate.name}">
+  <div class="candidate-name">${candidate.name}</div>
+  <div class="candidate-role">${candidate.role}</div>
+
+  ${candidate.justification ? `
+    <div class="candidate-justification">
+      <strong><i class="fas fa-info-circle"></i> Why Nominated</strong>
+      <p>${candidate.justification}</p>
+    </div>
+  ` : ''}
+</div>
+
         `;
         
         candidateElement.addEventListener('click', (e) => {
