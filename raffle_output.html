@@ -1036,37 +1036,30 @@
 
     // UPDATED: Filter function to include star prize
     function filterAllByDepartment(dept) {
-        if (!dept || dept.trim() === "") {
-            return {
-                participants: fullParticipants,
-                giftsForDraw: fullGifts,
-                hardcodedGifts: giftsHardcoded
-            };
-        }
-
-        const deptLower = dept.trim().toLowerCase();
-        
-        const filteredParticipants = fullParticipants.filter(p => {
-            const participantDept = String(p.department || "").toLowerCase().trim();
-            return participantDept === deptLower;
-        });
-        
-        const filteredGiftsForDraw = fullGifts.filter(g => {
-            const giftDept = String(g.department || "").toLowerCase().trim();
-            return giftDept === deptLower || giftDept === deptLower;
-        });
-        
-        const filteredHardcodedGifts = giftsHardcoded.filter(g => {
-            const hardcodedDept = String(g.department || "").toLowerCase().trim();
-            return hardcodedDept === deptLower || hardcodedDept === "general draw";
-        });
-
+    if (!dept || dept.trim() === "") {
         return {
-            participants: filteredParticipants,
-            giftsForDraw: filteredGiftsForDraw,
-            hardcodedGifts: filteredHardcodedGifts
+            participants: fullParticipants,
+            giftsForDraw: fullGifts,
+            hardcodedGifts: giftsHardcoded
         };
     }
+    const deptLower = dept.trim().toLowerCase();
+    const filteredParticipants = fullParticipants.filter(p =>
+        String(p.department || "").trim().toLowerCase() === deptLower
+    );
+    const filteredGiftsForDraw = fullGifts.filter(g =>
+        String(g.department || "").trim().toLowerCase() === deptLower
+    );
+    const filteredHardcodedGifts = giftsHardcoded.filter(g => {
+        const giftDept = String(g.department || "").trim().toLowerCase();
+        return giftDept === deptLower || giftDept === "general draw";
+    });
+    return {
+        participants: filteredParticipants,
+        giftsForDraw: filteredGiftsForDraw,
+        hardcodedGifts: filteredHardcodedGifts
+    };
+}
 
     function normalizeParticipantData(participant) {
         let department = participant.department || participant.Department || 
@@ -1147,39 +1140,31 @@
     });
 
     // Department filter - UPDATED TO USE CAROUSEL
-
-// Department filter - UPDATED TO USE CAROUSEL
-departmentSelect.addEventListener("change", function() {
+    departmentSelect.addEventListener("change", function() {
     const dept = this.value;
     currentDepartment = dept;
-
-    // Get filtered data
+    // Filter participants and gifts
     const filtered = filterAllByDepartment(dept);
-
-    // Update arrays
     participants = [...filtered.participants];
     giftsForDraw = [...filtered.giftsForDraw];
     gifts = [...filtered.hardcodedGifts];
-
-    // Calculate allowable draws based on available gifts
+    // Calculate allowable draws from actual gift count
     const allowableDraws = giftsForDraw.length;
-
-    // Update carousel
+    // Update gift carousel
     loadCarousel(gifts);
-
     // Update gift count
-    totalGiftsDisplay.textContent = allowableDraws;
-
-    // Set maximum allowable draws
+    if (totalGiftsDisplay) {
+        totalGiftsDisplay.textContent = allowableDraws;
+    }
+    // Set allowable draw quantity
     maxDrawsInput.max = allowableDraws;
-
-    // Automatically set draw input to the department's gift count
+    maxDrawsInput.min = allowableDraws;
     maxDrawsInput.value = allowableDraws;
-
+    // Prevent manual changes to the allowable quantity
+    maxDrawsInput.readOnly = true;
     // Update remaining gifts
     updateRemainingGiftsDisplay();
 });
-
 
     // UPDATED: previewGift function to handle star gifts
     async function previewGift(giftObj) {
@@ -1235,21 +1220,25 @@ departmentSelect.addEventListener("change", function() {
         }
 
 
-const desiredDraws = parseInt(maxDrawsInput.value, 10);
+// Determine allowable draws from actual available gifts
+const numDraws = giftsForDraw.length;
 
-// Validate draw input
-if (
-    isNaN(desiredDraws) ||
-    desiredDraws < 1 ||
-    desiredDraws > giftsForDraw.length
-) {
+// Ensure there are enough participants to receive all gifts
+if (participants.length < numDraws) {
+
     alert(
-        `Invalid draw quantity!\n\n` +
-        `Available gifts for ${currentDepartment || "All Departments"}: ${giftsForDraw.length}\n` +
-        `Maximum allowable draws: ${giftsForDraw.length}`
+        `Insufficient participants for this draw!\n\n` +
+        `Department: ${currentDepartment || "All Departments"}\n` +
+        `Available Gifts: ${numDraws}\n` +
+        `Available Participants: ${participants.length}\n\n` +
+        `The number of participants must be at least equal to the number of gifts.`
     );
 
-    maxDrawsInput.value = giftsForDraw.length;
+    return;
+}
+
+if (numDraws === 0) {
+    alert("No available gifts for drawing.");
     return;
 }
 
@@ -1285,10 +1274,24 @@ const numDraws = Math.min(participants.length,giftsForDraw.length,desiredDraws);
             }
         }
 /////////////////////////////////////////////////////////////////////////////////////////////////// To here
-        giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
-fullGifts = fullGifts.filter(gift => 
-    !(giftsToRemove.includes(gift.name) && (gift.department === currentDepartment || gift.department === "General draw"))
-);
+    function normalizeGiftData(gift, index) {
+
+    let department = gift.department || gift.Department ||
+                     gift.division || gift.Division || "General";
+
+    department = department.toString().trim();
+
+    return {
+        id: gift.id || gift.ID || `GIFT_${index + 1}`,
+
+        name: gift.name || gift.Name || gift.Gift ||
+              gift.GiftName || gift["Gift Name"] || String(gift).trim(),
+
+        department: department,
+
+        image: gift.image || gift.ImageURL || gift.Image || gift.img || ""
+    };
+}
 
 // Remove drawn participants from both current and full participant pools
 const participantsToRemove = results.map(result => result.name);
@@ -1336,7 +1339,7 @@ fullParticipants = fullParticipants.filter(p => !participantsToRemove.includes(p
         
         if (savedGifts) {
             const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(normalizeGiftData);
+            fullGifts = parsedGifts.map((gift, index) =>normalizeGiftData(gift, index));
         }
         
         departmentSelect.value = "";
