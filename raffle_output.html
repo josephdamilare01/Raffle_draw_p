@@ -1243,15 +1243,23 @@ if (numDraws === 0) {
 }
 
 // Determine actual number of draws
-const numDraws = Math.min(participants.length,giftsForDraw.length,desiredDraws);
+// Draw all available gifts
+const numDraws = giftsForDraw.length;
 
-        if (numDraws === 0) {
-            alert("Cannot run draw. Check participant count and gift count.");
-            return;
-        }
+// Check whether there are enough participants
+if (participants.length < numDraws) {
+    alert(
+        `INSUFFICIENT PARTICIPANTS!\n\n` +
+        `Department: ${currentDepartment || "All Departments"}\n` +
+        `Available Gifts: ${giftsForDraw.length}\n` +
+        `Eligible Participants: ${participants.length}\n\n` +
+        `Additional Participants Required: ${numDraws - participants.length}`
+    );
+    return;
+}
 
-        const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-        const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
+console.log("Gifts to be drawn:", numDraws);
+console.log("Eligible participants:", participants.length);
 
         results = [];
         const giftsToRemove = [];
