@@ -1136,7 +1136,7 @@
         // Load gifts for draw
         if (savedGifts) {
             const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(normalizeGiftData);
+            fullGifts = parsedGifts.map((gift, index) =>normalizeGiftData(gift, index));
         } else {
             alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
         }
@@ -1312,7 +1312,7 @@ fullParticipants = fullParticipants.filter(p => !participantsToRemove.includes(p
         
         if (savedGifts) {
             const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(normalizeGiftData);
+            fullGifts = parsedGifts.map((gift, index) =>normalizeGiftData(gift, index));
         }
         
         departmentSelect.value = "";
