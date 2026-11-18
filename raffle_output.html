@@ -1081,17 +1081,20 @@
         };
     }
 
-    function normalizeGiftData(gift) {
-        let department = gift.department || gift.Department || 
-                        gift.division || gift.Division || "General";
-        department = department.toString().trim();
-        
-        return {
-            name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
-            department: department,
-            image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
-        };
-    }
+    function normalizeGiftData(gift, index = 0) {
+    let department = gift.department || gift.Department ||
+                     gift.division || gift.Division || "General";
+
+    department = department.toString().trim();
+
+    return {
+        _drawId: gift._drawId || `GIFT-${index}`,
+        name: gift.name || gift.Name || gift.Gift ||
+              gift.GiftName || gift["Gift Name"] || String(gift).trim(),
+        department: department,
+        image: gift.image || gift.ImageURL || gift.Image || gift.img || ""
+    };
+}
 
     function updateRemainingGiftsDisplay() {
         let remainingGiftsContainer = document.getElementById('remainingGiftsList');
