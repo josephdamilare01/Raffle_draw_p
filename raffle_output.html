@@ -1219,30 +1219,6 @@
             return;
         }
 
-
-// Determine allowable draws from actual available gifts
-const numDraws = giftsForDraw.length;
-
-// Ensure there are enough participants to receive all gifts
-if (participants.length < numDraws) {
-
-    alert(
-        `Insufficient participants for this draw!\n\n` +
-        `Department: ${currentDepartment || "All Departments"}\n` +
-        `Available Gifts: ${numDraws}\n` +
-        `Available Participants: ${participants.length}\n\n` +
-        `The number of participants must be at least equal to the number of gifts.`
-    );
-
-    return;
-}
-
-if (numDraws === 0) {
-    alert("No available gifts for drawing.");
-    return;
-}
-
-// Determine actual number of draws
 // Draw all available gifts
 const numDraws = giftsForDraw.length;
 
