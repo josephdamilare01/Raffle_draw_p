@@ -645,10 +645,10 @@
         { name: "Zealot S78 Bluetooth Speaker, 120W, IPX6 Waterproof, With Light And Power Bank", department: "General draw", image: "./images/Zealot S78 Bluetooth Speaker, 120 W Speaker Boxes, Bluetooth Large With Booming Bass, IPX6 Waterproof, Music Box With Light, Power Bank, Bluetooth 5.2, Outdoor Speaker4.jpg" },
         
         // PM Department Gifts
-        { name: "25KG Big bull Rice", department: "PC, PG, PS, PT, PO  Partner", image: "./images/25KG Big bull Rice1.jfif" },
-        { name: "Hisense 1HP Split Copper Inverter AC", department: "PC, PG, PS, PT, PO  Partner", image: "./images/Hisense 1HP Split Copper Inverter AC1.jpg" },
-        { name: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts", department: "PC, PG, PS, PT, PO  Partner", image: "./images/Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts.jpg" },
-        { name: "Century Digital Torch Screen Dual Window Air Fryer CAF-8340-C 10L", department: "PC, PG, PS, PT, PO  Partner", image: "./images/Century Digital Torch Screen Dual Window Air Fryer CAF-8340-C 10L.jpg" },
+        { name: "25KG Big bull Rice", department: "PC,PG,PS,PT,PO Partner", image: "./images/25KG Big bull Rice1.jfif" },
+        { name: "Hisense 1HP Split Copper Inverter AC", department: "PC,PG,PS,PT,PO Partner", image: "./images/Hisense 1HP Split Copper Inverter AC1.jpg" },
+        { name: "Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts", department: "PC,PG,PS,PT,PO Partner", image: "./images/Panasonic Heavy-Duty Ice Crusher Commercial Blender 8500wtts.jpg" },
+        { name: "Century Digital Torch Screen Dual Window Air Fryer CAF-8340-C 10L", department: "PC,PG,PS,PT,PO Partner", image: "./images/Century Digital Torch Screen Dual Window Air Fryer CAF-8340-C 10L.jpg" },
         { name: "Panasonic Top Loading Water Dispenser SDM-WD3320TG With Fridge", department: "General draw", image: "./images/Panasonic Top Loading Water Dispenser SDM-WD3320TG With Fridge.jpg" },
         { name: "Treadmill 2HP With Massager MP3", department: "General draw", image: "./images/TREADMILL 2HP WITH MASSAGER MP32.jpg" },
         { name: "Hisense 43-Inch Smart LED TV + Netflix + YouTube", department: "General draw", image: "./images/Hisense 43-Inch Hisense Smart LED TV + Netflix +YouTube.jpg" },
@@ -656,7 +656,7 @@
         { name: "Samsung Galaxy Tab A9 8/128 Wi-Fi 8.7", department: "General draw", image: "./images/SAMSUNG GALAXY TAB A9 8128 WI-FI 8.72.jfif" },
         { name: "9.5 Litres Yam Pounder And Multifunctional Food Machine KYP 2020C", department: "General draw", image: "./images/9.5 liters Yam Pounder And Multifunctional Food Machine KYP 2020c1.jpg"},
         { name: "Lumin HOT1000 500W/1000Wh Portable Power Generator", department: "General draw", image: "./images/Lumin HOT1000 500W 1000Wh Portable Power Generator, For Home Backup, Travel, Outdoor Camping1.jpg" },
-        { name: "Oppo Reno 15F 5G, 6.57-Inch, 12/512GB, 50+8+2/50MP, 7000mAh", department: "PC, PG, PS, PT, PO  Partner", image:  "./images/Opo5.png" },
+        { name: "Oppo Reno 15F 5G, 6.57-Inch, 12/512GB, 50+8+2/50MP, 7000mAh", department: "PC,PG,PS,PT,PO Partner", image:  "./images/Opo5.png" },
         { name: "Hisense 541L 4-Door Inverter Refrigerator With Ice Maker & Water Dispenser", department: "General draw", image: "./images/Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser5.jpg" },
         { name: "Hisense 20 Litres Microwave (H20MOWS14)", department: "General draw", image: "./images/Hisense 20 Litres Microwave (H20MOWS14).jfif" },
         { name: "Kinelco 9pcs Aluminium Non-Stick Cookware Set (4 Big Pots, 1 Frying Pan)", department: "General draw", image: "./images/Kinelco 9pcs Aluminium Non Stick Cookware Set(4 BIG POTS,1 Frying Pan)5.jpg" },
@@ -1034,39 +1034,49 @@
         });
     }
 
+    function normalizeDepartmentName(value) {
+    return String(value || "")
+        .trim()
+        .replace(/\s*,\s*/g, ",")
+        .replace(/\s+/g, " ")
+        .toLowerCase();
+}
     // UPDATED: Filter function to include star prize
-    function filterAllByDepartment(dept) {
-        if (!dept || dept.trim() === "") {
-            return {
-                participants: fullParticipants,
-                giftsForDraw: fullGifts,
-                hardcodedGifts: giftsHardcoded
-            };
-        }
-
-        const deptLower = dept.trim().toLowerCase();
-        
-        const filteredParticipants = fullParticipants.filter(p => {
-            const participantDept = String(p.department || "").toLowerCase().trim();
-            return participantDept === deptLower;
-        });
-        
-        const filteredGiftsForDraw = fullGifts.filter(g => {
-            const giftDept = String(g.department || "").toLowerCase().trim();
-            return giftDept === deptLower || giftDept === "all departments";
-        });
-        
-        const filteredHardcodedGifts = giftsHardcoded.filter(g => {
-            const hardcodedDept = String(g.department || "").toLowerCase().trim();
-            return hardcodedDept === deptLower || hardcodedDept === "all departments";
-        });
-
+function filterAllByDepartment(dept) {
+    if (!dept || dept.trim() === "") {
         return {
-            participants: filteredParticipants,
-            giftsForDraw: filteredGiftsForDraw,
-            hardcodedGifts: filteredHardcodedGifts
+            participants: fullParticipants,
+            giftsForDraw: fullGifts,
+            hardcodedGifts: giftsHardcoded
         };
     }
+
+    const deptKey = normalizeDepartmentName(dept);
+
+    const filteredParticipants = fullParticipants.filter(p =>
+        normalizeDepartmentName(p.department) === deptKey
+    );
+
+    const filteredGiftsForDraw = fullGifts.filter(g => {
+        const giftDept = normalizeDepartmentName(g.department);
+
+        return giftDept === deptKey ||
+               giftDept === "all departments";
+    });
+
+    const filteredHardcodedGifts = giftsHardcoded.filter(g => {
+        const giftDept = normalizeDepartmentName(g.department);
+
+        return giftDept === deptKey ||
+               giftDept === "all departments";
+    });
+
+    return {
+        participants: filteredParticipants,
+        giftsForDraw: filteredGiftsForDraw,
+        hardcodedGifts: filteredHardcodedGifts
+    };
+}
 
     function normalizeParticipantData(participant) {
         let department = participant.department || participant.Department || 
@@ -1081,17 +1091,20 @@
         };
     }
 
-    function normalizeGiftData(gift) {
-        let department = gift.department || gift.Department || 
-                        gift.division || gift.Division || "General";
-        department = department.toString().trim();
-        
-        return {
-            name: gift.name || gift.Name || gift.Gift || gift.GiftName || gift["Gift Name"] || String(gift).trim(),
-            department: department,
-            image: gift.image || gift.ImageURL || gift.Image || gift.img || "",
-        };
-    }
+ function normalizeGiftData(gift, index = 0) {
+    let department = gift.department || gift.Department ||
+                     gift.division || gift.Division || "General";
+
+    department = department.toString().trim();
+
+    return {
+        _drawId: gift._drawId || `GIFT-${index}`,
+        name: gift.name || gift.Name || gift.Gift ||
+              gift.GiftName || gift["Gift Name"] || String(gift).trim(),
+        department: department,
+        image: gift.image || gift.ImageURL || gift.Image || gift.img || ""
+    };
+}
 
     function updateRemainingGiftsDisplay() {
         let remainingGiftsContainer = document.getElementById('remainingGiftsList');
@@ -1133,7 +1146,7 @@
         // Load gifts for draw
         if (savedGifts) {
             const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(normalizeGiftData);
+           fullGifts = parsedGifts.map((gift, index) =>normalizeGiftData(gift, index));
         } else {
             alert("⚠️ Please upload the gift list (for drawing) on the admin page first.");
         }
@@ -1237,36 +1250,50 @@
         const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
         const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
 
-        results = [];
-        const giftsToRemove = [];
-        
-        for (let i = 0; i < numDraws; i++) {
-            const gift = shuffledGifts[i];
-            results.push({
-                name: shuffledParticipants[i].name,
-                division: shuffledParticipants[i].division,
-                idCard: shuffledParticipants[i].idCard,
-                gift: gift, 
-            });
-            giftsToRemove.push(gift.name);
-            // The gift name here is for star price only
-       //////////////////////////////////////////////////////////////////////////////////////////////////////////// From here
-            // Special handling if this is the star prize
-            if (gift.name === "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser") {
-                // Remove star prize from ALL gift pools
-                fullGifts = fullGifts.filter(g => g.name !== "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser");
-            }
-        }
-/////////////////////////////////////////////////////////////////////////////////////////////////// To here
-        giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
-fullGifts = fullGifts.filter(gift => 
-    !(giftsToRemove.includes(gift.name) && (gift.department === currentDepartment || gift.department === "ALL DEPARTMENTS"))
+const shuffledParticipants = [...participants].sort(() => Math.random() - 0.5);
+const shuffledGifts = [...giftsForDraw].sort(() => Math.random() - 0.5);
+
+results = [];
+
+// Select the exact participants and gift records being awarded
+const selectedParticipants = shuffledParticipants.slice(0, numDraws);
+const selectedGifts = shuffledGifts.slice(0, numDraws);
+
+// Record the winners
+for (let i = 0; i < numDraws; i++) {
+    results.push({
+        name: selectedParticipants[i].name,
+        division: selectedParticipants[i].division,
+        idCard: selectedParticipants[i].idCard,
+        gift: selectedGifts[i]
+    });
+}
+
+// Identify the exact gift records selected
+const selectedGiftIds = new Set(
+    selectedGifts.map(gift => gift._drawId)
 );
 
-// Remove drawn participants from both current and full participant pools
-const participantsToRemove = results.map(result => result.name);
-participants = participants.filter(p => !participantsToRemove.includes(p.name));
-fullParticipants = fullParticipants.filter(p => !participantsToRemove.includes(p.name));
+// Remove ONLY the selected gift records
+giftsForDraw = giftsForDraw.filter(
+    gift => !selectedGiftIds.has(gift._drawId)
+);
+
+fullGifts = fullGifts.filter(
+    gift => !selectedGiftIds.has(gift._drawId)
+);
+
+// Remove ONLY the selected participants
+const selectedParticipantSet = new Set(selectedParticipants);
+
+participants = participants.filter(
+    person => !selectedParticipantSet.has(person)
+);
+
+fullParticipants = fullParticipants.filter(
+    person => !selectedParticipantSet.has(person)
+);
+        
         index = 0;
         giftImageEl.classList.remove("floating"); 
         await runDrawSequence();
@@ -1309,7 +1336,7 @@ fullParticipants = fullParticipants.filter(p => !participantsToRemove.includes(p
         
         if (savedGifts) {
             const parsedGifts = JSON.parse(savedGifts);
-            fullGifts = parsedGifts.map(normalizeGiftData);
+            fullGifts = parsedGifts.map((gift, index) =>normalizeGiftData(gift, index));
         }
         
         departmentSelect.value = "";
