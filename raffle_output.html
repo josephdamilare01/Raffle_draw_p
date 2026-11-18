@@ -1157,11 +1157,13 @@
         totalGiftsDisplay.textContent = allowableDraws;
     }
     // Set allowable draw quantity
-    maxDrawsInput.max = allowableDraws;
-    maxDrawsInput.min = allowableDraws;
-    maxDrawsInput.value = allowableDraws;
-    // Prevent manual changes to the allowable quantity
-    maxDrawsInput.readOnly = true;
+// Allow the user to choose the number of draws
+const maxAllowedDraws = Math.min(allowableDraws, participants.length);
+maxDrawsInput.min = 1;
+maxDrawsInput.max = maxAllowedDraws;
+maxDrawsInput.value = maxAllowedDraws > 0 ? 1 : 0;
+maxDrawsInput.readOnly = false;
+maxDrawsInput.disabled = maxAllowedDraws === 0;
     // Update remaining gifts
     updateRemainingGiftsDisplay();
 });
@@ -1208,94 +1210,126 @@
     }
 
     // UPDATED: startDraw to handle star prize if it comes up randomly
-    document.getElementById("startDraw").addEventListener("click", async () => {
-        if (!participants.length) {
-            alert("No participants available for the selected department.");
-            return;
-        }
-        
-        if (!giftsForDraw.length) {
-            alert("No gifts available for drawing in the selected department.");
-            return;
-        }
+    
+document.getElementById("startDraw").addEventListener("click", async () => {
 
-// Draw all available gifts
-const numDraws = giftsForDraw.length;
+    // Check participants
+    if (!participants.length) {
+        alert("No participants available for the selected department.");
+        return;
+    }
+    // Check gifts
+    if (!giftsForDraw.length) {
+        alert("No gifts available for drawing in the selected department.");
+        return;
+    }
+    // Get the number of draws selected by the user
+    const numDraws = Number(maxDrawsInput.value);
+    // Validate the requested number
+    if (
+        !Number.isInteger(numDraws) ||
+        numDraws < 1 ||
+        numDraws > giftsForDraw.length ||
+        numDraws > participants.length
+    ) {
+        alert(
+            `Please enter a valid number of draws.\n\n` +
+            `Available Gifts: ${giftsForDraw.length}\n` +
+            `Eligible Participants: ${participants.length}\n` +
+            `Maximum Allowed Draws: ${Math.min(giftsForDraw.length, participants.length)}`
+        );
+        return;
+    }
 
-// Check whether there are enough participants
-if (participants.length < numDraws) {
-    alert(
-        `INSUFFICIENT PARTICIPANTS!\n\n` +
-        `Department: ${currentDepartment || "All Departments"}\n` +
-        `Available Gifts: ${giftsForDraw.length}\n` +
-        `Eligible Participants: ${participants.length}\n\n` +
-        `Additional Participants Required: ${numDraws - participants.length}`
+    // Shuffle participants randomly
+    const shuffledParticipants = [...participants];
+
+    for (let i = shuffledParticipants.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledParticipants[i], shuffledParticipants[j]] =
+            [shuffledParticipants[j], shuffledParticipants[i]];
+    }
+
+    // Shuffle gifts randomly
+    const shuffledGifts = [...giftsForDraw];
+
+    for (let i = shuffledGifts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffledGifts[i], shuffledGifts[j]] =
+            [shuffledGifts[j], shuffledGifts[i]];
+    }
+
+    // Select only the requested number
+    const selectedParticipants = shuffledParticipants.slice(0, numDraws);
+    const selectedGifts = shuffledGifts.slice(0, numDraws);
+
+    // Prepare the results
+    results = selectedParticipants.map((participant, i) => ({
+        name: participant.name,
+        division: participant.division,
+        idCard: participant.idCard,
+        gift: selectedGifts[i]
+    }));
+
+    // Identify the Star Prize
+    const starPrizeName =
+        "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser";
+
+    const starPrizeDrawn = selectedGifts.some(
+        gift => gift.name.trim().toLowerCase() === starPrizeName.trim().toLowerCase()
     );
-    return;
-}
 
-console.log("Gifts to be drawn:", numDraws);
-console.log("Eligible participants:", participants.length);
+    if (starPrizeDrawn) {
+        console.log("STAR PRIZE selected in the random draw!");
 
-        results = [];
-        const giftsToRemove = [];
-        
-        for (let i = 0; i < numDraws; i++) {
-            const gift = shuffledGifts[i];
-            results.push({
-                name: shuffledParticipants[i].name,
-                division: shuffledParticipants[i].division,
-                idCard: shuffledParticipants[i].idCard,
-                gift: gift, 
-            });
-            giftsToRemove.push(gift.name);
-            // The gift name here is for star price only
-       //////////////////////////////////////////////////////////////////////////////////////////////////////////// From here
-            // Special handling if this is the star prize
-            if (gift.name === "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser") {
-                // Remove star prize from ALL gift pools
-                fullGifts = fullGifts.filter(g => g.name !== "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser");
-            }
-        }
-/////////////////////////////////////////////////////////////////////////////////////////////////// To here
-    function normalizeGiftData(gift, index) {
+        // Remove Star Prize from ALL gift pools
+        fullGifts = fullGifts.filter(
+            gift => gift.name.trim().toLowerCase() !== starPrizeName.trim().toLowerCase()
+        );
+    }
 
-    let department = gift.department || gift.Department ||
-                     gift.division || gift.Division || "General";
+    // Remove all selected gifts from the available gift pools
+    const drawnGifts = new Set(selectedGifts);
 
-    department = department.toString().trim();
+    giftsForDraw = giftsForDraw.filter(gift => !drawnGifts.has(gift));
+    fullGifts = fullGifts.filter(gift => !drawnGifts.has(gift));
 
-    return {
-        id: gift.id || gift.ID || `GIFT_${index + 1}`,
+    // Remove selected participants so they cannot win again
+    const drawnParticipants = new Set(selectedParticipants);
 
-        name: gift.name || gift.Name || gift.Gift ||
-              gift.GiftName || gift["Gift Name"] || String(gift).trim(),
+    participants = participants.filter(
+        participant => !drawnParticipants.has(participant)
+    );
 
-        department: department,
+    fullParticipants = fullParticipants.filter(
+        participant => !drawnParticipants.has(participant)
+    );
 
-        image: gift.image || gift.ImageURL || gift.Image || gift.img || ""
-    };
-}
+    // Start winner announcement sequence
+    index = 0;
+    giftImageEl.classList.remove("floating");
 
-// Remove drawn participants from both current and full participant pools
-const participantsToRemove = results.map(result => result.name);
-participants = participants.filter(p => !participantsToRemove.includes(p.name));
-fullParticipants = fullParticipants.filter(p => !participantsToRemove.includes(p.name));
-        index = 0;
-        giftImageEl.classList.remove("floating"); 
-        await runDrawSequence();
+    await runDrawSequence();
 
-        totalGiftsDisplay.textContent = giftsForDraw.length;
-        maxDrawsInput.max = giftsForDraw.length;
-        maxDrawsInput.value = giftsForDraw.length;
-        updateRemainingGiftsDisplay();
-        
-        if (giftsForDraw.length === 0) {
-            setTimeout(() => {
-                alert(`🎉 All gifts for ${currentDepartment} have been drawn!`);
-            }, 1000);
-        }
-    });
+    // Update the available draw quantity
+    const maxAllowedDraws = Math.min(giftsForDraw.length, participants.length);
+
+    maxDrawsInput.min = maxAllowedDraws > 0 ? 1 : 0;
+    maxDrawsInput.max = maxAllowedDraws;
+    maxDrawsInput.value = maxAllowedDraws > 0 ? 1 : 0;
+    maxDrawsInput.disabled = maxAllowedDraws === 0;
+
+    // Update remaining gifts
+    updateRemainingGiftsDisplay();
+
+    if (giftsForDraw.length === 0) {
+        setTimeout(() => {
+            alert(`🎉 All gifts for ${currentDepartment || "All Departments"} have been drawn!`);
+        }, 1000);
+    }
+
+});
+
 
     // ALL OTHER EXISTING FUNCTIONS REMAIN EXACTLY THE SAME...
     document.getElementById("restartBtn").addEventListener("click", () => {
