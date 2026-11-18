@@ -1237,39 +1237,50 @@
             return;
         }
 
-        const shuffledParticipants = [...participants].sort(() => 0.5 - Math.random());
-        const shuffledGifts = [...giftsForDraw].sort(() => 0.5 - Math.random());
+
+
+
+ //////////////////////////////////////////////////////////////////////////////////////////////////////////// From here
+        const shuffledParticipants = [...participants].sort(() => Math.random() - 0.5);
+        const shuffledGifts = [...giftsForDraw].sort(() => Math.random() - 0.5);
 
         results = [];
-        const giftsToRemove = [];
-        
-        for (let i = 0; i < numDraws; i++) {
-            const gift = shuffledGifts[i];
-            results.push({
-                name: shuffledParticipants[i].name,
-                division: shuffledParticipants[i].division,
-                idCard: shuffledParticipants[i].idCard,
-                gift: gift, 
-            });
-            giftsToRemove.push(gift.name);
-            // The gift name here is for star price only
-       //////////////////////////////////////////////////////////////////////////////////////////////////////////// From here
-            // Special handling if this is the star prize
-            if (gift.name === "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser") {
-                // Remove star prize from ALL gift pools
-                fullGifts = fullGifts.filter(g => g.name !== "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser");
-            }
-        }
-/////////////////////////////////////////////////////////////////////////////////////////////////// To here
-        giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
-fullGifts = fullGifts.filter(gift => 
-    !(giftsToRemove.includes(gift.name) && (gift.department === currentDepartment || gift.department === "ALL DEPARTMENTS"))
-);
 
-// Remove drawn participants from both current and full participant pools
-const participantsToRemove = results.map(result => result.name);
-participants = participants.filter(p => !participantsToRemove.includes(p.name));
-fullParticipants = fullParticipants.filter(p => !participantsToRemove.includes(p.name));
+// Select the exact participants and gift records being awarded
+const selectedParticipants = shuffledParticipants.slice(0, numDraws);
+const selectedGifts = shuffledGifts.slice(0, numDraws);
+
+// Record the winners
+for (let i = 0; i < numDraws; i++) {
+    results.push({
+        name: selectedParticipants[i].name,
+        division: selectedParticipants[i].division,
+        idCard: selectedParticipants[i].idCard,
+        gift: selectedGifts[i]
+    });
+}
+
+    // Identify the exact gift records selected
+     const selectedGiftIds = new Set(selectedGifts.map(gift => gift._drawId));
+
+    // Remove ONLY the selected gift records
+    giftsForDraw = giftsForDraw.filter(gift => !selectedGiftIds.has(gift._drawId));
+    fullGifts = fullGifts.filter(gift => !selectedGiftIds.has(gift._drawId));
+
+     // Remove ONLY the selected participants
+     const selectedParticipantSet = new Set(selectedParticipants);
+     participants = participants.filter(person => !selectedParticipantSet.has(person));
+     fullParticipants = fullParticipants.filter(person => !selectedParticipantSet.has(person));
+
+
+        
+
+        
+        
+        
+     //////////////////////////////////////////////////////////////////////////////////////////////////////////// From here    
+        
+        
         index = 0;
         giftImageEl.classList.remove("floating"); 
         await runDrawSequence();
