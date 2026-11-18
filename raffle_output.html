@@ -1053,7 +1053,7 @@
         
         const filteredGiftsForDraw = fullGifts.filter(g => {
             const giftDept = String(g.department || "").toLowerCase().trim();
-            return giftDept === deptLower || giftDept === "general draw";
+            return giftDept === deptLower || giftDept === deptLower;
         });
         
         const filteredHardcodedGifts = giftsHardcoded.filter(g => {
@@ -1147,26 +1147,39 @@
     });
 
     // Department filter - UPDATED TO USE CAROUSEL
-    departmentSelect.addEventListener("change", function() {
-        const dept = this.value;
-        currentDepartment = dept;
-        
-        // Get filtered data
-        const filtered = filterAllByDepartment(dept);
-        
-        // Update arrays
-        participants = [...filtered.participants];
-        giftsForDraw = [...filtered.giftsForDraw];
-        gifts = [...filtered.hardcodedGifts];
 
-        // Update UI - USING CAROUSEL NOW
-        loadCarousel(gifts);
-        totalGiftsDisplay.textContent = giftsForDraw.length;
-        maxDrawsInput.max = giftsForDraw.length;
-        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
-        
-        updateRemainingGiftsDisplay();
-    });
+// Department filter - UPDATED TO USE CAROUSEL
+departmentSelect.addEventListener("change", function() {
+    const dept = this.value;
+    currentDepartment = dept;
+
+    // Get filtered data
+    const filtered = filterAllByDepartment(dept);
+
+    // Update arrays
+    participants = [...filtered.participants];
+    giftsForDraw = [...filtered.giftsForDraw];
+    gifts = [...filtered.hardcodedGifts];
+
+    // Calculate allowable draws based on available gifts
+    const allowableDraws = giftsForDraw.length;
+
+    // Update carousel
+    loadCarousel(gifts);
+
+    // Update gift count
+    totalGiftsDisplay.textContent = allowableDraws;
+
+    // Set maximum allowable draws
+    maxDrawsInput.max = allowableDraws;
+
+    // Automatically set draw input to the department's gift count
+    maxDrawsInput.value = allowableDraws;
+
+    // Update remaining gifts
+    updateRemainingGiftsDisplay();
+});
+
 
     // UPDATED: previewGift function to handle star gifts
     async function previewGift(giftObj) {
@@ -1221,13 +1234,27 @@
             return;
         }
 
-        const desiredDraws = parseInt(maxDrawsInput.value, 10);
-        if (isNaN(desiredDraws) || desiredDraws < 1) {
-            alert("Please enter a valid number of draws (1 or more).");
-            return;
-        }
 
-        const numDraws = Math.min(participants.length, giftsForDraw.length, desiredDraws);
+const desiredDraws = parseInt(maxDrawsInput.value, 10);
+
+// Validate draw input
+if (
+    isNaN(desiredDraws) ||
+    desiredDraws < 1 ||
+    desiredDraws > giftsForDraw.length
+) {
+    alert(
+        `Invalid draw quantity!\n\n` +
+        `Available gifts for ${currentDepartment || "All Departments"}: ${giftsForDraw.length}\n` +
+        `Maximum allowable draws: ${giftsForDraw.length}`
+    );
+
+    maxDrawsInput.value = giftsForDraw.length;
+    return;
+}
+
+// Determine actual number of draws
+const numDraws = Math.min(participants.length,giftsForDraw.length,desiredDraws);
 
         if (numDraws === 0) {
             alert("Cannot run draw. Check participant count and gift count.");
@@ -1273,7 +1300,7 @@ fullParticipants = fullParticipants.filter(p => !participantsToRemove.includes(p
 
         totalGiftsDisplay.textContent = giftsForDraw.length;
         maxDrawsInput.max = giftsForDraw.length;
-        maxDrawsInput.value = Math.min(1, giftsForDraw.length);
+        maxDrawsInput.value = giftsForDraw.length;
         updateRemainingGiftsDisplay();
         
         if (giftsForDraw.length === 0) {
