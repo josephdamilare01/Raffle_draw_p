@@ -718,19 +718,19 @@
 
         // The gift name here is for star price only
        //////////////////////////////////////////////////////////////////////////////////////////////////////////// From here
-        // STAR PRIZE - Available to ALL departments
-    { name: "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser", department: "ALL DEPARTMENTS", image: "./images/Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser.jpg" },
-    /* { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR1.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR2.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR1.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR2.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR1.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR2.jpg" },
-    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "ALL DEPARTMENTS", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" }, */
+        // STAR PRIZE - Available to General draw
+    { name: "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser", department: "General draw", image: "./images/Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser.jpg" },
+    /* { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR1.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR2.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR1.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR2.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR1.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR2.jpg" },
+    { name: "Hisense 90 Litres Single Door Refrigerator Silver - REF093D", department: "General draw", image: "./images/Hisense 90 Litres Single Door Refrigerator Silver - REF093DR.jpg" }, */
     
     ];
 /////////////////////////////////////////////////////////////////////////////////////////////////// To here
@@ -839,7 +839,7 @@
         // The gift name here is for star price only
        //////////////////////////////////////////////////////////////////////////////////////////////////////////// From here
         // Check if star prize is still available
-        const starPrize = { name: "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser", department: "ALL DEPARTMENTS", image: "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser.jpg" };
+        const starPrize = { name: "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser", department: "General draw", image: "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser.jpg" };
         const starPrizeStillAvailable = !results.some(result => 
             result.gift.name === "Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser"
         );
@@ -850,7 +850,7 @@
         }
 
         // Special confirmation for star prize
-        if (!confirm("🎉 This will draw the STAR PRIZE (-Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser) from ALL departments!\n\nAre you ready to select the lucky winner?")) {
+        if (!confirm("🎉 This will draw the STAR PRIZE (-Hisense 541L 4-door Inverter Refrigerator With Ice Maker & Water Dispenser) from General draw!\n\nAre you ready to select the lucky winner?")) {
             return;
         }
 /////////////////////////////////////////////////////////////////////////////////////////////////// To here
@@ -1053,12 +1053,12 @@
         
         const filteredGiftsForDraw = fullGifts.filter(g => {
             const giftDept = String(g.department || "").toLowerCase().trim();
-            return giftDept === deptLower || giftDept === "all departments";
+            return giftDept === deptLower || giftDept === "general draw";
         });
         
         const filteredHardcodedGifts = giftsHardcoded.filter(g => {
             const hardcodedDept = String(g.department || "").toLowerCase().trim();
-            return hardcodedDept === deptLower || hardcodedDept === "all departments";
+            return hardcodedDept === deptLower || hardcodedDept === "general draw";
         });
 
         return {
@@ -1260,7 +1260,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////// To here
         giftsForDraw = giftsForDraw.filter(gift => !giftsToRemove.includes(gift.name));
 fullGifts = fullGifts.filter(gift => 
-    !(giftsToRemove.includes(gift.name) && (gift.department === currentDepartment || gift.department === "ALL DEPARTMENTS"))
+    !(giftsToRemove.includes(gift.name) && (gift.department === currentDepartment || gift.department === "General draw"))
 );
 
 // Remove drawn participants from both current and full participant pools
