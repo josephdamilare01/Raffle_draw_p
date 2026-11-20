@@ -1596,18 +1596,38 @@ function loadSelections() {
       const department = document.getElementById('department')?.value;
       
       // Determine identifier (email or employeeId)
-      const identifier = email || employeeIdInput || 'Unknown';
-      
-      const voteData = {
-        voterId: voterId,
-        selections: selections,
-        timestamp: new Date().toISOString(),
-        email: email || 'Not provided',
-        employeeId: employeeIdInput || 'Not provided',
-        employeeName: `${firstName || ''} ${lastName || ''}`.trim() || 'Unknown',
-        department: department || 'Unknown',
-        totalSelections: Object.keys(selections).length
-      };
+ // Validate required employee information
+if (
+    !firstName?.trim() ||
+    !lastName?.trim() ||
+    !department?.trim() ||
+    (!email?.trim() && !employeeIdInput?.trim())
+) {
+    alert(
+        "Unable to submit your vote.\n\n" +
+        "Please ensure that:\n" +
+        "- First name is provided.\n" +
+        "- Last name is provided.\n" +
+        "- Department is provided.\n" +
+        "- At least one of Email or Employee ID is provided."
+    );
+
+    return;
+}
+
+// Determine identifier (email or employeeId)
+const identifier = email?.trim() || employeeIdInput?.trim();
+
+const voteData = {
+    voterId: voterId,
+    selections: selections,
+    timestamp: new Date().toISOString(),
+    email: email?.trim() || null,
+    employeeId: employeeIdInput?.trim() || null,
+    employeeName: `${firstName.trim()} ${lastName.trim()}`,
+    department: department.trim(),
+    totalSelections: Object.keys(selections).length
+};
       
       console.log("📤 Submitting vote data:", voteData);
       
