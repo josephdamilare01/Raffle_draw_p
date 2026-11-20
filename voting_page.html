@@ -1162,9 +1162,16 @@ const firebaseConfig = {
   const progressBar = document.getElementById('progressBar');
   const loadingSpinner = document.getElementById('loadingSpinner');
 
-  // State variables
-  let selections = {};
-  let voterId = null;
+// State variables
+const VOTING_YEAR = 2026;
+
+let selections = {};
+let voterId = null;
+
+// Year-specific local storage key
+function getSelectionStorageKey() {
+    return `nlngSelections_${VOTING_YEAR}_${voterId}`;
+}
 
   // Initialize the page
   function initPage() {
@@ -1485,37 +1492,85 @@ const firebaseConfig = {
   }
 
   // Save selections to localStorage
-  function saveSelections() {
-    if (voterId) {
-      localStorage.setItem(`nlngSelections_${voterId}`, JSON.stringify(selections));
-    }
-  }
 
-  // Load selections from localStorage
-  function loadSelections() {
+// Save selections for the current voting year only
+function saveSelections() {
     if (voterId) {
-      const savedSelections = localStorage.getItem(`nlngSelections_${voterId}`);
-      if (savedSelections) {
-        selections = JSON.parse(savedSelections);
-        
-        // Update radio buttons based on saved selections
-        Object.keys(selections).forEach(awardId => {
-          const candidateName = selections[awardId];
-          const radio = document.querySelector(`input[name="${awardId}"][value="${candidateName}"]`);
-          if (radio) {
-            radio.checked = true;
-            const candidateElement = radio.closest('.candidate');
-            if (candidateElement) {
-              candidateElement.classList.add('selected');
-            }
-          }
-        });
-        
+        localStorage.setItem(
+            getSelectionStorageKey(),
+            JSON.stringify(selections)
+        );
+    }
+}
+
+// Load selections for the current voting year only
+function loadSelections() {
+    if (!voterId) return;
+
+    const savedSelections = localStorage.getItem(
+        getSelectionStorageKey()
+    );
+
+    // Start with an empty selection
+    selections = {};
+
+    if (!savedSelections) {
         updateSelectionsList();
         updateProgress();
-      }
+        return;
     }
-  }
+
+    try {
+        const parsedSelections = JSON.parse(savedSelections);
+
+        // Only restore selections that are still valid
+        const validation = validateSelections(parsedSelections);
+
+        if (validation.errors.length > 0) {
+            console.warn(
+                "Invalid saved selections were excluded:",
+                validation.errors
+            );
+        }
+
+        selections = validation.validSelections;
+
+        // Save the cleaned selections
+        saveSelections();
+
+        // Restore radio button selections
+        Object.entries(selections).forEach(([awardId, candidateName]) => {
+            const award = awardsData.find(a => a.id === awardId);
+
+            if (!award) return;
+
+            const radio = Array.from(
+                document.querySelectorAll(`input[name="${CSS.escape(awardId)}"]`)
+            ).find(input => input.value === candidateName);
+
+            if (radio) {
+                radio.checked = true;
+
+                const candidateElement = radio.closest('.candidate');
+
+                if (candidateElement) {
+                    candidateElement.classList.add('selected');
+                }
+            }
+        });
+
+        updateSelectionsList();
+        updateProgress();
+
+    } catch (error) {
+        console.error("Could not load saved selections:", error);
+
+        selections = {};
+
+        localStorage.removeItem(getSelectionStorageKey());
+    }
+}
+
 
   // Submit votes to Firebase
   async function submitVotes() {
