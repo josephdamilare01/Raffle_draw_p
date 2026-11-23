@@ -760,7 +760,7 @@
 <script type="module">
   // Import Firebase modules
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getDatabase, ref, get, set, update } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+  import { getDatabase, ref, get, set, update, runTransaction } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
   // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -1164,13 +1164,78 @@ const firebaseConfig = {
 
 // State variables
 const VOTING_YEAR = 2026;
+const VOTER_ID_STORAGE_KEY = `nlngVoterId_${VOTING_YEAR}`;
+const VOTER_PROFILE_STORAGE_KEY = `nlngVoterProfile_${VOTING_YEAR}`;
 
 let selections = {};
 let voterId = null;
 
-// Year-specific local storage key
+// Year-specific local storage keys
 function getSelectionStorageKey() {
     return `nlngSelections_${VOTING_YEAR}_${voterId}`;
+}
+
+function getEmailProfileKey() {
+    return VOTER_PROFILE_STORAGE_KEY;
+}
+
+function normalizeEmail(email) {
+    return (email || '').trim().toLowerCase();
+}
+
+// SHA-256 keeps the email out of the Firebase path itself.
+async function getEmailKey(email) {
+    const bytes = new TextEncoder().encode(normalizeEmail(email));
+    const digest = await crypto.subtle.digest('SHA-256', bytes);
+    return Array.from(new Uint8Array(digest))
+        .map(byte => byte.toString(16).padStart(2, '0'))
+        .join('');
+}
+
+function getEmailRegistrationPath(emailKey) {
+    return `emailRegistrations/${VOTING_YEAR}/${emailKey}`;
+}
+
+function saveVoterProfile() {
+    const profile = {
+        email: normalizeEmail(document.getElementById('Email')?.value),
+        employeeId: document.getElementById('employeeId')?.value.trim() || '',
+        firstName: document.getElementById('firstName')?.value.trim() || '',
+        lastName: document.getElementById('lastName')?.value.trim() || '',
+        department: document.getElementById('department')?.value.trim() || ''
+    };
+    localStorage.setItem(VOTER_PROFILE_STORAGE_KEY, JSON.stringify(profile));
+    return profile;
+}
+
+function restoreVoterProfile(profile) {
+    if (!profile) return;
+    document.getElementById('Email').value = profile.email || '';
+    document.getElementById('employeeId').value = profile.employeeId || '';
+    document.getElementById('firstName').value = profile.firstName || '';
+    document.getElementById('lastName').value = profile.lastName || '';
+    document.getElementById('department').value = profile.department || '';
+}
+
+// Check existing 2026 vote records created before the email index was introduced.
+async function findExisting2026VoteByEmail(email) {
+    const normalized = normalizeEmail(email);
+    if (!normalized) return null;
+
+    const votesSnapshot = await get(ref(db, 'votes'));
+    if (!votesSnapshot.exists()) return null;
+
+    const votes = votesSnapshot.val() || {};
+    for (const [existingVoterId, vote] of Object.entries(votes)) {
+        const voteEmail = normalizeEmail(vote?.email);
+        const voteYear = String(vote?.timestamp || '').slice(0, 4);
+        const voterIdYear = String(existingVoterId).startsWith(`NLNG${VOTING_YEAR}-`);
+
+        if (voteEmail === normalized && (voteYear === String(VOTING_YEAR) || voterIdYear)) {
+            return { voterId: existingVoterId, vote };
+        }
+    }
+    return null;
 }
 
   // Initialize the page
@@ -1218,40 +1283,57 @@ function getSelectionStorageKey() {
     voteBtn.style.display = 'none';
   }
       
-  // Check if user has already voted using Firebase
+  // Check only this election year's voter ID. Never trust the old generic key.
   async function checkVotingStatus() {
-    // Try to get voter ID from localStorage
-    voterId = localStorage.getItem('nlngVoterId');
-    
-    if (voterId) {
-      // Check if this voter ID has already voted in Firebase
-      try {
-        if (!db) {
-          throw new Error("Database not initialized");
-        }
-        
-        const voteRef = ref(db, `votes/${voterId}`);
-        const snapshot = await get(voteRef);
-        
-        if (snapshot.exists()) {
-          // User has already voted
-          showAlreadyVoted();
-        } else {
-          // User has an ID but hasn't voted yet
-          showVotingInterface();
-          renderAwards();
-          loadSelections();
-        }
-      } catch (error) {
-        console.error("Error checking voting status:", error);
-        // If there's an error, show voting interface anyway
-        showVotingInterface();
-        renderAwards();
-        loadSelections();
-      }
-    } else {
-      // New user, show ID generation form
+    voterId = localStorage.getItem(VOTER_ID_STORAGE_KEY);
+
+    if (!voterId) {
       showIdGenerationForm();
+      return;
+    }
+
+    try {
+      if (!db) throw new Error("Database not initialized");
+
+      const savedProfileText = localStorage.getItem(VOTER_PROFILE_STORAGE_KEY);
+      const savedProfile = savedProfileText ? JSON.parse(savedProfileText) : null;
+      if (!savedProfile) {
+        // Require the user to complete/confirm the current election information.
+        voterId = null;
+        showIdGenerationForm();
+        return;
+      }
+      restoreVoterProfile(savedProfile);
+
+      const voteSnapshot = await get(ref(db, `votes/${voterId}`));
+      if (voteSnapshot.exists()) {
+        showAlreadyVoted();
+        return;
+      }
+
+      if (savedProfile.email) {
+        // Check older 2026 vote records as well as the new email index.
+        const legacyVote = await findExisting2026VoteByEmail(savedProfile.email);
+        if (legacyVote) {
+          showAlreadyVoted();
+          return;
+        }
+
+        const emailKey = await getEmailKey(savedProfile.email);
+        const emailSnapshot = await get(ref(db, getEmailRegistrationPath(emailKey)));
+        if (emailSnapshot.exists() && emailSnapshot.val()?.status === 'voted') {
+          showAlreadyVoted();
+          return;
+        }
+      }
+
+      showVotingInterface();
+      renderAwards();
+      loadSelections();
+    } catch (error) {
+      console.error("Error checking voting status:", error);
+      showIdGenerationForm();
+      alert("We could not verify your voting status. Please refresh the page or try again later. Voting has been kept locked for your protection.");
     }
   }
 
@@ -1297,48 +1379,102 @@ function getSelectionStorageKey() {
 
   // Setup event listeners
   function setupEventListeners() {
-    // Generate ID button
-    generateIdBtn.addEventListener('click', () => {
-      const employeeId = document.getElementById('employeeId').value;
-      const firstName = document.getElementById('firstName').value;
-      const lastName = document.getElementById('lastName').value;
-      const department = document.getElementById('department').value;
-      const email = document.getElementById('Email').value;
-      
-      // Check that either email OR employeeId is provided
+    // Check the email against this election's Firebase registration/vote records.
+    generateIdBtn.addEventListener('click', async () => {
+      const employeeId = document.getElementById('employeeId').value.trim();
+      const firstName = document.getElementById('firstName').value.trim();
+      const lastName = document.getElementById('lastName').value.trim();
+      const department = document.getElementById('department').value.trim();
+      const email = normalizeEmail(document.getElementById('Email').value);
+
       if ((!email && !employeeId) || !firstName || !lastName || !department) {
         alert('Please fill in all required fields');
         return;
       }
-      
-      // Validate email domain if provided
+
       if (email) {
-        const validDomains = ['@nlng.com', '@Nsml.com', '@raisbny.com'];
-        const isValidDomain = validDomains.some(domain => email.toLowerCase().endsWith(domain.toLowerCase()));
-        
+        const validDomains = ['@nlng.com', '@nsml.com', '@raisbny.com'];
+        const isValidDomain = validDomains.some(domain => email.endsWith(domain));
         if (!isValidDomain) {
           alert('Please use a valid company email address (@nlng.com, @Nsml.com, or @raisbny.com)');
           return;
         }
       }
-      
-      // Generate voter ID using available information
-      const fullName = `${firstName} ${lastName}`;
-      const identifier = email || employeeId;
-      voterId = generateVoterId(identifier, fullName, department);
-      voterIdDisplay.textContent = voterId;
-      
-      // Show ID display
-      idDisplay.classList.add('active');
+
+      if (!db) {
+        alert('Unable to connect to the voting database. Please try again later.');
+        return;
+      }
+
+      generateIdBtn.disabled = true;
+      generateIdBtn.textContent = 'Checking email...';
+
+      try {
+        const fullName = `${firstName} ${lastName}`;
+        const identifier = email || employeeId;
+        const proposedVoterId = generateVoterId(identifier, fullName, department);
+
+        if (email) {
+          // Backward compatibility: detect 2026 votes recorded before this email index existed.
+          const legacyVote = await findExisting2026VoteByEmail(email);
+          if (legacyVote) {
+            showAlreadyVoted();
+            alert('This email address has already been used to submit a vote for the 2026 awards.');
+            return;
+          }
+
+          const emailKey = await getEmailKey(email);
+          const registrationRef = ref(db, getEmailRegistrationPath(emailKey));
+          const registrationTransaction = await runTransaction(registrationRef, current => {
+            if (current) return current;
+            return {
+              email: email,
+              voterId: proposedVoterId,
+              status: 'registered',
+              employeeId: employeeId || null,
+              employeeName: fullName,
+              department: department,
+              registeredAt: new Date().toISOString()
+            };
+          });
+
+          const registration = registrationTransaction.snapshot.val();
+          if (!registration) throw new Error('Could not create or retrieve your registration.');
+
+          if (registration.status === 'voted') {
+            showAlreadyVoted();
+            alert('This email address has already voted in the 2026 awards.');
+            return;
+          }
+          if (registration.status === 'submitting') {
+            alert('A vote submission for this email is already being processed. Please wait a moment and try again.');
+            return;
+          }
+
+          // Reuse the existing 2026 voter ID instead of creating another one.
+          voterId = registration.voterId || proposedVoterId;
+        } else {
+          // Employee-ID-only partner registrations remain supported.
+          voterId = proposedVoterId;
+        }
+
+        saveVoterProfile();
+        voterIdDisplay.textContent = voterId;
+        idDisplay.classList.add('active');
+      } catch (error) {
+        console.error('Email registration check failed:', error);
+        alert('We could not verify this email against the voting database. Please try again.\n\n' + error.message);
+      } finally {
+        generateIdBtn.disabled = false;
+        generateIdBtn.textContent = 'Generate Voter ID';
+      }
     });
 
-    // Save ID button
+    // Save the election-year-specific voter ID and profile.
     saveIdBtn.addEventListener('click', () => {
       if (voterId) {
-        // Save voter ID to localStorage
-        localStorage.setItem('nlngVoterId', voterId);
-        
-        // Show voting interface
+        localStorage.setItem(VOTER_ID_STORAGE_KEY, voterId);
+        saveVoterProfile();
         showVotingInterface();
         renderAwards();
       }
@@ -1582,6 +1718,11 @@ function loadSelections() {
     // Show loading spinner
     loadingSpinner.classList.add('active');
     voteBtn.disabled = true;
+
+    let emailRegistrationRef = null;
+    let emailRegistrationClaimed = false;
+    let normalizedVoterEmail = null;
+    let emailRegistrationKey = null;
     
     try {
       if (!db) {
@@ -1617,12 +1758,13 @@ if (
 
 // Determine identifier (email or employeeId)
 const identifier = email?.trim() || employeeIdInput?.trim();
+normalizedVoterEmail = normalizeEmail(email);
 
 const voteData = {
     voterId: voterId,
     selections: selections,
     timestamp: new Date().toISOString(),
-    email: email?.trim() || null,
+    email: normalizedVoterEmail || null,
     employeeId: employeeIdInput?.trim() || null,
     employeeName: `${firstName.trim()} ${lastName.trim()}`,
     department: department.trim(),
@@ -1640,9 +1782,62 @@ const voteData = {
         throw new Error("You have already voted with this voter ID!");
       }
       
-      // Save the vote
-      await set(voteRef, voteData);
-      console.log("✅ Vote saved successfully");
+      // Reserve the email so two browser sessions cannot submit concurrently.
+      // The vote and final email status are then written together in one atomic update.
+      if (normalizedVoterEmail) {
+        // Recheck legacy records at submission time, including a different voter ID.
+        const legacyEmailVote = await findExisting2026VoteByEmail(normalizedVoterEmail);
+        if (legacyEmailVote) {
+          throw new Error('This email has already voted in the 2026 awards.');
+        }
+
+        emailRegistrationKey = await getEmailKey(normalizedVoterEmail);
+        emailRegistrationRef = ref(db, getEmailRegistrationPath(emailRegistrationKey));
+
+        const claimTransaction = await runTransaction(emailRegistrationRef, current => {
+          if (current?.status === 'voted' || current?.status === 'submitting') {
+            return;
+          }
+          if (current?.voterId && current.voterId !== voterId) {
+            return;
+          }
+          // Create a registration here if this is an existing 2026 user whose
+          // registration was created before the email index was introduced.
+          return {
+            ...(current || {}),
+            email: normalizedVoterEmail,
+            voterId: voterId,
+            status: 'submitting',
+            employeeId: employeeIdInput?.trim() || current?.employeeId || null,
+            employeeName: `${firstName.trim()} ${lastName.trim()}`,
+            department: department.trim(),
+            submissionStartedAt: new Date().toISOString()
+          };
+        });
+
+        if (!claimTransaction.committed) {
+          throw new Error('This email has already voted or another vote submission is in progress.');
+        }
+        emailRegistrationClaimed = true;
+
+        const currentRegistration = claimTransaction.snapshot.val() || {};
+        const finalRegistration = {
+          ...currentRegistration,
+          email: normalizedVoterEmail,
+          voterId: voterId,
+          status: 'voted',
+          votedAt: voteData.timestamp
+        };
+
+        await update(ref(db), {
+          [`votes/${voterId}`]: voteData,
+          [getEmailRegistrationPath(emailRegistrationKey)]: finalRegistration
+        });
+        emailRegistrationClaimed = false;
+      } else {
+        await set(voteRef, voteData);
+      }
+      console.log("✅ Vote and email registration status saved successfully");
       
       // Update vote counts for each candidate
       console.log("📈 Updating vote counts...");
@@ -1706,6 +1901,20 @@ const voteData = {
       
     } catch (error) {
       console.error("❌❌❌ SUBMIT VOTES ERROR:", error);
+
+      // Release an email reservation if the vote write failed.
+      if (emailRegistrationClaimed && emailRegistrationRef) {
+        try {
+          await runTransaction(emailRegistrationRef, current => {
+            if (current?.status === 'submitting' && current?.voterId === voterId) {
+              return { ...current, status: 'registered', submissionStartedAt: null };
+            }
+            return current;
+          });
+        } catch (releaseError) {
+          console.error('Could not release email registration reservation:', releaseError);
+        }
+      }
       
       // Hide loading spinner
       loadingSpinner.classList.remove('active');
@@ -1873,52 +2082,3 @@ const voteData = {
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
