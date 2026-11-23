@@ -1218,25 +1218,41 @@ function restoreVoterProfile(profile) {
 }
 
 // Check existing 2026 vote records created before the email index was introduced.
+
 async function findExisting2026VoteByEmail(email) {
     const normalized = normalizeEmail(email);
     if (!normalized) return null;
 
-    const votesSnapshot = await get(ref(db, 'votes'));
-    if (!votesSnapshot.exists()) return null;
+    const votesQuery = query(
+        ref(db, 'votes'),
+        orderByChild('email'),
+        equalTo(normalized)
+    );
 
-    const votes = votesSnapshot.val() || {};
+    const snapshot = await get(votesQuery);
+
+    if (!snapshot.exists()) return null;
+
+    const votes = snapshot.val();
+
     for (const [existingVoterId, vote] of Object.entries(votes)) {
-        const voteEmail = normalizeEmail(vote?.email);
         const voteYear = String(vote?.timestamp || '').slice(0, 4);
-        const voterIdYear = String(existingVoterId).startsWith(`NLNG${VOTING_YEAR}-`);
+        const voterIdYear = existingVoterId.startsWith(`NLNG${VOTING_YEAR}-`);
 
-        if (voteEmail === normalized && (voteYear === String(VOTING_YEAR) || voterIdYear)) {
-            return { voterId: existingVoterId, vote };
+        if (
+            voteYear === String(VOTING_YEAR) ||
+            voterIdYear
+        ) {
+            return {
+                voterId: existingVoterId,
+                vote
+            };
         }
     }
+
     return null;
 }
+
 
   // Initialize the page
   function initPage() {
@@ -2082,3 +2098,4 @@ const voteData = {
 </script>
 </body>
 </html>
+
