@@ -760,7 +760,7 @@
 <script type="module">
   // Import Firebase modules
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-  import { getDatabase, ref, get, set, update, runTransaction } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
+  import { getDatabase, ref, get, set, update, runTransaction,query, orderByChild,equalTo } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-database.js";
 
   // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -2098,4 +2098,5 @@ const voteData = {
 </script>
 </body>
 </html>
+
 
